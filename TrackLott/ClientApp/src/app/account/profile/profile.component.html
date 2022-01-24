@@ -1,0 +1,83 @@
+<div class="row justify-content-center my-3 my-md-4 my-lg-5 mx-auto">
+  <div class="col-lg-8">
+    <div class="card shadow-sm bg-light">
+      <div class="card-body p-4">
+        <h3 class="mb-4">Account</h3>
+
+        <form novalidate class="row g-3 needs-validation" [ngClass]="{'was-validated': formInvalid}"
+              (ngSubmit)="onSubmit(ngFormObj)" #ngFormObj="ngForm">
+
+          <div class="col-md-6">
+            <label for="username-input" class="form-label">Username</label>
+            <input required type="text" class="form-control" id="username-input" name="username" ngModel>
+          </div>
+
+          <div class="col-md-6">
+            <label for="email-input" class="form-label">Email address</label>
+            <input required type="email" class="form-control" id="email-input" name="email" email ngModel>
+          </div>
+
+          <div class="col-md-6">
+            <label for="given-name-input" class="form-label">Given Name</label>
+            <input required class="form-control" id="given-name-input" name="givenName" ngModel>
+          </div>
+
+          <div class="col-md-6">
+            <label for="surname-input" class="form-label">Surname</label>
+            <input required class="form-control" id="surname-input" name="surname" ngModel>
+          </div>
+
+          <div class="col-md-6">
+            <label for="dob-input" class="form-label">Date of Birth</label>
+            <input required type="date" class="form-control" id="dob-input" placeholder="dd/mm/yyyy" name="dob" ngModel>
+          </div>
+
+          <div class="col-md-6">
+            <label for="countries-dropdown" class="form-label">Country</label>
+            <select required class="form-select" id="countries-dropdown" aria-label="Select Country" name="country"
+                    ngModel>
+              <option value="" selected disabled hidden>Select</option>
+              <option *ngFor="let country of countries" value="{{country}}">{{country}}</option>
+            </select>
+          </div>
+
+          <div *ngIf="showPasswordFields" class="col-12">
+            <div class="row g-3">
+              <div class="col-md-4">
+                <label for="current-password-input" class="form-label">Current Password</label>
+                <input required type="password" class="form-control" id="current-password-input" name="currentPassword"
+                       ngModel>
+              </div>
+              <div class="col-md-4">
+                <label for="new-password-input" class="form-label">New Password</label>
+                <input required type="password" class="form-control" id="new-password-input" name="newPassword" ngModel>
+              </div>
+              <div class="col-md-4">
+                <label for="repeat-password-input" class="form-label">Confirm Password</label>
+                <input required type="password" class="form-control" id="repeat-password-input" name="repeatPassword"
+                       ngModel>
+              </div>
+            </div>
+          </div>
+
+          <div class="col-md-6">
+            <button *ngIf="!showPasswordFields" class="btn btn-secondary color-light" type="button"
+                    (click)="showPasswordFields = true">
+              Change Password
+            </button>
+            <button *ngIf="showPasswordFields" class="btn btn-supplementary color-light" type="button"
+                    (click)="showPasswordFields = false">
+              Cancel
+            </button>
+          </div>
+
+          <div class="col-md-6 text-md-end">
+            <button class="btn btn-primary" type="submit">Update Profile</button>
+          </div>
+
+        </form>
+
+      </div>
+    </div>
+  </div>
+</div>

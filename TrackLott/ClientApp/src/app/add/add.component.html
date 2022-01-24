@@ -1,0 +1,53 @@
+<mat-card class="row col-xl-9 m-auto">
+  <mat-card-title>Add Combinations</mat-card-title>
+  <mat-divider inset class="my-3"></mat-divider>
+  <mat-card-content>
+    <form [formGroup]="addCombosForm" (ngSubmit)="onAddCombination()" autocomplete="off">
+
+      <div class="row row-cols-md-2">
+        <mat-form-field appearance="outline" class="mb-2">
+          <mat-label>Lottery Name</mat-label>
+          <mat-select formControlName="lotteryName" (selectionChange)="onLotterySelect($event)">
+            <mat-option *ngFor="let lotto of lotteryNamesArray | keyvalue"
+                        value="{{lotto.key}}">{{lotto.value.name}}</mat-option>
+          </mat-select>
+          <mat-hint>Select a lottery name</mat-hint>
+          <mat-error>Invalid lottery name</mat-error>
+        </mat-form-field>
+
+        <mat-form-field appearance="outline" class="mb-2">
+          <mat-label>Date *</mat-label>
+          <!--suppress TypeScriptValidateTypes -->
+          <input matInput formControlName="dateAdded" [min]="minDate" [max]="maxDate" placeholder="dd/mm/yyyy"
+                 [matDatepicker]="playedDatePicker">
+          <mat-datepicker-toggle matSuffix [for]="playedDatePicker"></mat-datepicker-toggle>
+          <mat-datepicker #playedDatePicker [touchUi]="(isHandset$ | async)"></mat-datepicker>
+          <mat-hint>When were/would these combinations be played?</mat-hint>
+          <mat-error>Invalid date</mat-error>
+        </mat-form-field>
+      </div>
+
+      <ng-container formArrayName="mainNumsArray">
+        <div class="row my-3">
+          <div class="col-3 col-md-2 col-lg-1" *ngFor="let control of mainNumsArray.controls; index as dex">
+            <mat-checkbox formControlName="{{dex}}" value="{{dex + 1}}">{{dex + 1}}</mat-checkbox>
+          </div>
+        </div>
+      </ng-container>
+
+      <ng-container formArrayName="powerNumsArray">
+        <div class="row">
+          <div class="col-3 col-md-2 col-lg-1" *ngFor="let control of powerNumsArray.controls; index as dex">
+            <mat-checkbox formControlName="{{dex}}">{{dex + 1}}</mat-checkbox>
+          </div>
+        </div>
+      </ng-container>
+
+      <div class="d-flex justify-content-center my-3">
+        <button mat-flat-button type="submit" color="primary" class="w-50 text-uppercase">
+          Add
+        </button>
+      </div>
+    </form>
+  </mat-card-content>
+</mat-card>

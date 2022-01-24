@@ -1,0 +1,57 @@
+<mat-sidenav-container class="sidenav-container">
+  <mat-sidenav #drawer class="sidenav" fixedInViewport="false" [attr.role]="'dialog'" [mode]="'over'"
+               [opened]="false">
+    <mat-toolbar color="primary">TrackLott</mat-toolbar>
+    <mat-nav-list *ngIf="(isHandsetPortrait$ | async)">
+      <a mat-list-item class="text-uppercase" [routerLink]="['/home']">Home</a>
+
+      <a mat-list-item class="text-uppercase" [routerLink]="['/add']">Add</a>
+
+      <a mat-list-item class="text-uppercase" [routerLink]="['/play']">Play</a>
+
+      <a mat-list-item class="text-uppercase" [routerLink]="'account/login'"
+         *ngIf="!userLoggedIn; else sideLinkNotShow">Login</a>
+
+      <ng-template #sideLinkNotShow>
+        <a mat-list-item class="text-uppercase" [routerLink]="'account/profile'">Account</a>
+
+        <a mat-list-item class="text-uppercase" (click)="logout()">Logout</a>
+      </ng-template>
+    </mat-nav-list>
+  </mat-sidenav>
+  <mat-sidenav-content>
+    <mat-toolbar color="primary" class="mat-elevation-z6">
+      <button mat-icon-button type="button" aria-label="Toggle Sidenav" (click)="drawer.toggle()"
+              *ngIf="(isHandsetPortrait$ | async)">
+        <mat-icon aria-label="Side nav toggle icon">menu</mat-icon>
+      </button>
+
+      <a mat-button color="accent" class="navBrand" [routerLink]="['/home']">TrackLott</a>
+
+      <a mat-button class="text-uppercase" [routerLink]="['/home']"
+         *ngIf="!(isHandsetPortrait$| async)">Home</a>
+
+      <a mat-button class="text-uppercase" [routerLink]="['/add']"
+         *ngIf="!(isHandsetPortrait$ | async)">Add</a>
+
+      <a mat-button class="text-uppercase" [routerLink]="['/play']"
+         *ngIf="!(isHandsetPortrait$ | async)">Play</a>
+
+      <span class="space-div" *ngIf="!(isHandsetPortrait$| async)"></span>
+
+      <a mat-button class="text-uppercase" [routerLink]="'account/login'"
+         *ngIf="!(isHandsetPortrait$ | async) && !userLoggedIn; else linkNotShow">
+        Login
+      </a>
+
+      <ng-template #linkNotShow>
+        <a mat-button class="text-uppercase" [routerLink]="'account/profile'"
+           *ngIf="!(isHandsetPortrait$ | async)">Account</a>
+
+        <a mat-button class="text-uppercase" (click)="logout()"
+           *ngIf="!(isHandsetPortrait$ | async)">Logout</a>
+      </ng-template>
+    </mat-toolbar>
+    <ng-content></ng-content>
+  </mat-sidenav-content>
+</mat-sidenav-container>
