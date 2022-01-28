@@ -7,9 +7,9 @@ export interface LotteryNameOptions {
 }
 
 export interface AvailableLotteries {
-  monday_lotto: LotteryNameOptions,
-  oz_lotto: LotteryNameOptions,
-  wednesday_lotto: LotteryNameOptions,
+  mondayLotto: LotteryNameOptions,
+  ozLotto: LotteryNameOptions,
+  wednesdayLotto: LotteryNameOptions,
   powerball: LotteryNameOptions,
-  tatts_lotto: LotteryNameOptions
+  tattsLotto: LotteryNameOptions
 }

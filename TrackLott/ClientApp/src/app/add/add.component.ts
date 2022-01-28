@@ -15,14 +15,14 @@ import {MatSelectChange} from "@angular/material/select";
 })
 export class AddComponent implements OnInit {
   lotteryNamesArray: AvailableLotteries = {
-    monday_lotto: {name: "Monday Lotto", biggest: 45, standard: 6, allowed: 20},
-    oz_lotto: {name: "Oz Lotto", biggest: 45, standard: 7, allowed: 20},
-    wednesday_lotto: {name: "Wednesday Lotto", biggest: 45, standard: 6, allowed: 20},
+    mondayLotto: {name: "Monday Lotto", biggest: 45, standard: 6, allowed: 20},
+    ozLotto: {name: "Oz Lotto", biggest: 45, standard: 7, allowed: 20},
+    wednesdayLotto: {name: "Wednesday Lotto", biggest: 45, standard: 6, allowed: 20},
     powerball: {name: "Powerball", biggest: 35, standard: 7, allowed: 20, jackpot: 20},
-    tatts_lotto: {name: "Tatts Lotto", biggest: 45, standard: 6, allowed: 20}
+    tattsLotto: {name: "Tatts Lotto", biggest: 45, standard: 6, allowed: 20}
   };
   isHandset$: Observable<boolean>;
-  addCombosForm: FormGroup;
+  combosFormGroup: FormGroup;
   mainNumsArray: FormArray;
   powerNumsArray: FormArray;
   numbersSelected: { mainNums: number[], jackpotNum: number } = {mainNums: [], jackpotNum: 0};
@@ -43,40 +43,57 @@ export class AddComponent implements OnInit {
   }
 
   private initializeForm() {
-    this.addCombosForm = new FormGroup({
+    this.combosFormGroup = new FormGroup({
       "lotteryName": new FormControl(null, [Validators.required, Validators.maxLength(54)]),
       "dateAdded": new FormControl(null, Validators.required),
       "mainNumsArray": new FormArray([]),
       "powerNumsArray": new FormArray([])
     });
 
-    this.mainNumsArray = this.addCombosForm.get("mainNumsArray") as FormArray;
-    this.powerNumsArray = this.addCombosForm.get("powerNumsArray") as FormArray;
+    this.mainNumsArray = this.combosFormGroup.get("mainNumsArray") as FormArray;
+    this.powerNumsArray = this.combosFormGroup.get("powerNumsArray") as FormArray;
+    console.log("Happened");
+    this.newNumControls();
   }
 
   public onLotterySelect(event: MatSelectChange) {
-    if (this.lotteryNamesArray.hasOwnProperty(event.value)) {
-      this.mainNumsArray.clear();
-      this.powerNumsArray.clear();
-      // @ts-ignore
-      for (let i = 1; i <= this.lotteryNamesArray[event.value].biggest; i++) {
-        this.mainNumsArray.push(AddComponent.insertFormControls());
-      }
+    this.mainNumsArray.clear();
+    this.powerNumsArray.clear();
 
-      if (event.value === 'powerball' && this.lotteryNamesArray.powerball.jackpot) {
-        for (let i = 1; i <= this.lotteryNamesArray.powerball.jackpot; i++) {
-          this.powerNumsArray.push(AddComponent.insertFormControls());
-        }
+    switch (event.value) {
+      case "mondayLotto":
+        this.newNumControls(this.lotteryNamesArray.mondayLotto.biggest);
+        break;
+      case "ozLotto":
+        this.newNumControls(this.lotteryNamesArray.ozLotto.biggest);
+        break;
+      case "wednesdayLotto":
+        this.newNumControls(this.lotteryNamesArray.wednesdayLotto.biggest);
+        break;
+      case "powerball":
+        this.newNumControls(this.lotteryNamesArray.powerball.biggest, this.lotteryNamesArray.powerball.jackpot);
+        break;
+      case "tattsLotto":
+        this.newNumControls(this.lotteryNamesArray.tattsLotto.biggest);
+        break;
+      default:
+        this.newNumControls();
+    }
+  }
+
+  private newNumControls(mainControls: number = 45, jackpotControls?: number) {
+    for (let i = 0; i < mainControls; i++) {
+      this.mainNumsArray.push(new FormControl(false, Validators.pattern(/\d\d?/)));
+    }
+
+    if (jackpotControls) {
+      for (let i = 0; i < jackpotControls; i++) {
+        this.powerNumsArray.push(new FormControl(false, Validators.pattern(/\d\d?/)));
       }
     }
   }
 
-  private static insertFormControls() {
-    return new FormControl(false, Validators.pattern(/\d\d?/));
-  }
-
   onAddCombination() {
-    console.log(this.addCombosForm);
-
+    console.log(this.combosFormGroup);
   }
 }

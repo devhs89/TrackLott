@@ -2,7 +2,7 @@
   <mat-card-title>Add Combinations</mat-card-title>
   <mat-divider inset class="my-3"></mat-divider>
   <mat-card-content>
-    <form [formGroup]="addCombosForm" (ngSubmit)="onAddCombination()" autocomplete="off">
+    <form [formGroup]="combosFormGroup" (ngSubmit)="onAddCombination()" autocomplete="off">
 
       <div class="row row-cols-md-2">
         <mat-form-field appearance="outline" class="mb-2">
@@ -16,7 +16,7 @@
         </mat-form-field>
 
         <mat-form-field appearance="outline" class="mb-2">
-          <mat-label>Date *</mat-label>
+          <mat-label>Date</mat-label>
           <!--suppress TypeScriptValidateTypes -->
           <input matInput formControlName="dateAdded" [min]="minDate" [max]="maxDate" placeholder="dd/mm/yyyy"
                  [matDatepicker]="playedDatePicker">
@@ -30,7 +30,7 @@
       <ng-container formArrayName="mainNumsArray">
         <div class="row my-3">
           <div class="col-3 col-md-2 col-lg-1" *ngFor="let control of mainNumsArray.controls; index as dex">
-            <mat-checkbox formControlName="{{dex}}" value="{{dex + 1}}">{{dex + 1}}</mat-checkbox>
+            <mat-checkbox [formControlName]="dex" value="{{dex + 1}}">{{dex + 1}}</mat-checkbox>
           </div>
         </div>
       </ng-container>

@@ -12,15 +12,17 @@ public static class ApplicationServiceExtensions
 
     services.AddDbContext<TrackLottContext>(options =>
     {
-      var connectionString = "server=localhost";
+      var connectionString = Environment.GetEnvironmentVariable("SQL_URL");
 
-      var env = Environment.GetEnvironmentVariable("SQL_URL");
-
-      if (env != null) connectionString = env;
-
-      var serverVersion = new MySqlServerVersion(new Version(8, 0, 28));
-
-      options.UseMySql(connectionString, serverVersion);
+      if (connectionString != null)
+      {
+        var serverVersion = new MySqlServerVersion(new Version(8, 0, 28));
+        options.UseMySql(connectionString, serverVersion);
+      }
+      else
+      {
+        throw new Exception("Database connection failed!");
+      }
     });
 
     return services;
