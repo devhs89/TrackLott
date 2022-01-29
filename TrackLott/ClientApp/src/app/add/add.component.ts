@@ -7,6 +7,7 @@ import {CombinationsService} from "../services/combinations.service";
 import {MatSnackBar} from "@angular/material/snack-bar";
 import {AvailableLotteries, LotteryNameOptions} from "../models/lottery-name-options";
 import {MatSelectChange} from "@angular/material/select";
+import {ThemePalette} from "@angular/material/core";
 
 @Component({
   selector: 'app-add',
@@ -26,8 +27,10 @@ export class AddComponent implements OnInit {
   lotteryNameSelected: LotteryNameOptions = {name: "default", biggest: 45, standard: 6, allowed: 20, mainNums: []};
   currPickedNums: { mainNums: number[] } = {mainNums: []};
   allPickedNums: { mainNums: number[][] } = {mainNums: []};
+  numBtnReset: string | undefined = "selected"
   minDate: Date;
   maxDate: Date;
+  btnColor: ThemePalette = "primary";
 
   constructor(private deviceBreakpoint: DeviceBreakpoint, private combinationsService: CombinationsService, private matSnackBar: MatSnackBar) {
   }
@@ -78,7 +81,7 @@ export class AddComponent implements OnInit {
     }
   }
 
-  onNumClick(clickedNum: number) {
+  onNumClick(clickedNum: number, event: EventTarget | null) {
     if (this.currPickedNums.mainNums.includes(clickedNum)) {
       const dex = this.currPickedNums.mainNums.indexOf(clickedNum);
       this.currPickedNums.mainNums.splice(dex, 1);
@@ -91,10 +94,13 @@ export class AddComponent implements OnInit {
     if (this.currPickedNums.mainNums.length === this.lotteryNameSelected.allowed) {
       this.onAddCombination();
     }
+
+    console.log(event)
   }
 
   onAddCombination() {
     this.allPickedNums.mainNums.push(this.currPickedNums.mainNums);
     this.currPickedNums.mainNums = [];
+    this.numBtnReset = undefined
   }
 }

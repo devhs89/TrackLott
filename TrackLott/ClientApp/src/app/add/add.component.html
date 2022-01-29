@@ -60,10 +60,9 @@
 
       <div class="row mb-3" *ngIf="lotteryNameSelected.mainNums">
         <div class="col-auto col-md-7 mb-2 mb-md-0 justify-content-between text-center">
-          <mat-button-toggle class="m-0625" style="width: 2.75rem;" (click)="onNumClick(num)"
-                             [disabled]="currPickedNums.mainNums.includes(num)"
-                             [checked]="currPickedNums.mainNums.includes(num)"
-                             *ngFor="let num of lotteryNameSelected.mainNums">{{num}}</mat-button-toggle>
+          <button mat-mini-fab type="button" class="m-0125" [color]="btnColor"
+                  (click)="onNumClick(num, $event.currentTarget)"
+                  *ngFor="let num of lotteryNameSelected.mainNums">{{num}}</button>
         </div>
       </div>
 
