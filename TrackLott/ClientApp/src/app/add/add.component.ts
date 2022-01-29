@@ -15,17 +15,17 @@ import {MatSelectChange} from "@angular/material/select";
 })
 export class AddComponent implements OnInit {
   lotteryNames: AvailableLotteries = {
-    mondayLotto: {name: "Monday Lotto", biggest: 45, standard: 6, allowed: 20, mainNums: []},
-    ozLotto: {name: "Oz Lotto", biggest: 45, standard: 7, allowed: 20, mainNums: []},
-    wednesdayLotto: {name: "Wednesday Lotto", biggest: 45, standard: 6, allowed: 20, mainNums: []},
-    powerball: {name: "Powerball", biggest: 35, standard: 7, allowed: 20, jackpot: 20, mainNums: [], jackpotNums: []},
-    tattsLotto: {name: "Tatts Lotto", biggest: 45, standard: 6, allowed: 20, mainNums: []}
+    mondayLotto: {name: "monday lotto", biggest: 45, standard: 6, allowed: 20, mainNums: []},
+    ozLotto: {name: "oz lotto", biggest: 45, standard: 7, allowed: 20, mainNums: []},
+    wednesdayLotto: {name: "wednesday lotto", biggest: 45, standard: 6, allowed: 20, mainNums: []},
+    powerball: {name: "powerball", biggest: 35, standard: 7, allowed: 20, mainNums: []},
+    tattsLotto: {name: "tatts lotto", biggest: 45, standard: 6, allowed: 20, mainNums: []}
   };
   isHandset$: Observable<boolean>;
   combosFormGroup: FormGroup;
-  lotteryNameSelected: LotteryNameOptions = {name: "Default", biggest: 45, standard: 6, allowed: 20, mainNums: []};
-  currPickedNums: { mainNums: number[], jackpotNum?: number } = {mainNums: []};
-  allPickedNums: { mainNums: number[][], jackpotNum?: number } = {mainNums: []};
+  lotteryNameSelected: LotteryNameOptions = {name: "default", biggest: 45, standard: 6, allowed: 20, mainNums: []};
+  currPickedNums: { mainNums: number[] } = {mainNums: []};
+  allPickedNums: { mainNums: number[][] } = {mainNums: []};
   minDate: Date;
   maxDate: Date;
 
@@ -55,42 +55,30 @@ export class AddComponent implements OnInit {
     switch (event.value) {
       case "mondayLotto":
         this.lotteryNameSelected = this.lotteryNames.mondayLotto;
-        this.numButtons(this.lotteryNameSelected.biggest);
         break;
       case "ozLotto":
         this.lotteryNameSelected = this.lotteryNames.ozLotto;
-        this.numButtons(this.lotteryNameSelected.biggest);
         break;
       case "wednesdayLotto":
         this.lotteryNameSelected = this.lotteryNames.wednesdayLotto;
-        this.numButtons(this.lotteryNameSelected.biggest);
         break;
       case "powerball":
         this.lotteryNameSelected = this.lotteryNames.powerball;
-        this.numButtons(this.lotteryNameSelected.biggest, this.lotteryNameSelected.jackpot);
         break;
       case "tattsLotto":
         this.lotteryNameSelected = this.lotteryNames.tattsLotto;
-        this.numButtons(this.lotteryNameSelected.biggest);
         break;
-      default:
-        this.numButtons();
     }
+    this.numButtons(this.lotteryNameSelected.biggest);
   }
 
-  private numButtons(mainNumLength: number = 45, jackpotNumLength?: number) {
+  private numButtons(mainNumLength: number = 45) {
     for (let i = 1; i <= mainNumLength; i++) {
       this.lotteryNameSelected.mainNums?.push(i);
     }
-
-    if (jackpotNumLength) {
-      for (let i = 1; i <= jackpotNumLength; i++) {
-        this.lotteryNameSelected.jackpotNums?.push(i);
-      }
-    }
   }
 
-  onNumberClick(clickedNum: number) {
+  onNumClick(clickedNum: number) {
     if (this.currPickedNums.mainNums.includes(clickedNum)) {
       const dex = this.currPickedNums.mainNums.indexOf(clickedNum);
       this.currPickedNums.mainNums.splice(dex, 1);
