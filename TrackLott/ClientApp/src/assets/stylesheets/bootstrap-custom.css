@@ -1265,6 +1265,14 @@
   margin: 0 !important
 }
 
+.m-0625 {
+  margin: 0.0625rem !important
+}
+
+.m-0125 {
+  margin: 0.125rem !important
+}
+
 .m-1 {
   margin: .25rem !important
 }

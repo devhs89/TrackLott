@@ -18,6 +18,7 @@ import {MAT_DATE_LOCALE} from "@angular/material/core";
 import {MatSnackBar} from "@angular/material/snack-bar";
 import {MatCheckboxModule} from "@angular/material/checkbox";
 import {MatSelectModule} from "@angular/material/select";
+import {MatButtonToggleModule} from "@angular/material/button-toggle";
 
 @NgModule({
   declarations: [
@@ -39,7 +40,8 @@ import {MatSelectModule} from "@angular/material/select";
     BrowserAnimationsModule,
     MaterialModule,
     MatCheckboxModule,
-    MatSelectModule
+    MatSelectModule,
+    MatButtonToggleModule
   ],
   providers: [{provide: MAT_DATE_LOCALE, useValue: "en-AU"}, MatSnackBar],
   bootstrap: [AppComponent]

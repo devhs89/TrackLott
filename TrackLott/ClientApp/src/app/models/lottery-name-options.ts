@@ -1,9 +1,11 @@
 export interface LotteryNameOptions {
   name: string,
-  biggest: number,
   standard: number,
   allowed: number,
-  jackpot?: number
+  biggest?: number,
+  jackpot?: number,
+  mainNums?: number[],
+  jackpotNums?: number[]
 }
 
 export interface AvailableLotteries {

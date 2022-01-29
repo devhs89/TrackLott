@@ -1,11 +1,11 @@
 import {Component, OnInit} from '@angular/core';
 import {DeviceBreakpoint} from "../services/device-breakpoint.service";
-import {FormArray, FormControl, FormGroup, Validators} from "@angular/forms";
+import {FormControl, FormGroup, Validators} from "@angular/forms";
 import {Observable} from "rxjs";
 import {Breakpoints} from "@angular/cdk/layout";
 import {CombinationsService} from "../services/combinations.service";
 import {MatSnackBar} from "@angular/material/snack-bar";
-import {AvailableLotteries} from "../models/lottery-name-options";
+import {AvailableLotteries, LotteryNameOptions} from "../models/lottery-name-options";
 import {MatSelectChange} from "@angular/material/select";
 
 @Component({
@@ -14,18 +14,18 @@ import {MatSelectChange} from "@angular/material/select";
   styleUrls: ['./add.component.scss']
 })
 export class AddComponent implements OnInit {
-  lotteryNamesArray: AvailableLotteries = {
-    mondayLotto: {name: "Monday Lotto", biggest: 45, standard: 6, allowed: 20},
-    ozLotto: {name: "Oz Lotto", biggest: 45, standard: 7, allowed: 20},
-    wednesdayLotto: {name: "Wednesday Lotto", biggest: 45, standard: 6, allowed: 20},
-    powerball: {name: "Powerball", biggest: 35, standard: 7, allowed: 20, jackpot: 20},
-    tattsLotto: {name: "Tatts Lotto", biggest: 45, standard: 6, allowed: 20}
+  lotteryNames: AvailableLotteries = {
+    mondayLotto: {name: "Monday Lotto", biggest: 45, standard: 6, allowed: 20, mainNums: []},
+    ozLotto: {name: "Oz Lotto", biggest: 45, standard: 7, allowed: 20, mainNums: []},
+    wednesdayLotto: {name: "Wednesday Lotto", biggest: 45, standard: 6, allowed: 20, mainNums: []},
+    powerball: {name: "Powerball", biggest: 35, standard: 7, allowed: 20, jackpot: 20, mainNums: [], jackpotNums: []},
+    tattsLotto: {name: "Tatts Lotto", biggest: 45, standard: 6, allowed: 20, mainNums: []}
   };
   isHandset$: Observable<boolean>;
   combosFormGroup: FormGroup;
-  mainNumsArray: FormArray;
-  powerNumsArray: FormArray;
-  numbersSelected: { mainNums: number[], jackpotNum: number } = {mainNums: [], jackpotNum: 0};
+  lotteryNameSelected: LotteryNameOptions = {name: "Default", biggest: 45, standard: 6, allowed: 20, mainNums: []};
+  currPickedNums: { mainNums: number[], jackpotNum?: number } = {mainNums: []};
+  allPickedNums: { mainNums: number[][], jackpotNum?: number } = {mainNums: []};
   minDate: Date;
   maxDate: Date;
 
@@ -46,54 +46,67 @@ export class AddComponent implements OnInit {
     this.combosFormGroup = new FormGroup({
       "lotteryName": new FormControl(null, [Validators.required, Validators.maxLength(54)]),
       "dateAdded": new FormControl(null, Validators.required),
-      "mainNumsArray": new FormArray([]),
-      "powerNumsArray": new FormArray([])
     });
 
-    this.mainNumsArray = this.combosFormGroup.get("mainNumsArray") as FormArray;
-    this.powerNumsArray = this.combosFormGroup.get("powerNumsArray") as FormArray;
-    console.log("Happened");
-    this.newNumControls();
+    this.numButtons();
   }
 
   public onLotterySelect(event: MatSelectChange) {
-    this.mainNumsArray.clear();
-    this.powerNumsArray.clear();
-
     switch (event.value) {
       case "mondayLotto":
-        this.newNumControls(this.lotteryNamesArray.mondayLotto.biggest);
+        this.lotteryNameSelected = this.lotteryNames.mondayLotto;
+        this.numButtons(this.lotteryNameSelected.biggest);
         break;
       case "ozLotto":
-        this.newNumControls(this.lotteryNamesArray.ozLotto.biggest);
+        this.lotteryNameSelected = this.lotteryNames.ozLotto;
+        this.numButtons(this.lotteryNameSelected.biggest);
         break;
       case "wednesdayLotto":
-        this.newNumControls(this.lotteryNamesArray.wednesdayLotto.biggest);
+        this.lotteryNameSelected = this.lotteryNames.wednesdayLotto;
+        this.numButtons(this.lotteryNameSelected.biggest);
         break;
       case "powerball":
-        this.newNumControls(this.lotteryNamesArray.powerball.biggest, this.lotteryNamesArray.powerball.jackpot);
+        this.lotteryNameSelected = this.lotteryNames.powerball;
+        this.numButtons(this.lotteryNameSelected.biggest, this.lotteryNameSelected.jackpot);
         break;
       case "tattsLotto":
-        this.newNumControls(this.lotteryNamesArray.tattsLotto.biggest);
+        this.lotteryNameSelected = this.lotteryNames.tattsLotto;
+        this.numButtons(this.lotteryNameSelected.biggest);
         break;
       default:
-        this.newNumControls();
+        this.numButtons();
     }
   }
 
-  private newNumControls(mainControls: number = 45, jackpotControls?: number) {
-    for (let i = 0; i < mainControls; i++) {
-      this.mainNumsArray.push(new FormControl(false, Validators.pattern(/\d\d?/)));
+  private numButtons(mainNumLength: number = 45, jackpotNumLength?: number) {
+    for (let i = 1; i <= mainNumLength; i++) {
+      this.lotteryNameSelected.mainNums?.push(i);
     }
 
-    if (jackpotControls) {
-      for (let i = 0; i < jackpotControls; i++) {
-        this.powerNumsArray.push(new FormControl(false, Validators.pattern(/\d\d?/)));
+    if (jackpotNumLength) {
+      for (let i = 1; i <= jackpotNumLength; i++) {
+        this.lotteryNameSelected.jackpotNums?.push(i);
       }
     }
   }
 
+  onNumberClick(clickedNum: number) {
+    if (this.currPickedNums.mainNums.includes(clickedNum)) {
+      const dex = this.currPickedNums.mainNums.indexOf(clickedNum);
+      this.currPickedNums.mainNums.splice(dex, 1);
+    } else {
+      if (this.currPickedNums.mainNums.length < this.lotteryNameSelected.allowed) {
+        this.currPickedNums.mainNums.push(clickedNum);
+      }
+    }
+
+    if (this.currPickedNums.mainNums.length === this.lotteryNameSelected.allowed) {
+      this.onAddCombination();
+    }
+  }
+
   onAddCombination() {
-    console.log(this.combosFormGroup);
+    this.allPickedNums.mainNums.push(this.currPickedNums.mainNums);
+    this.currPickedNums.mainNums = [];
   }
 }
