@@ -30,7 +30,7 @@ export class AddComponent implements OnInit {
   numBtnReset: string | undefined = "selected"
   minDate: Date;
   maxDate: Date;
-  btnColor: ThemePalette = "primary";
+  // btnColor: ThemePalette = "primary";
 
   constructor(private deviceBreakpoint: DeviceBreakpoint, private combinationsService: CombinationsService, private matSnackBar: MatSnackBar) {
   }
