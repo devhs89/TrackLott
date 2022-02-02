@@ -1483,6 +1483,14 @@
   padding: 0 !important
 }
 
+.p-0625 {
+  padding: 0.0625rem !important
+}
+
+.p-0125 {
+  padding: 0.125rem !important
+}
+
 .p-1 {
   padding: .25rem !important
 }

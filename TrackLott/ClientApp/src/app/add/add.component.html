@@ -32,7 +32,7 @@
       </div>
 
       <ng-container *ngIf="allPickedNums.mainNums">
-        <mat-card class="mb-2" *ngFor="let row of allPickedNums.mainNums">
+        <mat-card class="mb-4" *ngFor="let row of allPickedNums.mainNums">
           <mat-card-content>
           <span class="m-1" *ngFor="let num of row">
             <ng-container
@@ -42,27 +42,28 @@
         </mat-card>
       </ng-container>
 
-      <div class="row" *ngIf="currPickedNums.mainNums">
-        <div class="col-12 col-md-8">
-            <span class="m-1" *ngFor="let num of currPickedNums.mainNums">
-              <ng-container
-                *ngTemplateOutlet="numbersSvg; context: {$implicit: {number: num, bgFill: '#673ab7'}}"></ng-container>
-            </span>
-        </div>
-        <div class="col-12 col-md-8 justify-content-end text-end"
-             *ngIf="currPickedNums.mainNums.length >= lotteryNameSelected.standard">
-          <button mat-flat-button type="button" color="primary" class="w-auto text-uppercase"
-                  (click)="onAddCombination()">
-            Add
-          </button>
-        </div>
-      </div>
-
       <div class="row mb-3" *ngIf="lotteryNameSelected.mainNums">
-        <div class="col-auto col-md-7 mb-2 mb-md-0 justify-content-between text-center">
+        <div class="col-12 col-md-6 justify-content-center">
           <button mat-mini-fab type="button" class="m-0125" [color]="btnColor"
                   (click)="onNumClick(num, $event.currentTarget)"
                   *ngFor="let num of lotteryNameSelected.mainNums">{{num}}</button>
+        </div>
+        <div class="col-12 col-md-6" *ngIf="currPickedNums.mainNums.length > 0">
+          <div class="row">
+            <div class="col-12">
+              <ng-container *ngFor="let num of currPickedNums.mainNums">
+                <ng-container
+                  *ngTemplateOutlet="numbersSvg; context: {$implicit: {number: num, bgFill: '#673ab7'}}"></ng-container>
+              </ng-container>
+            </div>
+            <div class="col-12 justify-content-end text-end"
+                 *ngIf="currPickedNums.mainNums.length >= lotteryNameSelected.standard">
+              <button mat-flat-button type="button" color="primary" class="w-auto text-uppercase"
+                      (click)="onAddCombination()">
+                Add
+              </button>
+            </div>
+          </div>
         </div>
       </div>
 
@@ -76,7 +77,7 @@
 </mat-card>
 
 <ng-template #numbersSvg let-options>
-  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 40 40" width="40" height="40">
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 40 40" width="40" height="40" style="margin: 2px;">
     <style>
       .textNum {
         font: 400 1.1rem 'Roboto Mono', monospace;
