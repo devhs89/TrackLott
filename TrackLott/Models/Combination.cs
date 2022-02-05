@@ -8,8 +8,6 @@ public class Combination
 
   public string PickedNumbers { get; set; }
 
-  public string? OptionalNumbers { get; set; }
-
   public Member Member { get; set; }
   public Guid MemberId { get; set; }
 

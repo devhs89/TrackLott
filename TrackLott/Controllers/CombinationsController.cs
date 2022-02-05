@@ -35,8 +35,6 @@ public class CombinationsController : BaseApiController
       MemberId = appUser.Id
     };
 
-    if (combinationDto.OptionalNumbers != null)
-      combination.OptionalNumbers = JsonSerializer.Serialize(combinationDto.OptionalNumbers);
     if (lottoResult != null) combination.LotteryResultId = lottoResult.Id;
 
     await _context.Combinations.AddAsync(combination);
@@ -71,8 +69,7 @@ public class CombinationsController : BaseApiController
       matchingCombos.Add(new MatchCombinationDto()
       {
         DateAdded = combination.DateAdded,
-        PickedNumbers = combination.PickedNumbers,
-        OptionalNumbers = combination.OptionalNumbers
+        PickedNumbers = combination.PickedNumbers
       });
     }
 
