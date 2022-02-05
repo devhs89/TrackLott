@@ -1,84 +1,86 @@
 <mat-card class="row col-xl-8 mx-auto mb-3 mat-elevation-z6">
   <mat-card-title>Sign Up</mat-card-title>
-  <mat-divider class="my-3"></mat-divider>
+  <mat-divider class="my-3" inset></mat-divider>
   <mat-card-content>
-    <form novalidate class="row g-2 mb-4 needs-validation" [ngClass]="{'was-validated': formInvalid}"
-          (ngSubmit)="onSubmit(ngFormObj)" #ngFormObj="ngForm">
+    <form (ngSubmit)="onSubmit(ngFormObj)" #ngFormObj="ngForm">
 
-      <div class="col-md-6">
-        <div class="form-floating">
-          <input required type="text" class="form-control" id="username-input" placeholder="user123"
-                 name="username" ngModel>
-          <label for="username-input">Username</label>
+      <div class="row">
+        <div class="col-12 col-md-6">
+          <mat-form-field appearance="outline" class="w-100">
+            <mat-label>Username</mat-label>
+            <input ngModel matInput required name="username" type="text" placeholder="Ex. user123">
+            <mat-error>Invalid username</mat-error>
+          </mat-form-field>
+        </div>
+        <div class="col-12 col-md-6">
+          <mat-form-field class="w-100" appearance="outline">
+            <mat-label>Password</mat-label>
+            <input ngModel matInput required name="password" type="password" placeholder="a-z A-Z 0-9">
+            <mat-error>Invalid password</mat-error>
+          </mat-form-field>
         </div>
       </div>
 
-      <div class="col-md-6">
-        <div class="form-floating">
-          <input required type="password" class="form-control" id="password-input" placeholder="Password"
-                 name="password" ngModel>
-          <label for="password-input">Password</label>
+      <div class="row">
+        <div class="col-md-4">
+          <mat-form-field class="w-100" appearance="outline">
+            <mat-label>Given Name</mat-label>
+            <input ngModel matInput required name="givenName" type="text" placeholder="e.g. John">
+            <mat-error>Invalid given name</mat-error>
+          </mat-form-field>
+        </div>
+
+        <div class="col-md-4">
+          <mat-form-field class="w-100" appearance="outline">
+            <mat-label>Surname</mat-label>
+            <input ngModel matInput required name="surname" type="text" placeholder="e.g. Smith">
+            <mat-error>Invalid surname</mat-error>
+          </mat-form-field>
+        </div>
+
+        <div class="col-md-4">
+          <mat-form-field class="w-100" appearance="outline">
+            <mat-label>Date of Birth</mat-label>
+            <input ngModel matInput required name="dob" [matDatepicker]="dobPicker" placeholder="dd/mm/yyyy">
+            <mat-datepicker-toggle matSuffix [for]="dobPicker"></mat-datepicker-toggle>
+            <mat-datepicker #dobPicker></mat-datepicker>
+            <mat-error>Invalid date</mat-error>
+          </mat-form-field>
         </div>
       </div>
 
-      <div class="col-md-4">
-        <div class="form-floating">
-          <input required class="form-control" id="given-name-input" placeholder="e.g. John" name="givenName"
-                 ngModel>
-          <label for="given-name-input">Given Name</label>
+      <div class="row">
+        <div class="col-md-6">
+          <mat-form-field class="w-100" appearance="outline">
+            <mat-label>Email address</mat-label>
+            <input ngModel matInput email required name="email" type="email" placeholder="user@example.com">
+            <mat-error>Invalid email</mat-error>
+          </mat-form-field>
+        </div>
+
+        <div class="col-md-6">
+          <mat-form-field class="w-100" appearance="outline">
+            <mat-label>Country</mat-label>
+            <mat-select ngModel required name="country" aria-label="Select Country">
+              <mat-option *ngFor="let country of countries" value="{{country.toLowerCase()}}">{{country}}</mat-option>
+            </mat-select>
+            <mat-error>Invalid country</mat-error>
+          </mat-form-field>
         </div>
       </div>
 
-      <div class="col-md-4">
-        <div class="form-floating">
-          <input required class="form-control" id="surname-input" placeholder="e.g. Smith" name="surname"
-                 ngModel>
-          <label for="surname-input">Surname</label>
+      <div class="row mb-4">
+        <div class="col-12">
+          <mat-checkbox ngModel required name="termsCheck" color="primary">
+            Agree to <a routerLink="/terms">terms and conditions</a>
+          </mat-checkbox>
         </div>
       </div>
 
-      <div class="col-md-4">
-        <div class="form-floating">
-          <input required type="date" class="form-control" id="dob-input" placeholder="dd/mm/yyyy" name="dob"
-                 ngModel>
-          <label for="dob-input">Date of Birth</label>
+      <div class="row">
+        <div class="col-8 col-md-4 mx-auto">
+          <button mat-flat-button class="w-100" color="primary" type="submit">Register</button>
         </div>
-      </div>
-
-      <div class="col-md-6">
-        <div class="form-floating">
-          <input required type="email" class="form-control" id="email-input" placeholder="user@example.com"
-                 name="email" email ngModel>
-          <label for="email-input">Email address</label>
-        </div>
-      </div>
-
-      <div class="col-md-6">
-        <div class="form-floating">
-          <select required class="form-select" id="countries-dropdown" aria-label="Select Country"
-                  name="country" ngModel>
-            <option value="" selected disabled hidden>Country</option>
-            <option *ngFor="let country of countries" value="{{country}}">{{country}}</option>
-          </select>
-          <label for="countries-dropdown">Select</label>
-        </div>
-      </div>
-
-      <div class="col-12">
-        <div class="form-check">
-          <input required class="form-check-input" type="checkbox" value="" id="terms-check" name="termsCheck"
-                 ngModel #termsCheckbox>
-          <label class="form-check-label" for="terms-check">
-            Agree to
-            <a
-              [ngClass]="{'text-color-alt': (termsCheckbox.checked && ngFormObj.submitted), 'text-danger': !termsCheckbox.checked && ngFormObj.submitted}"
-              routerLink="/terms">terms and conditions</a>
-          </label>
-        </div>
-      </div>
-
-      <div class="col-md-12 text-center">
-        <button class="btn btn-lg btn-primary w-50" type="submit">Register</button>
       </div>
 
     </form>
