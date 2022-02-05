@@ -2,13 +2,13 @@
   <mat-card-title>Add Combinations</mat-card-title>
   <mat-divider inset class="my-3"></mat-divider>
   <mat-card-content>
-    <form [formGroup]="combosFormGroup" (ngSubmit)="onAddCombination()" autocomplete="off">
+    <form (ngSubmit)="onSave()" autocomplete="off">
 
       <div class="row mb-4">
         <div class="col-12 col-md-6">
           <mat-form-field appearance="outline" class="w-100">
             <mat-label>Lottery Name</mat-label>
-            <mat-select formControlName="lotteryName" (selectionChange)="onLotterySelect($event)">
+            <mat-select [formControl]="lotteryNameControl" (selectionChange)="onLotterySelect($event)">
               <mat-option *ngFor="let lotto of lotteryNames | keyvalue"
                           value="{{lotto.key}}">{{lotto.value.name}}</mat-option>
             </mat-select>
@@ -21,7 +21,7 @@
           <mat-form-field appearance="outline" class="w-100">
             <mat-label>Date</mat-label>
             <!--suppress TypeScriptValidateTypes -->
-            <input matInput formControlName="dateAdded" [min]="minDate" [max]="maxDate" placeholder="dd/mm/yyyy"
+            <input matInput [formControl]="dateAddedControl" [min]="minDate" [max]="maxDate" placeholder="dd/mm/yyyy"
                    [matDatepicker]="playedDatePicker">
             <mat-datepicker-toggle matSuffix [for]="playedDatePicker"></mat-datepicker-toggle>
             <mat-datepicker #playedDatePicker [touchUi]="(isHandset$ | async)"></mat-datepicker>
@@ -37,59 +37,42 @@
           <div class="row">
             <div class="col-12 mb-3">
               <div class="w-100 pt-3 px-3 pb-2 border-bottom"
-                   *ngIf="currPickedNums.mainNums && currPickedNums.mainNums.length > 0; else showBlank">
-                <ng-container *ngFor="let num of currPickedNums.mainNums">
+                   *ngIf="currPickedNums && currPickedNums.length > 0; else showBlank">
+                <ng-container *ngFor="let num of currPickedNums">
                   <ng-container
                     *ngTemplateOutlet="numbersSvg; context: {$implicit: {number: num, bgFill: '#ffd740'}}"></ng-container>
                 </ng-container>
                 <div class="w-100 pt-1 justify-content-end text-end">
                   <button mat-flat-button type="button" color="warn" class="text-uppercase"
-                          (click)="currPickedNums.mainNums = []">
+                          (click)="currPickedNums = []">
                     Clear
                   </button>
                   <button mat-flat-button type="button" color="primary" class="ms-2 text-uppercase"
                           (click)="onAddCombination()"
-                          *ngIf="currPickedNums.mainNums.length >= lotteryNameSelected.standard">
+                          *ngIf="currPickedNums.length >= lotteryNameSelected.standard">
                     Add
                   </button>
                 </div>
               </div>
 
-              <ng-template #showBlank>
-                <div class="border rounded-3 p-3">
-                  <small class="text-secondary" *ngIf="allPickedNums.mainNums.length < 10; else limitReached">
-                    Click on numbers on the right to add them as a combination.</small>
-                  <ng-template #limitReached>
-                    <small class="text-secondary">
-                      Maximum number of combinnations selected. Please save current combinations to add more.</small>
-                  </ng-template>
-                </div>
-              </ng-template>
-            </div>
-
-            <div class="col-12">
-              <ng-container *ngIf="allPickedNums.mainNums">
-                <mat-card class="mb-2 p-2" *ngFor="let row of allPickedNums.mainNums; index as dex">
-                  <mat-card-content>
-                    <mat-card-subtitle class="ms-1 mb-1">#{{allPickedNums.mainNums.length - dex}}</mat-card-subtitle>
-                    <ng-container *ngFor="let num of row">
-                      <ng-container
-                        *ngTemplateOutlet="numbersSvg; context: {$implicit: {number: num, bgFill: '#ffd740'}}"></ng-container>
-                    </ng-container>
-                  </mat-card-content>
-                </mat-card>
+              <ng-container *ngIf="!(isHandset$ | async)">
+                <ng-container *ngTemplateOutlet="allPickedNumbers"></ng-container>
               </ng-container>
             </div>
           </div>
         </div>
 
         <div class="col-12 col-md-6">
-          <div class="border rounded-3 p-2 justify-content-center text-center">
+          <div class="border rounded-3 p-2 mb-3 justify-content-center text-center">
             <button mat-mini-fab type="button" class="m-1" color="primary"
-                    (click)="onNumClick(num, $event.currentTarget)" [disabled]="allPickedNums.mainNums.length >= 10"
+                    (click)="onNumClick(num, $event.currentTarget)" [disabled]="allPickedNums.length >= 10"
                     *ngFor="let num of lotteryNameSelected.mainNums">{{num}}</button>
           </div>
         </div>
+
+        <ng-container *ngIf="(isHandset$ | async)">
+          <ng-container *ngTemplateOutlet="allPickedNumbers"></ng-container>
+        </ng-container>
       </div>
 
       <div class="d-flex justify-content-center my-3">
@@ -115,4 +98,31 @@
       <text x="20" y="26" text-anchor="middle" class="textNum">{{options.number}}</text>
     </g>
   </svg>
+</ng-template>
+
+<ng-template #allPickedNumbers>
+  <div class="col-12">
+    <ng-container *ngIf="allPickedNums">
+      <mat-card class="mb-2 p-2" *ngFor="let row of allPickedNums; index as dex">
+        <mat-card-content>
+          <mat-card-subtitle class="ms-1 mb-1">#{{allPickedNums.length - dex}}</mat-card-subtitle>
+          <ng-container *ngFor="let num of row">
+            <ng-container
+              *ngTemplateOutlet="numbersSvg; context: {$implicit: {number: num, bgFill: '#ffd740'}}"></ng-container>
+          </ng-container>
+        </mat-card-content>
+      </mat-card>
+    </ng-container>
+  </div>
+</ng-template>
+
+<ng-template #showBlank>
+  <div class="border rounded-3 p-3">
+    <small class="text-secondary" *ngIf="allPickedNums.length < 10; else limitReached">
+      Click on numbers on the right to add them as a combination.</small>
+    <ng-template #limitReached>
+      <small class="text-secondary">
+        Maximum number of combinnations selected. Please save current combinations to add more.</small>
+    </ng-template>
+  </div>
 </ng-template>

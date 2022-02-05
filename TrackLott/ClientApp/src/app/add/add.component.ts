@@ -1,12 +1,12 @@
 import {Component, OnInit} from '@angular/core';
 import {DeviceBreakpoint} from "../services/device-breakpoint.service";
-import {FormControl, FormGroup, Validators} from "@angular/forms";
+import {FormControl, Validators} from "@angular/forms";
 import {Observable} from "rxjs";
 import {Breakpoints} from "@angular/cdk/layout";
 import {CombinationsService} from "../services/combinations.service";
-import {MatSnackBar} from "@angular/material/snack-bar";
 import {AvailableLotteries, LotteryNameOptions} from "../models/lottery-name-options";
 import {MatSelectChange} from "@angular/material/select";
+import {Combination} from "../models/combination";
 
 @Component({
   selector: 'app-add',
@@ -22,33 +22,32 @@ export class AddComponent implements OnInit {
     tattsLotto: {name: "tatts lotto", biggest: 45, standard: 6, allowed: 20, mainNums: []}
   };
   isHandset$: Observable<boolean>;
-  combosFormGroup: FormGroup;
+  lotteryNameControl: FormControl;
+  dateAddedControl: FormControl;
   lotteryNameSelected: LotteryNameOptions = {name: "default", biggest: 45, standard: 6, allowed: 20, mainNums: []};
-  currPickedNums: { mainNums: number[] } = {mainNums: []};
-  allPickedNums: { mainNums: number[][] } = {mainNums: []};
+  currPickedNums: number[] = [];
+  allPickedNums: number[][] = [];
+  combinations: Combination;
   numBtnReset: string | undefined = "selected";
   minDate: Date;
   maxDate: Date;
 
-  constructor(private deviceBreakpoint: DeviceBreakpoint, private combinationsService: CombinationsService, private matSnackBar: MatSnackBar) {
+  constructor(private deviceBreakpoint: DeviceBreakpoint, private combinationsService: CombinationsService) {
   }
 
   ngOnInit(): void {
+    this.isHandset$ = this.deviceBreakpoint.handsetBreakpoint(Breakpoints.Handset);
+
     this.initializeForm();
 
     const today = new Date();
     this.minDate = new Date(today.getFullYear() - 120, 0, 1);
     this.maxDate = new Date(today.getFullYear(), today.getMonth() + 6, today.getDate());
-
-    this.isHandset$ = this.deviceBreakpoint.handsetBreakpoint(Breakpoints.Handset);
   }
 
   private initializeForm() {
-    this.combosFormGroup = new FormGroup({
-      "lotteryName": new FormControl(null, [Validators.required, Validators.maxLength(54)]),
-      "dateAdded": new FormControl(null, Validators.required),
-    });
-
+    this.lotteryNameControl = new FormControl(null, [Validators.required, Validators.maxLength(54)]);
+    this.dateAddedControl = new FormControl(null, Validators.required);
     this.numButtons();
   }
 
@@ -80,23 +79,32 @@ export class AddComponent implements OnInit {
   }
 
   onNumClick(clickedNum: number, event: EventTarget | null) {
-    if (this.currPickedNums.mainNums.includes(clickedNum)) {
-      const dex = this.currPickedNums.mainNums.indexOf(clickedNum);
-      this.currPickedNums.mainNums.splice(dex, 1);
+    if (this.currPickedNums.includes(clickedNum)) {
+      const dex = this.currPickedNums.indexOf(clickedNum);
+      this.currPickedNums.splice(dex, 1);
     } else {
-      if (this.currPickedNums.mainNums.length < this.lotteryNameSelected.allowed) {
-        this.currPickedNums.mainNums.push(clickedNum);
+      if (this.currPickedNums.length < this.lotteryNameSelected.allowed) {
+        this.currPickedNums.push(clickedNum);
       }
     }
 
-    if (this.currPickedNums.mainNums.length === this.lotteryNameSelected.allowed) {
+    if (this.currPickedNums.length === this.lotteryNameSelected.allowed) {
       this.onAddCombination();
     }
   }
 
   onAddCombination() {
-    this.allPickedNums.mainNums.unshift(this.currPickedNums.mainNums);
-    this.currPickedNums.mainNums = [];
+    this.allPickedNums.unshift(this.currPickedNums);
+    this.currPickedNums = [];
     this.numBtnReset = undefined;
+  }
+
+  onSave() {
+    this.combinations = {
+      lottoName: this.lotteryNameSelected.name,
+      dateAdded: this.dateAddedControl.value,
+      pickerNumbers: this.allPickedNums
+    };
+    this.combinationsService.addCombinations(this.combinations).subscribe(resp => console.log(resp));
   }
 }
