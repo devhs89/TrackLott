@@ -1,6 +1,7 @@
 <mat-card class="row col-xl-9 mx-auto mb-3 mat-elevation-z6"
           *ngIf="latestLottoResult && latestLottoResult.drawName.length > 0; else noResult">
   <mat-card-title class="text-capitalize">{{latestLottoResult.drawName}}</mat-card-title>
+  <mat-divider class="my-3" inset></mat-divider>
   <mat-card-content>
     <div class="d-inline-flex gap-1 me-md-3">
       <div *ngFor="let num of latestLottoResult.winningNumbers">

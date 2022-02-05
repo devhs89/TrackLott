@@ -13,7 +13,9 @@ import {MatDividerModule} from "@angular/material/divider";
 import {MatDatepickerModule} from "@angular/material/datepicker";
 import {MatNativeDateModule} from "@angular/material/core";
 import {MatAutocompleteModule} from "@angular/material/autocomplete";
-import {MatSnackBar} from "@angular/material/snack-bar";
+import {MatCheckboxModule} from "@angular/material/checkbox";
+import {MatSelectModule} from "@angular/material/select";
+import {MatButtonToggleModule} from "@angular/material/button-toggle";
 
 
 @NgModule({
@@ -34,7 +36,10 @@ import {MatSnackBar} from "@angular/material/snack-bar";
     MatDividerModule,
     MatDatepickerModule,
     MatNativeDateModule,
-    MatAutocompleteModule
+    MatAutocompleteModule,
+    MatCheckboxModule,
+    MatSelectModule,
+    MatButtonToggleModule
   ],
   exports: [
     MatToolbarModule,
@@ -52,7 +57,10 @@ import {MatSnackBar} from "@angular/material/snack-bar";
     MatDividerModule,
     MatDatepickerModule,
     MatNativeDateModule,
-    MatAutocompleteModule
+    MatAutocompleteModule,
+    MatCheckboxModule,
+    MatSelectModule,
+    MatButtonToggleModule
   ]
 })
 export class MaterialModule {
