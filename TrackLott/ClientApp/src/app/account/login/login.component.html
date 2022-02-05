@@ -1,25 +1,23 @@
-<div class="row justify-content-center">
-  <mat-card class="col-md-5">
-    <mat-card-title>Login</mat-card-title>
-    <mat-divider inset class="my-3"></mat-divider>
-    <mat-card-content class="md-subhead">
+<mat-card class="row col-md-6 mx-auto mb-3 mat-elevation-z6">
+  <mat-card-title>Sign In</mat-card-title>
+  <mat-divider inset class="my-3"></mat-divider>
+  <mat-card-content>
 
-      <form class="row" [formGroup]="loginForm" (ngSubmit)="onSubmit()">
-        <mat-form-field appearance="outline" class="col-12 mb-3">
-          <mat-label>Username*</mat-label>
-          <input matInput class="mat-typography" type="text" placeholder="Enter a username" formControlName="userName">
-          <mat-error>Required</mat-error>
-        </mat-form-field>
+    <form class="row" [formGroup]="loginForm" (ngSubmit)="onSubmit()">
+      <mat-form-field appearance="outline">
+        <mat-label>Username*</mat-label>
+        <input matInput class="mat-typography" type="text" placeholder="Enter a username" formControlName="userName">
+        <mat-error>Required</mat-error>
+      </mat-form-field>
 
-        <mat-form-field appearance="outline" class="col-12 mb-3">
-          <mat-label>Password*</mat-label>
-          <input matInput type="password" placeholder="Enter your password" formControlName="password">
-          <mat-error>Required</mat-error>
-        </mat-form-field>
+      <mat-form-field appearance="outline">
+        <mat-label>Password*</mat-label>
+        <input matInput type="password" placeholder="Enter your password" formControlName="password">
+        <mat-error>Required</mat-error>
+      </mat-form-field>
 
-        <button mat-flat-button color="primary" class="w-50 mx-auto" type="submit">Sign in</button>
-      </form>
+      <button mat-flat-button color="primary" class="w-50 mb-3 mx-auto text-uppercase" type="submit">Sign in</button>
+    </form>
 
-    </mat-card-content>
-  </mat-card>
-</div>
+  </mat-card-content>
+</mat-card>

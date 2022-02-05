@@ -1,4 +1,4 @@
-<mat-card class="row col-xl-9 m-auto">
+<mat-card class="row col-xl-9 mx-auto mb-3 mat-elevation-z6">
   <mat-card-title>Add Combinations</mat-card-title>
   <mat-divider inset class="my-3"></mat-divider>
   <mat-card-content>
@@ -36,7 +36,7 @@
 
           <div class="row">
             <div class="col-12 mb-3">
-              <div class="w-100 pt-3 px-3 pb-2 border-bottom"
+              <div class="border rounded-3 p-2 mb-2"
                    *ngIf="currPickedNums && currPickedNums.length > 0; else showBlank">
                 <ng-container *ngFor="let num of currPickedNums">
                   <ng-container
@@ -63,7 +63,7 @@
         </div>
 
         <div class="col-12 col-md-6">
-          <div class="border rounded-3 p-2 mb-3 justify-content-center text-center">
+          <div class="border rounded-3 p-2 justify-content-center text-center">
             <button mat-mini-fab type="button" class="m-1" color="primary"
                     (click)="onNumClick(num, $event.currentTarget)" [disabled]="allPickedNums.length >= 10"
                     *ngFor="let num of lotteryNameSelected.mainNums">{{num}}</button>
@@ -117,7 +117,7 @@
 </ng-template>
 
 <ng-template #showBlank>
-  <div class="border rounded-3 p-3">
+  <div class="border rounded-3 p-2 mb-2">
     <small class="text-secondary" *ngIf="allPickedNums.length < 10; else limitReached">
       Click on numbers on the right to add them as a combination.</small>
     <ng-template #limitReached>
