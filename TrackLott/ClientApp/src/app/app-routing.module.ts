@@ -11,8 +11,8 @@ const routes = [
   {path: 'play', component: PlayComponent},
   {path: 'terms', component: TermsComponent},
   {
-    path: 'account',
-    loadChildren: () => import('./account/account.module').then(mod => mod.AccountModule)
+    path: 'user',
+    loadChildren: () => import('./user/user.module').then(mod => mod.UserModule)
   },
   {path: '', redirectTo: 'home', pathMatch: 'full'}
 ];

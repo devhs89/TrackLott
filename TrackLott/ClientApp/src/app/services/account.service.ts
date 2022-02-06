@@ -2,12 +2,11 @@ import {Injectable} from "@angular/core";
 import {HttpClient} from "@angular/common/http";
 import {BASE_URL} from "../constants/backend";
 import {UserRegister} from "../models/user-register";
-import {map} from "rxjs/operators";
-import {UserProfile} from "../models/user-profile";
 import {ReplaySubject} from "rxjs";
 import {UserLogin} from "../models/user-login";
-import {setLocalUserToken, setSessionUserToken} from "../helpers/common-methods";
 import {AppUser} from "../models/app-user";
+import {UserNewInfo} from "../models/user-new-info";
+import {UserPassword} from "../models/user-password";
 
 @Injectable({
   providedIn: "root"
@@ -23,7 +22,15 @@ export class AccountService {
     return this.httpClient.post(`${BASE_URL}/account/register`, userRegister);
   }
 
-  login(userCredentials: UserLogin) {
+  onLogin(userCredentials: UserLogin) {
     return this.httpClient.post(`${BASE_URL}/account/login`, userCredentials);
+  }
+
+  onUpdateInfo(newInfo: UserNewInfo) {
+    return this.httpClient.post(`${BASE_URL}/account/updateInfo`, newInfo);
+  }
+
+  onUpdatePassword(passwords: UserPassword) {
+    return this.httpClient.post(`${BASE_URL}/account/updatePassword`, passwords);
   }
 }

@@ -11,9 +11,12 @@ import {MatFormFieldModule} from "@angular/material/form-field";
 import {MatInputModule} from "@angular/material/input";
 import {MatDividerModule} from "@angular/material/divider";
 import {MatDatepickerModule} from "@angular/material/datepicker";
-import {MatNativeDateModule} from "@angular/material/core";
+import {MAT_DATE_LOCALE, MatNativeDateModule} from "@angular/material/core";
 import {MatAutocompleteModule} from "@angular/material/autocomplete";
-import {MatSnackBar} from "@angular/material/snack-bar";
+import {MatCheckboxModule} from "@angular/material/checkbox";
+import {MatSelectModule} from "@angular/material/select";
+import {MatButtonToggleModule} from "@angular/material/button-toggle";
+import {MAT_SNACK_BAR_DEFAULT_OPTIONS, MatSnackBar} from "@angular/material/snack-bar";
 
 
 @NgModule({
@@ -34,7 +37,10 @@ import {MatSnackBar} from "@angular/material/snack-bar";
     MatDividerModule,
     MatDatepickerModule,
     MatNativeDateModule,
-    MatAutocompleteModule
+    MatAutocompleteModule,
+    MatCheckboxModule,
+    MatSelectModule,
+    MatButtonToggleModule
   ],
   exports: [
     MatToolbarModule,
@@ -52,7 +58,18 @@ import {MatSnackBar} from "@angular/material/snack-bar";
     MatDividerModule,
     MatDatepickerModule,
     MatNativeDateModule,
-    MatAutocompleteModule
+    MatAutocompleteModule,
+    MatCheckboxModule,
+    MatSelectModule,
+    MatButtonToggleModule
+  ],
+  providers: [
+    MatSnackBar,
+    {provide: MAT_DATE_LOCALE, useValue: "en-AU"},
+    {
+      provide: MAT_SNACK_BAR_DEFAULT_OPTIONS,
+      useValue: {horizontalPosition: "end", verticalPosition: "bottom"}
+    }
   ]
 })
 export class MaterialModule {

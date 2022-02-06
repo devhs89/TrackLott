@@ -14,11 +14,6 @@ import {NavbarComponent} from "./navbar/navbar.component";
 import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
 import {MatchComboComponent} from './home/match-combo/match-combo.component';
 import {MaterialModule} from "./material/material.module";
-import {MAT_DATE_LOCALE} from "@angular/material/core";
-import {MatSnackBar} from "@angular/material/snack-bar";
-import {MatCheckboxModule} from "@angular/material/checkbox";
-import {MatSelectModule} from "@angular/material/select";
-import {MatButtonToggleModule} from "@angular/material/button-toggle";
 
 @NgModule({
   declarations: [
@@ -38,12 +33,9 @@ import {MatButtonToggleModule} from "@angular/material/button-toggle";
     ReactiveFormsModule,
     AppRoutingModule,
     BrowserAnimationsModule,
-    MaterialModule,
-    MatCheckboxModule,
-    MatSelectModule,
-    MatButtonToggleModule
+    MaterialModule
   ],
-  providers: [{provide: MAT_DATE_LOCALE, useValue: "en-AU"}, MatSnackBar],
+  providers: [],
   bootstrap: [AppComponent]
 })
 export class AppModule {

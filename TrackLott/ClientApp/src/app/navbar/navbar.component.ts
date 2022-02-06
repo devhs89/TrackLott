@@ -5,6 +5,7 @@ import {AppUser} from "../models/app-user";
 import {removeLocalUserToken, removeSessionUserToken} from "../helpers/common-methods";
 import {DeviceBreakpoint} from "../services/device-breakpoint.service";
 import {Breakpoints} from "@angular/cdk/layout";
+import {Router} from "@angular/router";
 
 @Component({
   selector: 'app-navbar',
@@ -14,10 +15,9 @@ import {Breakpoints} from "@angular/cdk/layout";
 export class NavbarComponent implements OnInit, OnDestroy {
   isHandsetPortrait$: Observable<boolean>;
   appUserSubscription = new Subscription();
-  isExpanded = false;
   userLoggedIn = false;
 
-  constructor(private deviceBreakpoint: DeviceBreakpoint, private accountService: AccountService) {
+  constructor(private deviceBreakpoint: DeviceBreakpoint, private accountService: AccountService, private router: Router) {
   }
 
   ngOnInit(): void {
@@ -35,6 +35,7 @@ export class NavbarComponent implements OnInit, OnDestroy {
     removeLocalUserToken();
     removeSessionUserToken();
     this.userLoggedIn = false;
+    this.router.navigate(['/home']);
   }
 
   ngOnDestroy(): void {

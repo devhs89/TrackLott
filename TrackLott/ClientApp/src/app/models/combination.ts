@@ -1,5 +1,5 @@
 export interface Combination {
-  lottoName?: string;
+  lottoName: string;
   dateAdded: Date;
-  pickerNumbers: number[];
+  pickerNumbers: number[][];
 }

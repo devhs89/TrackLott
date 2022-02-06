@@ -1,6 +1,6 @@
 namespace TrackLott.DTOs;
 
-public class ProfileDto
+public class AccountDto
 {
   public string UserName { get; set; }
 
