@@ -16,7 +16,6 @@ export class RegisterComponent implements OnInit, OnDestroy {
   registerSubscription = new Subscription();
   loginSubscription = new Subscription();
   countries: string[] = COUNTRIES;
-  formInvalid = false;
 
   constructor(private accountService: AccountService, private router: Router) {
   }
@@ -25,10 +24,7 @@ export class RegisterComponent implements OnInit, OnDestroy {
   }
 
   onSubmit(ngFormObj: NgForm) {
-    if (ngFormObj.invalid) {
-      this.formInvalid = true;
-      return;
-    }
+    if (ngFormObj.invalid) return;
 
     let userDetails: UserRegister = {...ngFormObj.value};
 

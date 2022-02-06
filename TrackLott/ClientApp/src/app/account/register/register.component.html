@@ -71,13 +71,17 @@
 
       <div class="row mb-4">
         <div class="col-12">
-          <mat-checkbox ngModel required name="termsCheck" color="primary">
-            Agree to <a routerLink="/terms">terms and conditions</a>
+          <mat-checkbox #termsCheck ngModel required="true" name="termsCheck" color="primary">
+            Agree to
+            <a routerLink="/terms"
+               [ngStyle]="{'color': (ngFormObj.submitted && !termsCheck.checked)? 'red': ''}">
+              terms and conditions
+            </a>
           </mat-checkbox>
         </div>
       </div>
 
-      <div class="row">
+      <div class=" row">
         <div class="col-8 col-md-4 mx-auto">
           <button mat-flat-button class="w-100" color="primary" type="submit">Register</button>
         </div>
