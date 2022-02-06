@@ -12,15 +12,15 @@
       <mat-divider></mat-divider>
 
       <ng-container *ngIf="!userLoggedIn; else sideLinkNotShow">
-        <a mat-list-item class="text-uppercase" [routerLink]="'account/login'">Sign In</a>
+        <a mat-list-item class="text-uppercase" [routerLink]="'user/login'">Login</a>
 
-        <a mat-list-item class="text-uppercase" [routerLink]="'account/register'">Sign Up</a>
+        <a mat-list-item class="text-uppercase" [routerLink]="'user/register'">Register</a>
       </ng-container>
 
       <ng-template #sideLinkNotShow>
-        <a mat-list-item class="text-uppercase" [routerLink]="'account/profile'">Account</a>
+        <a mat-list-item class="text-uppercase" [routerLink]="'user/account'">Account</a>
 
-        <a mat-list-item class="text-uppercase" (click)="logout()">Sign Out</a>
+        <a mat-list-item class="text-uppercase" (click)="logout()">Logout</a>
       </ng-template>
     </mat-nav-list>
   </mat-sidenav>
@@ -43,18 +43,16 @@
 
         <span class="space-div"></span>
 
-        <a mat-button class="text-uppercase" [routerLink]="'account/login'" *ngIf="!userLoggedIn; else linkNotShow">
-          Sign In
-        </a>
+        <ng-container *ngIf="!userLoggedIn; else linkNotShow">
+          <a mat-button class="text-uppercase" [routerLink]="'user/login'">Login</a>
 
-        <a mat-button class="text-uppercase" [routerLink]="'account/register'" *ngIf="!userLoggedIn; else linkNotShow">
-          Sign Up
-        </a>
+          <a mat-button class="text-uppercase" [routerLink]="'user/register'">Register</a>
+        </ng-container>
 
         <ng-template #linkNotShow>
-          <a mat-button class="text-uppercase" [routerLink]="'account/profile'">Account</a>
+          <a mat-button class="text-uppercase" [routerLink]="'user/account'">Account</a>
 
-          <a mat-button class="text-uppercase" (click)="logout()">Sign Out</a>
+          <a mat-button class="text-uppercase" (click)="logout()">Logout</a>
         </ng-template>
       </ng-container>
     </mat-toolbar>

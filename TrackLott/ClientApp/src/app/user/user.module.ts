@@ -2,18 +2,18 @@ import {NgModule} from "@angular/core";
 import {RouterModule} from "@angular/router";
 import {LoginComponent} from './login/login.component';
 import {RegisterComponent} from './register/register.component';
-import {ProfileComponent} from './profile/profile.component';
 import {ForgotComponent} from './forgot/forgot.component';
 import {CommonModule} from "@angular/common";
 import {MaterialModule} from "../material/material.module";
 import {FormsModule, ReactiveFormsModule} from "@angular/forms";
+import {AccountComponent} from "./account/account.component";
 
 @NgModule({
   imports: [
     RouterModule.forChild([
       {path: 'login', component: LoginComponent},
       {path: 'register', component: RegisterComponent},
-      {path: 'profile', component: ProfileComponent},
+      {path: 'account', component: AccountComponent},
       {path: 'forgot', component: ForgotComponent},
       {path: '', redirectTo: 'login', pathMatch: 'full'}
     ]),
@@ -25,9 +25,9 @@ import {FormsModule, ReactiveFormsModule} from "@angular/forms";
   declarations: [
     LoginComponent,
     RegisterComponent,
-    ProfileComponent,
+    AccountComponent,
     ForgotComponent
   ]
 })
-export class AccountModule {
+export class UserModule {
 }

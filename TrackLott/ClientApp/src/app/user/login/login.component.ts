@@ -30,7 +30,7 @@ export class LoginComponent implements OnInit, OnDestroy {
     if (this.loginForm.valid) {
       let userCredentials: UserLogin = {...this.loginForm.value};
 
-      this.subscription = this.accountService.login({
+      this.subscription = this.accountService.onLogin({
         userName: userCredentials.userName,
         password: userCredentials.password
       }).subscribe((response: any) => {

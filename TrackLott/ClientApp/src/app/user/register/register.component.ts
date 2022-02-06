@@ -6,6 +6,7 @@ import {AccountService} from "../../services/account.service";
 import {Router} from "@angular/router";
 import {UserRegister} from "../../models/user-register";
 import {setSessionUserToken} from "../../helpers/common-methods";
+import {MatSnackBar} from "@angular/material/snack-bar";
 
 @Component({
   selector: 'app-register',
@@ -17,7 +18,7 @@ export class RegisterComponent implements OnInit, OnDestroy {
   loginSubscription = new Subscription();
   countries: string[] = COUNTRIES;
 
-  constructor(private accountService: AccountService, private router: Router) {
+  constructor(private accountService: AccountService, private router: Router, private matSnackBar: MatSnackBar) {
   }
 
   ngOnInit(): void {
@@ -32,9 +33,9 @@ export class RegisterComponent implements OnInit, OnDestroy {
       if (resp["userName"] && resp["token"]) {
         this.accountService.appUserReplaySubject.next(resp);
         setSessionUserToken(resp);
-        this.router.navigate(["/account/profile"]);
+        this.router.navigate(["/user/account"]);
       }
-    }, error => console.log(error.message()));
+    }, error => this.matSnackBar.open(error.message, 'Dismiss'));
   }
 
   ngOnDestroy() {

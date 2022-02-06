@@ -14,8 +14,6 @@ import {NavbarComponent} from "./navbar/navbar.component";
 import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
 import {MatchComboComponent} from './home/match-combo/match-combo.component';
 import {MaterialModule} from "./material/material.module";
-import {MAT_DATE_LOCALE} from "@angular/material/core";
-import {MatSnackBar} from "@angular/material/snack-bar";
 
 @NgModule({
   declarations: [
@@ -37,7 +35,7 @@ import {MatSnackBar} from "@angular/material/snack-bar";
     BrowserAnimationsModule,
     MaterialModule
   ],
-  providers: [{provide: MAT_DATE_LOCALE, useValue: "en-AU"}, MatSnackBar],
+  providers: [],
   bootstrap: [AppComponent]
 })
 export class AppModule {
