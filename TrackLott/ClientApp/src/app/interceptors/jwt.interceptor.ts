@@ -5,7 +5,9 @@ import {UserToken} from "../models/user-token";
 import {AccountService} from "../services/account.service";
 import {take} from "rxjs/operators";
 
-@Injectable()
+@Injectable({
+  providedIn: "root"
+})
 export class JwtInterceptor implements HttpInterceptor {
 
   constructor(private accountService: AccountService) {
@@ -13,13 +15,21 @@ export class JwtInterceptor implements HttpInterceptor {
 
   intercept(request: HttpRequest<unknown>, next: HttpHandler): Observable<HttpEvent<unknown>> {
     let currentAppUser: UserToken | null = {username: '', token: ''};
+    let tokenizedRequest: HttpRequest<unknown> | null = null;
 
-    this.accountService.appUser$.pipe(take(1)).subscribe((user) => currentAppUser = user);
+    this.accountService.appUser$.pipe(take(1)).subscribe({
+      next: (user) => currentAppUser = user,
+      error: err => console.log(err)
+    });
 
-    if (currentAppUser?.token.length > 0) {
-      request.headers.set("Authorization", `Bearer ${currentAppUser?.token}`);
+    if (currentAppUser !== null) {
+      tokenizedRequest = request.clone({
+        setHeaders: {
+          "Authorization": `Bearer ${currentAppUser?.token}`
+        }
+      });
     }
 
-    return next.handle(request);
+    return next.handle(tokenizedRequest !== null ? tokenizedRequest : request);
   }
 }

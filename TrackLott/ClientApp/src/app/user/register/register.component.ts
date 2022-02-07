@@ -5,7 +5,7 @@ import {Subscription} from "rxjs";
 import {AccountService} from "../../services/account.service";
 import {Router} from "@angular/router";
 import {UserRegister} from "../../models/user-register";
-import {setSessionUserToken} from "../../helpers/common-methods";
+import {setSessionUserToken} from "../../helpers/local-storage";
 import {MatSnackBar} from "@angular/material/snack-bar";
 
 @Component({

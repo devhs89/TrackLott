@@ -3,7 +3,7 @@ import {FormControl, FormGroup, NgForm, Validators} from "@angular/forms";
 import {Subscription} from "rxjs";
 import {AccountService} from "../../services/account.service";
 import {Router} from "@angular/router";
-import {setLocalUserToken, setSessionUserToken} from "../../helpers/common-methods";
+import {setLocalUserToken, setSessionUserToken} from "../../helpers/local-storage";
 import {UserLogin} from "../../models/user-login";
 
 @Component({

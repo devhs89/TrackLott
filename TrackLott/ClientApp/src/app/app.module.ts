@@ -1,6 +1,6 @@
 import {NgModule} from '@angular/core';
 import {FormsModule, ReactiveFormsModule} from '@angular/forms';
-import {HttpClientModule} from '@angular/common/http';
+import {HTTP_INTERCEPTORS, HttpClientModule} from '@angular/common/http';
 
 import {AppComponent} from './app.component';
 import {HomeComponent} from './home/home.component';
@@ -14,6 +14,7 @@ import {NavbarComponent} from "./navbar/navbar.component";
 import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
 import {MatchComboComponent} from './home/match-combo/match-combo.component';
 import {MaterialModule} from "./material/material.module";
+import {JwtInterceptor} from "./interceptors/jwt.interceptor";
 
 @NgModule({
   declarations: [
@@ -35,7 +36,9 @@ import {MaterialModule} from "./material/material.module";
     BrowserAnimationsModule,
     MaterialModule
   ],
-  providers: [],
+  providers: [
+    {provide: HTTP_INTERCEPTORS, useClass: JwtInterceptor, multi: true}
+  ],
   bootstrap: [AppComponent]
 })
 export class AppModule {
