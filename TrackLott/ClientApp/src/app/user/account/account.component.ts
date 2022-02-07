@@ -43,6 +43,9 @@ export class AccountComponent implements OnInit {
     this.surname = new FormControl(null);
     this.dob = new FormControl(null);
     this.country = new FormControl(null);
+    this.currentPassword = new FormControl({value: null, disabled: this.disablePasswordControls});
+    this.newPassword = new FormControl({value: null, disabled: this.disablePasswordControls});
+    this.repeatPassword = new FormControl({value: null, disabled: this.disablePasswordControls});
 
     this.infoForm = this.formBuilder.group({
       userName: this.userName,
@@ -53,34 +56,29 @@ export class AccountComponent implements OnInit {
       country: this.country
     });
 
-    this.currentPassword = new FormControl({value: null, disabled: this.disablePasswordControls});
-    this.newPassword = new FormControl({value: null, disabled: this.disablePasswordControls});
-    this.repeatPassword = new FormControl({value: null, disabled: this.disablePasswordControls});
-
     this.passwordsForm = this.formBuilder.group({
       currentPassword: this.currentPassword,
       newPassword: this.newPassword,
       repeatPassword: this.repeatPassword
     });
 
+    this.getUserAccount();
+  }
+
+  private getUserAccount() {
     this.showUserSubscription = this.accountService.showUser().subscribe({
       next: (resp: UserInfo) => {
         this.infoForm.setValue({
           userName: resp.userName,
           email: resp.email,
-          givenName: resp.givenName,
-          surname: resp.surname,
+          givenName: resp.givenName ? capitalizeString(resp.givenName) : '',
+          surname: resp.surname ? capitalizeString(resp.surname) : '',
           dob: resp.dob,
           country: resp.country ? capitalizeString(resp.country) : ''
         });
-        console.log(capitalizeString(resp.country!));
       },
       error: err => this.matSnackBar.open(err.error, "Dismiss")
     });
-  }
-
-  setCountry() {
-    return undefined;
   }
 
   showPasswordControls() {
