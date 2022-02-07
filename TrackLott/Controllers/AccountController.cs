@@ -1,7 +1,9 @@
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using TrackLott.DTOs;
+using TrackLott.Extensions;
 using TrackLott.Models;
 using TrackLott.Services;
 
@@ -68,6 +70,27 @@ public class AccountController : BaseApiController
     {
       UserName = user.UserName,
       Token = await _tokenService.CreateToken(user)
+    };
+  }
+
+  [HttpPost("show")]
+  [Authorize]
+  public async Task<ActionResult<AccountDto>> ShowMember()
+  {
+    var userName = User.GetUserName();
+
+    var member = await _userManager.Users.SingleOrDefaultAsync(rec => rec.UserName.Equals(userName));
+
+    if (member == null) return BadRequest("User not found");
+
+    return new AccountDto()
+    {
+      UserName = member.UserName,
+      Email = member.Email,
+      GivenName = member.GivenName,
+      Surname = member.Surname,
+      Dob = member.Dob,
+      Country = member.Country
     };
   }
 

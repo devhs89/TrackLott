@@ -1,7 +1,7 @@
 import {Component, OnDestroy, OnInit} from '@angular/core';
 import {AccountService} from "../services/account.service";
 import {Observable, Subscription} from "rxjs";
-import {AppUser} from "../models/app-user";
+import {UserToken} from "../models/user-token";
 import {removeLocalUserToken, removeSessionUserToken} from "../helpers/common-methods";
 import {DeviceBreakpoint} from "../services/device-breakpoint.service";
 import {Breakpoints} from "@angular/cdk/layout";
@@ -21,7 +21,7 @@ export class NavbarComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit(): void {
-    this.appUserSubscription = this.accountService.appUser$.subscribe((ut: AppUser | null) => {
+    this.appUserSubscription = this.accountService.appUser$.subscribe((ut: UserToken | null) => {
       if (ut !== null) {
         this.userLoggedIn = true;
       }

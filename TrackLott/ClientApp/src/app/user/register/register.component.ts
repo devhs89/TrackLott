@@ -29,13 +29,16 @@ export class RegisterComponent implements OnInit, OnDestroy {
 
     let userDetails: UserRegister = {...ngFormObj.value};
 
-    this.registerSubscription = this.accountService.onRegister(userDetails).subscribe((resp: any) => {
-      if (resp["userName"] && resp["token"]) {
-        this.accountService.appUserReplaySubject.next(resp);
-        setSessionUserToken(resp);
-        this.router.navigate(["/user/account"]);
-      }
-    }, error => this.matSnackBar.open(error.message, 'Dismiss'));
+    this.registerSubscription = this.accountService.onRegister(userDetails).subscribe({
+      next: (resp: any) => {
+        if (resp["userName"] && resp["token"]) {
+          this.accountService.appUserReplaySubject.next(resp);
+          setSessionUserToken(resp);
+          this.router.navigate(["/user/account"]);
+        }
+      },
+      error: resp => this.matSnackBar.open(resp.error, "Dismiss")
+    });
   }
 
   ngOnDestroy() {

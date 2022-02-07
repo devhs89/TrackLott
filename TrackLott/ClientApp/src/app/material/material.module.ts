@@ -68,7 +68,7 @@ import {MAT_SNACK_BAR_DEFAULT_OPTIONS, MatSnackBar} from "@angular/material/snac
     {provide: MAT_DATE_LOCALE, useValue: "en-AU"},
     {
       provide: MAT_SNACK_BAR_DEFAULT_OPTIONS,
-      useValue: {horizontalPosition: "end", verticalPosition: "bottom"}
+      useValue: {horizontalPosition: "end", verticalPosition: "bottom", duration: 10000}
     }
   ]
 })

@@ -1,6 +1,6 @@
-import {AppUser} from "../models/app-user";
+import {UserToken} from "../models/user-token";
 
-export const setLocalUserToken = (userObj: AppUser) => {
+export const setLocalUserToken = (userObj: UserToken) => {
   localStorage.setItem("user", JSON.stringify(userObj));
 };
 
@@ -12,7 +12,7 @@ export const removeLocalUserToken = () => {
   localStorage.removeItem("user");
 };
 
-export const setSessionUserToken = (userObj: AppUser) => {
+export const setSessionUserToken = (userObj: UserToken) => {
   sessionStorage.setItem("user", JSON.stringify(userObj));
 };
 

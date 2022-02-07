@@ -77,13 +77,13 @@ public class CombinationsController : BaseApiController
 
   private async Task<Member?> GetUser()
   {
-    var userId = User.GetUserId();
+    var userName = User.GetUserName();
 
     // TODO - Find a way to make this Guid a readonly static property to increase performance
-    var appUser =
-      await _context.Users.SingleOrDefaultAsync(member => userId != null && member.Id.Equals(Guid.Parse(userId)));
+    var member =
+      await _context.Users.SingleOrDefaultAsync(member => userName != null && member.UserName.Equals(userName));
 
-    return appUser;
+    return member;
   }
 
   private async Task<LotteryResult?> CheckLottery(string? lottoName)

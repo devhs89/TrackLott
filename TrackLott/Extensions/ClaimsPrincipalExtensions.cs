@@ -4,7 +4,7 @@ namespace TrackLott.Extensions;
 
 public static class ClaimsPrincipalExtensions
 {
-  public static string? GetUserId(this ClaimsPrincipal claimsPrincipal)
+  public static string? GetUserName(this ClaimsPrincipal claimsPrincipal)
   {
     return claimsPrincipal.FindFirst(ClaimTypes.NameIdentifier)?.Value;
   }

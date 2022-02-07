@@ -22,8 +22,7 @@ public class TokenService
   {
     var claims = new List<Claim>()
     {
-      new(JwtRegisteredClaimNames.NameId, user.Id.ToString()),
-      new(JwtRegisteredClaimNames.UniqueName, user.UserName)
+      new(JwtRegisteredClaimNames.NameId, user.UserName)
     };
 
     var roles = await _userManager.GetRolesAsync(user);
