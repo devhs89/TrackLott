@@ -5,7 +5,7 @@ import {Subscription} from "rxjs";
 import {AccountService} from "../../services/account.service";
 import {Router} from "@angular/router";
 import {UserRegister} from "../../models/user-register";
-import {setSessionUserToken} from "../../helpers/common-methods";
+import {setSessionUserToken} from "../../helpers/local-storage";
 import {MatSnackBar} from "@angular/material/snack-bar";
 
 @Component({
@@ -29,13 +29,16 @@ export class RegisterComponent implements OnInit, OnDestroy {
 
     let userDetails: UserRegister = {...ngFormObj.value};
 
-    this.registerSubscription = this.accountService.onRegister(userDetails).subscribe((resp: any) => {
-      if (resp["userName"] && resp["token"]) {
-        this.accountService.appUserReplaySubject.next(resp);
-        setSessionUserToken(resp);
-        this.router.navigate(["/user/account"]);
-      }
-    }, error => this.matSnackBar.open(error.message, 'Dismiss'));
+    this.registerSubscription = this.accountService.onRegister(userDetails).subscribe({
+      next: (resp: any) => {
+        if (resp["userName"] && resp["token"]) {
+          this.accountService.appUserReplaySubject.next(resp);
+          setSessionUserToken(resp);
+          this.router.navigate(["/user/account"]);
+        }
+      },
+      error: resp => this.matSnackBar.open(resp.error, "Dismiss")
+    });
   }
 
   ngOnDestroy() {

@@ -3,9 +3,10 @@ import {FormBuilder, FormControl, FormGroup, Validators} from "@angular/forms";
 import {COUNTRIES} from "../../constants/countries";
 import {Subscription} from "rxjs";
 import {AccountService} from "../../services/account.service";
-import {UserNewInfo} from "../../models/user-new-info";
+import {UserInfo} from "../../models/user-info";
 import {UserPassword} from "../../models/user-password";
 import {MatSnackBar} from "@angular/material/snack-bar";
+import {capitalizeString} from "../../helpers/capitalize-string";
 
 @Component({
   selector: 'app-account',
@@ -15,9 +16,10 @@ import {MatSnackBar} from "@angular/material/snack-bar";
 export class AccountComponent implements OnInit {
   updateInfoSubscription = new Subscription();
   updatePasswordSubscription = new Subscription();
+  showUserSubscription = new Subscription();
   countries: string[] = COUNTRIES;
   disablePasswordControls: boolean = true;
-  private username: FormControl;
+  private userName: FormControl;
   private email: FormControl;
   private givenName: FormControl;
   private surname: FormControl;
@@ -28,25 +30,22 @@ export class AccountComponent implements OnInit {
   private repeatPassword: FormControl;
   infoForm: FormGroup;
   passwordsForm: FormGroup;
-  private newInfo: UserNewInfo;
+  private newInfo: UserInfo;
   private userPasswords: UserPassword;
 
   constructor(private formBuilder: FormBuilder, private accountService: AccountService, private matSnackBar: MatSnackBar) {
   }
 
   ngOnInit(): void {
-    this.username = new FormControl('John');
-    this.email = new FormControl('John@gmail.com', Validators.email);
-    this.givenName = new FormControl('Harpreet');
-    this.surname = new FormControl('Singh');
-    this.dob = new FormControl('dd');
-    this.country = new FormControl('count');
-    this.currentPassword = new FormControl({value: null, disabled: this.disablePasswordControls});
-    this.newPassword = new FormControl({value: null, disabled: this.disablePasswordControls});
-    this.repeatPassword = new FormControl({value: null, disabled: this.disablePasswordControls});
+    this.userName = new FormControl(null);
+    this.email = new FormControl(null, Validators.email);
+    this.givenName = new FormControl(null);
+    this.surname = new FormControl(null);
+    this.dob = new FormControl(null);
+    this.country = new FormControl(null);
 
     this.infoForm = this.formBuilder.group({
-      username: this.username,
+      userName: this.userName,
       email: this.email,
       givenName: this.givenName,
       surname: this.surname,
@@ -54,11 +53,34 @@ export class AccountComponent implements OnInit {
       country: this.country
     });
 
+    this.currentPassword = new FormControl({value: null, disabled: this.disablePasswordControls});
+    this.newPassword = new FormControl({value: null, disabled: this.disablePasswordControls});
+    this.repeatPassword = new FormControl({value: null, disabled: this.disablePasswordControls});
+
     this.passwordsForm = this.formBuilder.group({
       currentPassword: this.currentPassword,
       newPassword: this.newPassword,
       repeatPassword: this.repeatPassword
     });
+
+    this.showUserSubscription = this.accountService.showUser().subscribe({
+      next: (resp: UserInfo) => {
+        this.infoForm.setValue({
+          userName: resp.userName,
+          email: resp.email,
+          givenName: resp.givenName,
+          surname: resp.surname,
+          dob: resp.dob,
+          country: resp.country ? capitalizeString(resp.country) : ''
+        });
+        console.log(capitalizeString(resp.country!));
+      },
+      error: err => this.matSnackBar.open(err.error, "Dismiss")
+    });
+  }
+
+  setCountry() {
+    return undefined;
   }
 
   showPasswordControls() {

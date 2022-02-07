@@ -62,7 +62,8 @@
           <mat-form-field class="w-100" appearance="outline">
             <mat-label>Country</mat-label>
             <mat-select ngModel required name="country" aria-label="Select Country">
-              <mat-option *ngFor="let country of countries" value="{{country.toLowerCase()}}">{{country}}</mat-option>
+              <mat-option *ngFor="let country of countries"
+                          value="{{country}}">{{country}}</mat-option>
             </mat-select>
             <mat-error>Invalid country</mat-error>
           </mat-form-field>

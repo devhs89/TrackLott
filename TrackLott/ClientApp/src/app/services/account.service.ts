@@ -4,15 +4,15 @@ import {BASE_URL} from "../constants/backend";
 import {UserRegister} from "../models/user-register";
 import {ReplaySubject} from "rxjs";
 import {UserLogin} from "../models/user-login";
-import {AppUser} from "../models/app-user";
-import {UserNewInfo} from "../models/user-new-info";
+import {UserToken} from "../models/user-token";
+import {UserInfo} from "../models/user-info";
 import {UserPassword} from "../models/user-password";
 
 @Injectable({
   providedIn: "root"
 })
 export class AccountService {
-  appUserReplaySubject = new ReplaySubject<AppUser | null>(1);
+  appUserReplaySubject = new ReplaySubject<UserToken | null>(1);
   appUser$ = this.appUserReplaySubject.asObservable();
 
   constructor(private httpClient: HttpClient) {
@@ -26,7 +26,11 @@ export class AccountService {
     return this.httpClient.post(`${BASE_URL}/account/login`, userCredentials);
   }
 
-  onUpdateInfo(newInfo: UserNewInfo) {
+  showUser() {
+    return this.httpClient.post<UserInfo>(`${BASE_URL}/account/show`, {});
+  }
+
+  onUpdateInfo(newInfo: UserInfo) {
     return this.httpClient.post(`${BASE_URL}/account/updateInfo`, newInfo);
   }
 

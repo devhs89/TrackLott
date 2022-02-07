@@ -1,4 +1,4 @@
-export interface AppUser {
+export interface UserToken {
   username: string;
   token: string;
 }
