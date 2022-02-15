@@ -1,4 +1,4 @@
-import {Component, OnInit} from '@angular/core';
+import {Component, OnDestroy, OnInit} from '@angular/core';
 import {FormBuilder, FormControl, FormGroup, Validators} from "@angular/forms";
 import {COUNTRIES} from "../../constants/countries";
 import {Subscription} from "rxjs";
@@ -14,7 +14,7 @@ import {parseError} from "../../helpers/parse-error";
   templateUrl: './account.component.html',
   styleUrls: ['./account.component.scss']
 })
-export class AccountComponent implements OnInit {
+export class AccountComponent implements OnInit, OnDestroy {
   updateInfoSubscription = new Subscription();
   updatePasswordSubscription = new Subscription();
   showUserSubscription = new Subscription();
@@ -31,7 +31,7 @@ export class AccountComponent implements OnInit {
   private repeatPassword: FormControl;
   infoForm: FormGroup;
   passwordsForm: FormGroup;
-  private newInfo: UserInfo;
+  private info: UserInfo;
   private userPasswords: UserPassword = {currentPassword: "", newPassword: "", repeatPassword: ""};
 
   constructor(private formBuilder: FormBuilder, private accountService: AccountService, private matSnackBar: MatSnackBar) {
@@ -69,6 +69,7 @@ export class AccountComponent implements OnInit {
   private getUserAccount() {
     this.showUserSubscription = this.accountService.showUser().subscribe({
       next: (resp: UserInfo) => {
+        this.info = resp;
         this.infoForm.setValue({
           userName: resp.userName,
           email: resp.email,
@@ -92,11 +93,26 @@ export class AccountComponent implements OnInit {
   }
 
   onSubmitInfo() {
-    this.updateInfoSubscription = this.accountService.onUpdateInfo(this.newInfo)
-      .subscribe({
-        next: resp => console.log(resp),
-        error: err => this.matSnackBar.open(err.message, "Dismiss")
-      });
+    let infoToUpdate: UserInfo = {};
+
+    for (let ctrl in this.infoForm.controls) {
+      // @ts-ignore
+      const currFieldInfo = this.info[ctrl];
+      const formCtrlValue = this.infoForm.controls[ctrl].value.toLowerCase();
+
+      if (currFieldInfo && currFieldInfo.equals(formCtrlValue)) {
+        // @ts-ignore
+        infoToUpdate[ctrl] = formCtrlValue;
+      }
+    }
+
+    if (Object.keys(infoToUpdate).length > 0) {
+      this.updateInfoSubscription = this.accountService.onUpdateInfo(infoToUpdate)
+        .subscribe({
+          next: resp => console.log(resp),
+          error: err => this.matSnackBar.open(err.message, "Dismiss")
+        });
+    }
   }
 
   onSubmitPasswords() {
@@ -122,5 +138,11 @@ export class AccountComponent implements OnInit {
       repeatPassword: {value: null, disabled: true}
     });
     this.passwordsForm.disable();
+  }
+
+  ngOnDestroy() {
+    this.updateInfoSubscription.unsubscribe();
+    this.updatePasswordSubscription.unsubscribe();
+    this.showUserSubscription.unsubscribe();
   }
 }
