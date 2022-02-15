@@ -98,7 +98,7 @@ public class AccountController : BaseApiController
   [Authorize]
   public async Task<ActionResult<string>> UpdatePassword(PasswordDto passwordDto)
   {
-    if (!passwordDto.newPassword.Equals(passwordDto.repeatPassword)) return BadRequest("Passwords do not match");
+    if (!passwordDto.newPassword.Equals(passwordDto.repeatPassword)) return BadRequest("New passwords do not match");
 
     var username = User.GetUserName();
 
@@ -108,7 +108,7 @@ public class AccountController : BaseApiController
 
     var result = await _userManager.ChangePasswordAsync(member, passwordDto.currentPassword, passwordDto.newPassword);
 
-    return !result.Succeeded ? result.Errors.GetEnumerator().Current.Description : "Success";
+    return !result.Succeeded ? result.Errors.GetEnumerator().Current.Description : "Password updated successfully";
   }
 
   private async Task<bool> UserExists(string username)

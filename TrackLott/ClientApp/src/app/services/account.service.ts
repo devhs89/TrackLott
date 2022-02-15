@@ -35,6 +35,6 @@ export class AccountService {
   }
 
   onUpdatePassword(passwords: UserPassword) {
-    return this.httpClient.post(`${BASE_URL}/account/updatePassword`, passwords);
+    return this.httpClient.post(`${BASE_URL}/account/updatePassword`, passwords, {responseType: "text"});
   }
 }

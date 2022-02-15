@@ -7,6 +7,7 @@ import {UserInfo} from "../../models/user-info";
 import {UserPassword} from "../../models/user-password";
 import {MatSnackBar} from "@angular/material/snack-bar";
 import {capitalizeString} from "../../helpers/capitalize-string";
+import {parseError} from "../../helpers/parse-error";
 
 @Component({
   selector: 'app-account',
@@ -31,7 +32,7 @@ export class AccountComponent implements OnInit {
   infoForm: FormGroup;
   passwordsForm: FormGroup;
   private newInfo: UserInfo;
-  private userPasswords: UserPassword;
+  private userPasswords: UserPassword = {currentPassword: "", newPassword: "", repeatPassword: ""};
 
   constructor(private formBuilder: FormBuilder, private accountService: AccountService, private matSnackBar: MatSnackBar) {
   }
@@ -85,12 +86,7 @@ export class AccountComponent implements OnInit {
     if (this.disablePasswordControls) {
       this.passwordsForm.enable();
     } else {
-      this.passwordsForm.reset({
-        currentPassword: {value: null, disabled: true},
-        newPassword: {value: null, disabled: true},
-        repeatPassword: {value: null, disabled: true}
-      });
-      this.passwordsForm.disable();
+      this.resetPasswordForm();
     }
     this.disablePasswordControls = !this.disablePasswordControls;
   }
@@ -98,16 +94,33 @@ export class AccountComponent implements OnInit {
   onSubmitInfo() {
     this.updateInfoSubscription = this.accountService.onUpdateInfo(this.newInfo)
       .subscribe({
-        next: resp => this.matSnackBar.open("TEST"),
-        error: err => this.matSnackBar.open(err.message(), "Dismiss")
+        next: resp => console.log(resp),
+        error: err => this.matSnackBar.open(err.message, "Dismiss")
       });
   }
 
   onSubmitPasswords() {
+    this.userPasswords.currentPassword = this.currentPassword.value;
+    this.userPasswords.newPassword = this.newPassword.value;
+    this.userPasswords.repeatPassword = this.repeatPassword.value;
+
     this.updateInfoSubscription = this.accountService.onUpdatePassword(this.userPasswords)
       .subscribe({
-        next: resp => this.matSnackBar.open("TEST"),
-        error: err => this.matSnackBar.open(err.message(), "Dismiss")
+        next: resp => this.matSnackBar.open(parseError(resp), "Dismiss"),
+        error: err => this.matSnackBar.open(parseError(err.error), "Dismiss"),
+        complete: () => {
+          this.resetPasswordForm();
+          this.disablePasswordControls = true;
+        }
       });
+  }
+
+  private resetPasswordForm() {
+    this.passwordsForm.reset({
+      currentPassword: {value: null, disabled: true},
+      newPassword: {value: null, disabled: true},
+      repeatPassword: {value: null, disabled: true}
+    });
+    this.passwordsForm.disable();
   }
 }
