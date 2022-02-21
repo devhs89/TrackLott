@@ -8,6 +8,7 @@ import {UserPassword} from "../../models/user-password";
 import {MatSnackBar} from "@angular/material/snack-bar";
 import {capitalizeString} from "../../helpers/capitalize-string";
 import {parseError} from "../../helpers/parse-error";
+import {UserUpdateInfo} from "../../models/user-update-info";
 
 @Component({
   selector: 'app-account',
@@ -93,18 +94,18 @@ export class AccountComponent implements OnInit, OnDestroy {
   }
 
   onSubmitInfo() {
-    let infoToUpdate: UserInfo = {};
+    let infoToUpdate: UserUpdateInfo = {};
 
     for (let ctrl in this.infoForm.controls) {
+      const formField = this.infoForm.controls[ctrl].value.toLowerCase();
       // @ts-ignore
-      const currFieldInfo = this.info[ctrl];
-      const formCtrlValue = this.infoForm.controls[ctrl].value.toLowerCase();
-
-      if (currFieldInfo && currFieldInfo.equals(formCtrlValue)) {
+      if (this.info[ctrl] !== formField) {
         // @ts-ignore
-        infoToUpdate[ctrl] = formCtrlValue;
+        infoToUpdate[ctrl] = formField;
       }
     }
+
+    console.log(infoToUpdate);
 
     if (Object.keys(infoToUpdate).length > 0) {
       this.updateInfoSubscription = this.accountService.onUpdateInfo(infoToUpdate)

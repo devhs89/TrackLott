@@ -111,9 +111,9 @@ public class AccountController : BaseApiController
     return !result.Succeeded ? result.Errors.GetEnumerator().Current.Description : "Password updated successfully";
   }
 
-  [HttpPost("updateInfo")]
+  [HttpPut("updateInfo")]
   [Authorize]
-  public async Task<ActionResult<AccountDto>> UpdateInfo(AccountDto accountDto)
+  public async Task<ActionResult<string>> UpdateInfo(AccountUpdateDto accountUpdateDto)
   {
     var userName = User.GetUserName();
 
@@ -121,8 +121,16 @@ public class AccountController : BaseApiController
 
     if (member == null) return BadRequest("No user found");
 
-    var res = await _userManager.UpdateAsync(member)
-      // TODO - from here
+    if (accountUpdateDto.Email != null) member.Email = accountUpdateDto.Email;
+    if (accountUpdateDto.GivenName != null) member.GivenName = accountUpdateDto.GivenName;
+    if (accountUpdateDto.Surname != null) member.Surname = accountUpdateDto.Surname;
+    if (accountUpdateDto.Country != null) member.Country = accountUpdateDto.Country;
+
+    var res = await _userManager.UpdateAsync(member);
+
+    if (res == null) return BadRequest("Something went wrong");
+
+    return res.ToString();
   }
 
   private async Task<bool> UserExists(string username)
