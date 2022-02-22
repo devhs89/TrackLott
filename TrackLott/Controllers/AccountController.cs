@@ -94,6 +94,47 @@ public class AccountController : BaseApiController
     };
   }
 
+  [HttpPost("updatePassword")]
+  [Authorize]
+  public async Task<ActionResult<string>> UpdatePassword(PasswordDto passwordDto)
+  {
+    if (!passwordDto.newPassword.Equals(passwordDto.repeatPassword)) return BadRequest("New passwords do not match");
+
+    var username = User.GetUserName();
+
+    var member = await _userManager.Users.SingleOrDefaultAsync(rec => rec.UserName.Equals(username));
+
+    if (member == null) return BadRequest("No user found");
+
+    var result = await _userManager.ChangePasswordAsync(member, passwordDto.currentPassword, passwordDto.newPassword);
+
+    return !result.Succeeded ? result.Errors.GetEnumerator().Current.Description : "Password updated successfully";
+  }
+
+  [HttpPut("updateInfo")]
+  [Authorize]
+  public async Task<ActionResult<string>> UpdateInfo(AccountUpdateDto accountUpdateDto)
+  {
+    var userName = User.GetUserName();
+
+    var member = await _userManager.Users.SingleOrDefaultAsync(rec => rec.UserName.Equals(userName));
+
+    if (member == null) return BadRequest("No user found");
+
+    if (accountUpdateDto.Email != null) member.Email = accountUpdateDto.Email;
+    if (accountUpdateDto.GivenName != null) member.GivenName = accountUpdateDto.GivenName;
+    if (accountUpdateDto.Surname != null) member.Surname = accountUpdateDto.Surname;
+    if (accountUpdateDto.Country != null) member.Country = accountUpdateDto.Country;
+
+    var res = await _userManager.UpdateAsync(member);
+
+    if (res == null) return BadRequest("Something went wrong");
+
+    if (res.ToString() == "Succeeded") return NoContent();
+
+    return BadRequest("Something went wrong");
+  }
+
   private async Task<bool> UserExists(string username)
   {
     return await _userManager.Users.AnyAsync(entry => entry.Email.Equals(username.ToLower()));

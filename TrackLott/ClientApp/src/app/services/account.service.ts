@@ -7,6 +7,7 @@ import {UserLogin} from "../models/user-login";
 import {UserToken} from "../models/user-token";
 import {UserInfo} from "../models/user-info";
 import {UserPassword} from "../models/user-password";
+import {UserUpdateInfo} from "../models/user-update-info";
 
 @Injectable({
   providedIn: "root"
@@ -30,11 +31,11 @@ export class AccountService {
     return this.httpClient.post<UserInfo>(`${BASE_URL}/account/show`, {});
   }
 
-  onUpdateInfo(newInfo: UserInfo) {
-    return this.httpClient.post(`${BASE_URL}/account/updateInfo`, newInfo);
+  onUpdateInfo(newInfo: UserUpdateInfo) {
+    return this.httpClient.put<string>(`${BASE_URL}/account/updateInfo`, newInfo);
   }
 
   onUpdatePassword(passwords: UserPassword) {
-    return this.httpClient.post(`${BASE_URL}/account/updatePassword`, passwords);
+    return this.httpClient.post(`${BASE_URL}/account/updatePassword`, passwords, {responseType: "text"});
   }
 }
