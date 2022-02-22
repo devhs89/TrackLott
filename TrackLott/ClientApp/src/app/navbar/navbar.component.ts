@@ -13,7 +13,7 @@ import {Router} from "@angular/router";
   styleUrls: ['./navbar.component.scss']
 })
 export class NavbarComponent implements OnInit, OnDestroy {
-  isHandsetPortrait$: Observable<boolean>;
+  isHandset$: Observable<boolean>;
   appUserSubscription = new Subscription();
   userLoggedIn = false;
 
@@ -27,7 +27,7 @@ export class NavbarComponent implements OnInit, OnDestroy {
       }
     });
 
-    this.isHandsetPortrait$ = this.deviceBreakpoint.handsetBreakpoint(Breakpoints.HandsetPortrait);
+    this.isHandset$ = this.deviceBreakpoint.handsetBreakpoint(Breakpoints.XSmall);
   }
 
   logout() {

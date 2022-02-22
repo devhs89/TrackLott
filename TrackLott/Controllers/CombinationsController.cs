@@ -26,17 +26,19 @@ public class CombinationsController : BaseApiController
 
     if (appUser == null) return BadRequest("User not found");
 
-    var lottoResult = CheckLottery(combinationDto.LottoName?.ToLower()).Result;
-
-    if (lottoResult == null) return BadRequest("Lottery name not found");
-
     var combination = new Combination()
     {
       MemberId = appUser.Id,
-      LotteryResultId = lottoResult.Id,
       DateAdded = new DateTime(combinationDto.DateAdded.Millisecond),
       PickedNumbers = JsonSerializer.Serialize(combinationDto.PickedNumbers),
     };
+
+    if (combinationDto.LottoName != null)
+    {
+      var lottoResult = CheckLottery(combinationDto.LottoName.ToLower()).Result;
+      if (lottoResult == null) return BadRequest("Lottery name not found");
+      combination.LotteryResultId = lottoResult.Id;
+    }
 
     await _context.Combinations.AddAsync(combination);
     await _context.SaveChangesAsync();

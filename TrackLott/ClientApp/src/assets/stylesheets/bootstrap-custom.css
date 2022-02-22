@@ -46,6 +46,10 @@
   color: rgba(0, 0, 0, .6);
 }
 
+.text-warning {
+  color: rgb(244, 67, 54);
+}
+
 .row {
   --bs-gutter-x: 1.5rem;
   --bs-gutter-y: 0;
