@@ -20,6 +20,8 @@ export class AccountComponent implements OnInit, OnDestroy {
   updatePasswordSubscription = new Subscription();
   showUserSubscription = new Subscription();
   countries: string[] = COUNTRIES;
+  infoForm: FormGroup;
+  passwordsForm: FormGroup;
   disablePasswordControls: boolean = true;
   private userName: FormControl;
   private email: FormControl;
@@ -30,8 +32,6 @@ export class AccountComponent implements OnInit, OnDestroy {
   private currentPassword: FormControl;
   private newPassword: FormControl;
   private repeatPassword: FormControl;
-  infoForm: FormGroup;
-  passwordsForm: FormGroup;
   private info: UserInfo;
   private userPasswords: UserPassword = {currentPassword: "", newPassword: "", repeatPassword: ""};
 
@@ -67,25 +67,6 @@ export class AccountComponent implements OnInit, OnDestroy {
     this.getUserAccount();
   }
 
-  private getUserAccount() {
-    this.showUserSubscription = this.accountService.showUser().subscribe({
-      next: (resp: UserInfo) => {
-        const dob = new Date(resp.dob);
-        this.info = resp;
-
-        this.infoForm.setValue({
-          userName: resp.userName,
-          email: resp.email,
-          givenName: resp.givenName ? capitalizeString(resp.givenName) : '',
-          surname: resp.surname ? capitalizeString(resp.surname) : '',
-          dob: `${dob.getDate()}/${dob.getMonth()}/${dob.getFullYear()}`,
-          country: resp.country ? capitalizeString(resp.country) : ''
-        });
-      },
-      error: err => this.matSnackBar.open(err.error, "Dismiss")
-    });
-  }
-
   showPasswordControls() {
     if (this.disablePasswordControls) {
       this.passwordsForm.enable();
@@ -110,7 +91,6 @@ export class AccountComponent implements OnInit, OnDestroy {
         const fetchedInfo = this.info[ctrl].toLowerCase();
         const formField = this.infoForm.controls[ctrl].value.toLowerCase();
 
-        // @ts-ignore
         if (fetchedInfo !== formField) {
           // @ts-ignore
           infoToUpdate[ctrl] = formField;
@@ -122,7 +102,8 @@ export class AccountComponent implements OnInit, OnDestroy {
       this.updateInfoSubscription = this.accountService.onUpdateInfo(infoToUpdate)
         .subscribe({
           next: resp => this.matSnackBar.open(resp === null ? "Update Successful" : "Something went wrong", "Dismiss"),
-          error: err => this.matSnackBar.open(parseError(err.error), "Dismiss")
+          error: err => this.matSnackBar.open(parseError(err.error), "Dismiss"),
+          complete: () => this.getUserAccount()
         });
     }
   }
@@ -134,13 +115,32 @@ export class AccountComponent implements OnInit, OnDestroy {
 
     this.updateInfoSubscription = this.accountService.onUpdatePassword(this.userPasswords)
       .subscribe({
-        next: resp => this.matSnackBar.open(parseError(resp), "Dismiss"),
+        next: resp => this.matSnackBar.open(resp, "Dismiss"),
         error: err => this.matSnackBar.open(parseError(err.error), "Dismiss"),
         complete: () => {
           this.resetPasswordForm();
           this.disablePasswordControls = true;
         }
       });
+  }
+
+  private getUserAccount() {
+    this.showUserSubscription = this.accountService.showUser().subscribe({
+      next: (resp: UserInfo) => {
+        const dob = new Date(resp.dob);
+        this.info = resp;
+
+        this.infoForm.setValue({
+          userName: resp.userName,
+          email: resp.email,
+          givenName: resp.givenName ? capitalizeString(resp.givenName) : '',
+          surname: resp.surname ? capitalizeString(resp.surname) : '',
+          dob: `${dob.getDate()}/${dob.getMonth()}/${dob.getFullYear()}`,
+          country: resp.country ? capitalizeString(resp.country) : ''
+        });
+      },
+      error: err => this.matSnackBar.open(err.error, "Dismiss")
+    });
   }
 
   private resetPasswordForm() {
