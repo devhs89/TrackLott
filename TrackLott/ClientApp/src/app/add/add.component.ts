@@ -97,16 +97,28 @@ export class AddComponent implements OnInit {
         this.currPickedNums.mainNums.push(clickedNum);
       }
     }
-    this.onAddCombination();
+    this.autoAddCombination();
   }
 
   onJackpotNumClick(clickedNum: number) {
     this.currPickedNums.jackpot = clickedNum;
-    this.onAddCombination();
+    this.autoAddCombination();
+  }
+
+  autoAddCombination() {
+    if (this.currPickedNums.mainNums.length === this.lotteryNameSelected.allowed) {
+      if (this.lotteryNameSelected.name === "Powerball") {
+        if (this.currPickedNums.jackpot > 0) {
+          this.addCombination();
+        }
+      } else {
+        this.addCombination();
+      }
+    }
   }
 
   onAddCombination() {
-    if (this.currPickedNums.mainNums.length === this.lotteryNameSelected.allowed) {
+    if (this.currPickedNums.mainNums.length >= this.lotteryNameSelected.standard) {
       if (this.lotteryNameSelected.name === "Powerball") {
         if (this.currPickedNums.jackpot > 0) {
           this.addCombination();
