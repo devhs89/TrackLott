@@ -130,7 +130,9 @@ public class AccountController : BaseApiController
 
     if (res == null) return BadRequest("Something went wrong");
 
-    return res.ToString();
+    if (res.ToString() == "Succeeded") return NoContent();
+
+    return BadRequest("Something went wrong");
   }
 
   private async Task<bool> UserExists(string username)

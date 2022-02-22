@@ -3,6 +3,6 @@ export interface UserInfo {
   email: string;
   givenName: string;
   surname: string;
-  dob: Date;
+  dob: string;
   country: string;
 }

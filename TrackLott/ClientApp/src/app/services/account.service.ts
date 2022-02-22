@@ -32,7 +32,7 @@ export class AccountService {
   }
 
   onUpdateInfo(newInfo: UserUpdateInfo) {
-    return this.httpClient.post(`${BASE_URL}/account/updateInfo`, newInfo);
+    return this.httpClient.put<string>(`${BASE_URL}/account/updateInfo`, newInfo);
   }
 
   onUpdatePassword(passwords: UserPassword) {

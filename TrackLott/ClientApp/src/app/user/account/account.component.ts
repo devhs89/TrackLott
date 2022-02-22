@@ -70,13 +70,15 @@ export class AccountComponent implements OnInit, OnDestroy {
   private getUserAccount() {
     this.showUserSubscription = this.accountService.showUser().subscribe({
       next: (resp: UserInfo) => {
+        const dob = new Date(resp.dob);
         this.info = resp;
+
         this.infoForm.setValue({
           userName: resp.userName,
           email: resp.email,
           givenName: resp.givenName ? capitalizeString(resp.givenName) : '',
           surname: resp.surname ? capitalizeString(resp.surname) : '',
-          dob: resp.dob,
+          dob: `${dob.getDate()}/${dob.getMonth()}/${dob.getFullYear()}`,
           country: resp.country ? capitalizeString(resp.country) : ''
         });
       },
@@ -94,24 +96,33 @@ export class AccountComponent implements OnInit, OnDestroy {
   }
 
   onSubmitInfo() {
-    let infoToUpdate: UserUpdateInfo = {};
+    const infoToUpdate: UserUpdateInfo = {
+      email: undefined,
+      givenName: undefined,
+      surname: undefined,
+      country: undefined
+    };
+    const infoToUpdateKeys = Object.keys(infoToUpdate);
 
     for (let ctrl in this.infoForm.controls) {
-      const formField = this.infoForm.controls[ctrl].value.toLowerCase();
-      // @ts-ignore
-      if (this.info[ctrl] !== formField) {
+      if (infoToUpdateKeys.includes(ctrl)) {
         // @ts-ignore
-        infoToUpdate[ctrl] = formField;
+        const fetchedInfo = this.info[ctrl].toLowerCase();
+        const formField = this.infoForm.controls[ctrl].value.toLowerCase();
+
+        // @ts-ignore
+        if (fetchedInfo !== formField) {
+          // @ts-ignore
+          infoToUpdate[ctrl] = formField;
+        }
       }
     }
 
-    console.log(infoToUpdate);
-
-    if (Object.keys(infoToUpdate).length > 0) {
+    if (infoToUpdate.email !== undefined || infoToUpdate.givenName !== undefined || infoToUpdate.surname !== undefined || infoToUpdate.country !== undefined) {
       this.updateInfoSubscription = this.accountService.onUpdateInfo(infoToUpdate)
         .subscribe({
-          next: resp => console.log(resp),
-          error: err => this.matSnackBar.open(err.message, "Dismiss")
+          next: resp => this.matSnackBar.open(resp === null ? "Update Successful" : "Something went wrong", "Dismiss"),
+          error: err => this.matSnackBar.open(parseError(err.error), "Dismiss")
         });
     }
   }
