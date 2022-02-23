@@ -4,9 +4,10 @@ import {FormControl, FormGroup, Validators} from "@angular/forms";
 import {Observable} from "rxjs";
 import {Breakpoints} from "@angular/cdk/layout";
 import {CombinationsService} from "../services/combinations.service";
-import {AvailableLotteries, LotteryNameOptions} from "../models/lottery-name-options";
+import {LotteryNameOptions} from "../models/lottery-name-options";
 import {MatSelectChange} from "@angular/material/select";
 import {Combination, PickedNumbers} from "../models/combination";
+import {allLottoNames} from "../constants/lotto-names";
 
 @Component({
   selector: 'app-add',
@@ -14,13 +15,7 @@ import {Combination, PickedNumbers} from "../models/combination";
   styleUrls: ['./add.component.scss']
 })
 export class AddComponent implements OnInit {
-  lotteryNames: AvailableLotteries = {
-    mondayLotto: {name: "Monday Lotto", biggest: 45, standard: 6, allowed: 20, mainNums: []},
-    ozLotto: {name: "Oz Lotto", biggest: 45, standard: 7, allowed: 20, mainNums: []},
-    wednesdayLotto: {name: "Wednesday Lotto", biggest: 45, standard: 6, allowed: 20, mainNums: []},
-    powerball: {name: "Powerball", biggest: 35, standard: 7, allowed: 20, mainNums: [], jackpotNums: []},
-    tattsLotto: {name: "Tatts Lotto", biggest: 45, standard: 6, allowed: 20, mainNums: []}
-  };
+  lotteryNames = allLottoNames;
   lotteryNameSelected: LotteryNameOptions = {
     name: "default",
     biggest: 45,
@@ -122,12 +117,16 @@ export class AddComponent implements OnInit {
   }
 
   onSaveCombinations() {
-    if (this.addCombosForm.valid) {
+    console.log(this.dateAddedControl.value);
+
+    if (this.addCombosForm.valid && this.allPickedNums.length > 0) {
       this.combinations = {
         lottoName: this.lotteryNameSelected.name,
         dateAdded: this.dateAddedControl.value,
         pickedNumbers: this.allPickedNums
       };
+
+      console.log(this.combinations.dateAdded);
       this.combinationsService.addCombinations(this.combinations).subscribe(resp => console.log(resp));
     }
   }

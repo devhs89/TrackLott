@@ -12,6 +12,6 @@ export class CombinationsService {
   }
 
   addCombinations(combinations: Combination) {
-    return this.httpClient.post<string>(`${BASE_URL}/combinations/add`, combinations);
+    return this.httpClient.post(`${BASE_URL}/combinations/add`, combinations, {responseType: "text"});
   }
 }

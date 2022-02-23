@@ -33,7 +33,7 @@ public class CombinationsController : BaseApiController
       PickedNumbers = JsonSerializer.Serialize(combinationDto.PickedNumbers),
     };
 
-    if (combinationDto.LottoName != null)
+    if (combinationDto.LottoName != null && combinationDto.LottoName != "default")
     {
       var lottoResult = CheckLottery(combinationDto.LottoName.ToLower()).Result;
       if (lottoResult == null) return BadRequest("Lottery name not found");
