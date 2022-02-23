@@ -129,6 +129,10 @@ export class AddComponent implements OnInit {
     }
   }
 
+  onClear(dex: number) {
+    this.allPickedNums.splice(dex, 1);
+  }
+
   onSaveCombinations() {
     if (this.addCombosForm.valid) {
       this.combinations = {

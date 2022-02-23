@@ -39,17 +39,10 @@
             <div class="col-12 mb-3">
               <div class="border rounded-3 p-2 mb-2"
                    *ngIf="(currPickedNums.mainNums && currPickedNums.mainNums.length > 0) || currPickedNums.jackpot > 0; else showBlank">
-                <ng-container *ngFor="let num of currPickedNums.mainNums">
-                  <ng-container
-                    *ngTemplateOutlet="numbersSvg; context: {$implicit: {number: num, bgFill: '#ffd740', txtColor: '#343a40'}}"></ng-container>
-                </ng-container>
-                <ng-container *ngIf="currPickedNums.jackpot > 0">
-                  <ng-container
-                    *ngTemplateOutlet="numbersSvg; context: {$implicit: {number: currPickedNums.jackpot, bgFill: '#F44336FF', txtColor: 'white'}}"></ng-container>
-                </ng-container>
+                <ng-container *ngTemplateOutlet="currentPickedNumbers"></ng-container>
                 <div class="w-100 pt-1 justify-content-end text-end">
                   <button mat-flat-button type="button" color="warn" class="text-uppercase"
-                          (click)="currPickedNums.mainNums = []">
+                          (click)="currPickedNums.mainNums = []; currPickedNums.jackpot = 0;">
                     Clear
                   </button>
                   <button mat-flat-button type="button" color="primary" class="ms-2 text-uppercase"
@@ -112,12 +105,33 @@
   </svg>
 </ng-template>
 
+<ng-template #currentPickedNumbers>
+  <ng-container *ngFor="let num of currPickedNums.mainNums">
+    <ng-container
+      *ngTemplateOutlet="numbersSvg;
+      context: {$implicit: {number: num, bgFill: '#ffd740', txtColor: '#343a40'}}"></ng-container>
+  </ng-container>
+  <ng-container *ngIf="currPickedNums.jackpot > 0">
+    <ng-container
+      *ngTemplateOutlet="numbersSvg;
+      context: {$implicit: {number: currPickedNums.jackpot, bgFill: '#F44336FF', txtColor: 'white'}}"></ng-container>
+  </ng-container>
+</ng-template>
+
 <ng-template #allPickedNumbers>
   <div class="col-12">
     <ng-container *ngIf="allPickedNums">
       <mat-card class="mb-2 p-2" *ngFor="let row of allPickedNums; index as dex">
+        <div class="d-flex justify-content-between">
+          <div class="d-inline-flex flex-column justify-content-center">
+            <span style="font-size: 1.2rem;" class="mx-2">#{{allPickedNums.length - dex}}</span>
+          </div>
+          <button mat-icon-button (click)="onClear(dex)">
+            <mat-icon>clear</mat-icon>
+          </button>
+        </div>
+        <mat-divider inset class="mb-2"></mat-divider>
         <mat-card-content>
-          <mat-card-subtitle class="ms-1 mb-1">#{{allPickedNums.length - dex}}</mat-card-subtitle>
           <ng-container *ngFor="let num of row.mainNums">
             <ng-container
               *ngTemplateOutlet="numbersSvg; context: {$implicit: {number: num, bgFill: '#ffd740', txtColor: '#343a40'}}"></ng-container>
