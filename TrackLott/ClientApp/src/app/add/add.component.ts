@@ -33,7 +33,7 @@ export class AddComponent implements OnInit {
   addCombosForm: FormGroup;
   lotteryNameControl: FormControl;
   dateAddedControl: FormControl;
-  currPickedNums: PickedNumbers = {mainNums: [], jackpot: 0};
+  currPickedNums: PickedNumbers = {mainNums: []};
   allPickedNums: PickedNumbers[] = [];
   combinations: Combination;
   minDate: Date;
@@ -66,7 +66,7 @@ export class AddComponent implements OnInit {
 
   public onLotterySelect(event: MatSelectChange) {
     this.allPickedNums = [];
-    this.currPickedNums = {mainNums: [], jackpot: 0};
+    this.clearCurrentPickedNumbers();
 
     switch (event.value) {
       case "mondayLotto":
@@ -107,25 +107,13 @@ export class AddComponent implements OnInit {
 
   autoAddCombination() {
     if (this.currPickedNums.mainNums.length === this.lotteryNameSelected.allowed) {
-      if (this.lotteryNameSelected.name === "Powerball") {
-        if (this.currPickedNums.jackpot > 0) {
-          this.addCombination();
-        }
-      } else {
-        this.addCombination();
-      }
+      this.checkSelectedLotto();
     }
   }
 
   onAddCombination() {
     if (this.currPickedNums.mainNums.length >= this.lotteryNameSelected.standard) {
-      if (this.lotteryNameSelected.name === "Powerball") {
-        if (this.currPickedNums.jackpot > 0) {
-          this.addCombination();
-        }
-      } else {
-        this.addCombination();
-      }
+      this.checkSelectedLotto();
     }
   }
 
@@ -159,8 +147,23 @@ export class AddComponent implements OnInit {
     }
   }
 
+  private clearCurrentPickedNumbers() {
+    this.currPickedNums.mainNums = [];
+    if (this.currPickedNums.jackpot) this.currPickedNums.jackpot = 0;
+  }
+
   private addCombination() {
     this.allPickedNums.unshift({mainNums: this.currPickedNums.mainNums, jackpot: this.currPickedNums.jackpot});
-    this.currPickedNums = {mainNums: [], jackpot: 0};
+    this.clearCurrentPickedNumbers();
+  }
+
+  private checkSelectedLotto() {
+    if (this.lotteryNameSelected.name === "Powerball") {
+      if (this.currPickedNums.jackpot && this.currPickedNums.jackpot > 0) {
+        this.addCombination();
+      }
+    } else {
+      this.addCombination();
+    }
   }
 }

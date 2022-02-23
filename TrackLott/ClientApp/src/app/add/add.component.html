@@ -38,8 +38,10 @@
           <div class="row">
             <div class="col-12 mb-3">
               <div class="border rounded-3 p-2 mb-2"
-                   *ngIf="(currPickedNums.mainNums && currPickedNums.mainNums.length > 0) || currPickedNums.jackpot > 0; else showBlank">
+                   *ngIf="(currPickedNums.mainNums && currPickedNums.mainNums.length > 0) || (currPickedNums.jackpot && currPickedNums.jackpot > 0); else showBlank">
+
                 <ng-container *ngTemplateOutlet="currentPickedNumbers"></ng-container>
+
                 <div class="w-100 pt-1 justify-content-end text-end">
                   <button mat-flat-button type="button" color="warn" class="text-uppercase"
                           (click)="currPickedNums.mainNums = []; currPickedNums.jackpot = 0;">
@@ -111,7 +113,7 @@
       *ngTemplateOutlet="numbersSvg;
       context: {$implicit: {number: num, bgFill: '#ffd740', txtColor: '#343a40'}}"></ng-container>
   </ng-container>
-  <ng-container *ngIf="currPickedNums.jackpot > 0">
+  <ng-container *ngIf="currPickedNums.jackpot && currPickedNums.jackpot > 0">
     <ng-container
       *ngTemplateOutlet="numbersSvg;
       context: {$implicit: {number: currPickedNums.jackpot, bgFill: '#F44336FF', txtColor: 'white'}}"></ng-container>
@@ -136,7 +138,7 @@
             <ng-container
               *ngTemplateOutlet="numbersSvg; context: {$implicit: {number: num, bgFill: '#ffd740', txtColor: '#343a40'}}"></ng-container>
           </ng-container>
-          <ng-container *ngIf="row.jackpot > 0">
+          <ng-container *ngIf="row.jackpot && row.jackpot > 0">
             <ng-container
               *ngTemplateOutlet="numbersSvg; context: {$implicit: {number: row.jackpot, bgFill: '#F44336FF', txtColor: 'white'}}"></ng-container>
           </ng-container>

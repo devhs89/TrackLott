@@ -1,6 +1,6 @@
 export interface PickedNumbers {
   mainNums: number[],
-  jackpot: number
+  jackpot?: number
 }
 
 export interface Combination {
