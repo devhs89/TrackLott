@@ -3,7 +3,7 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.IdentityModel.Tokens;
 using TrackLott.Data;
-using TrackLott.Models;
+using TrackLott.Entities;
 
 namespace TrackLott.Extensions;
 

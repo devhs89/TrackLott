@@ -1,3 +1,5 @@
+using System.Text.Json.Nodes;
+
 namespace TrackLott.DTOs;
 
 public class CombinationDto
@@ -6,5 +8,5 @@ public class CombinationDto
 
   public DateTime DateAdded { get; set; }
 
-  public int[] PickedNumbers { get; set; }
+  public JsonObject[] PickedNumbers { get; set; }
 }

@@ -1,6 +1,6 @@
 using Microsoft.AspNetCore.Identity;
 
-namespace TrackLott.Models;
+namespace TrackLott.Entities;
 
 public class MemberAbility : IdentityUserRole<Guid>
 {

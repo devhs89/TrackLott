@@ -1,4 +1,4 @@
-namespace TrackLott.Models;
+namespace TrackLott.Entities;
 
 public class Combination
 {

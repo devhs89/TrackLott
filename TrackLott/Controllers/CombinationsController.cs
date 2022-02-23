@@ -4,8 +4,8 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using TrackLott.Data;
 using TrackLott.DTOs;
+using TrackLott.Entities;
 using TrackLott.Extensions;
-using TrackLott.Models;
 
 namespace TrackLott.Controllers;
 
