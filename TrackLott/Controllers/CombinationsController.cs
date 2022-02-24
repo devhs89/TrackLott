@@ -29,7 +29,7 @@ public class CombinationsController : BaseApiController
     var combination = new Combination()
     {
       MemberId = appUser.Id,
-      DateAdded = new DateTime(combinationDto.DateAdded.Millisecond),
+      DateAdded = combinationDto.DateAdded,
       PickedNumbers = JsonSerializer.Serialize(combinationDto.PickedNumbers),
     };
 

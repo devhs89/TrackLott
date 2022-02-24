@@ -5,6 +5,6 @@ export interface PickedNumbers {
 
 export interface Combination {
   lottoName?: string;
-  dateAdded: Date;
+  dateAdded: string;
   pickedNumbers: PickedNumbers[];
 }

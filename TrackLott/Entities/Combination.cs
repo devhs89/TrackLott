@@ -4,7 +4,7 @@ public class Combination
 {
   public Guid Id { get; set; }
 
-  public DateTime DateAdded { get; set; }
+  public string DateAdded { get; set; }
 
   public string PickedNumbers { get; set; }
 

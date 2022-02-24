@@ -8,6 +8,8 @@ import {LotteryNameOptions} from "../models/lottery-name-options";
 import {MatSelectChange} from "@angular/material/select";
 import {Combination, PickedNumbers} from "../models/combination";
 import {allLottoNames} from "../constants/lotto-names";
+import {MatSnackBar} from "@angular/material/snack-bar";
+import {parseError} from "../helpers/parse-error";
 
 @Component({
   selector: 'app-add',
@@ -34,7 +36,7 @@ export class AddComponent implements OnInit {
   minDate: Date;
   maxDate: Date;
 
-  constructor(private deviceBreakpoint: DeviceBreakpoint, private combinationsService: CombinationsService) {
+  constructor(private deviceBreakpoint: DeviceBreakpoint, private combinationsService: CombinationsService, private matSnackBar: MatSnackBar) {
   }
 
   ngOnInit(): void {
@@ -49,7 +51,7 @@ export class AddComponent implements OnInit {
 
   private initializeForm() {
     this.lotteryNameControl = new FormControl(null, [Validators.maxLength(54)]);
-    this.dateAddedControl = new FormControl(null, Validators.required);
+    this.dateAddedControl = new FormControl(new Date(), Validators.required);
 
     this.addCombosForm = new FormGroup({
       lotteryNameControl: this.lotteryNameControl,
@@ -60,7 +62,7 @@ export class AddComponent implements OnInit {
   }
 
   public onLotterySelect(event: MatSelectChange) {
-    this.allPickedNums = [];
+    this.clearAllPickedNumbers();
     this.clearCurrentPickedNumbers();
 
     switch (event.value) {
@@ -117,17 +119,20 @@ export class AddComponent implements OnInit {
   }
 
   onSaveCombinations() {
-    console.log(this.dateAddedControl.value);
-
     if (this.addCombosForm.valid && this.allPickedNums.length > 0) {
       this.combinations = {
         lottoName: this.lotteryNameSelected.name,
-        dateAdded: this.dateAddedControl.value,
+        dateAdded: this.dateAddedControl.value.toLocaleString(),
         pickedNumbers: this.allPickedNums
       };
-
-      console.log(this.combinations.dateAdded);
-      this.combinationsService.addCombinations(this.combinations).subscribe(resp => console.log(resp));
+      this.combinationsService.addCombinations(this.combinations).subscribe({
+        next: resp => {
+          this.matSnackBar.open(resp, "Dismiss");
+          this.clearCurrentPickedNumbers();
+          this.clearAllPickedNumbers();
+        },
+        error: err => this.matSnackBar.open(parseError(err.error), "Dismiss")
+      });
     }
   }
 
@@ -149,6 +154,10 @@ export class AddComponent implements OnInit {
   private clearCurrentPickedNumbers() {
     this.currPickedNums.mainNums = [];
     if (this.currPickedNums.jackpot) this.currPickedNums.jackpot = 0;
+  }
+
+  private clearAllPickedNumbers() {
+    this.allPickedNums = [];
   }
 
   private addCombination() {
