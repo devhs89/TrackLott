@@ -3,7 +3,7 @@ import {AccountService} from "../services/account.service";
 import {Observable, Subscription} from "rxjs";
 import {UserToken} from "../models/user-token";
 import {removeLocalUserToken, removeSessionUserToken} from "../helpers/local-storage";
-import {DeviceBreakpoint} from "../services/device-breakpoint.service";
+import {DeviceBreakpointService} from "../services/device-breakpoint.service";
 import {Breakpoints} from "@angular/cdk/layout";
 import {Router} from "@angular/router";
 
@@ -17,7 +17,7 @@ export class NavbarComponent implements OnInit, OnDestroy {
   appUserSubscription = new Subscription();
   userLoggedIn = false;
 
-  constructor(private deviceBreakpoint: DeviceBreakpoint, private accountService: AccountService, private router: Router) {
+  constructor(private deviceBreakpoint: DeviceBreakpointService, private accountService: AccountService, private router: Router) {
   }
 
   ngOnInit(): void {

@@ -1,3 +1,47 @@
-<div>
-  <span *ngFor="let combo of matchingCombos">{{combo.dateAdded}} - {{combo.pickedNumbers.mainNums}}</span>
-</div>
+<ng-container *ngIf="(isHandset$ | async); else notHandset">
+  <ng-container *ngIf="matchingCombos.length > 0">
+    <mat-paginator [length]="matchingCombos.length" pageSize="3" aria-label="Matching Combinations"
+                   (page)="pageSize($event)"></mat-paginator>
+    <mat-card class="row col-xl-9 mx-auto mb-3 mat-elevation-z6" *ngFor="let combo of matchingCombosSliced">
+      <mat-card-title>{{combo.dateAdded}}</mat-card-title>
+      <mat-card-content>
+        <div class="d-inline-flex me-md-3">
+          <app-number-svg [numsArray]="combo.mainNums" bgFill="#ffd740" txtColor="#343a40"></app-number-svg>
+        </div>
+        <div class="d-inline-flex">
+          <app-number-svg [numsArray]="[combo.jackpot]" bgFill="#F44336FF" *ngIf="combo.jackpot"></app-number-svg>
+        </div>
+      </mat-card-content>
+    </mat-card>
+  </ng-container>
+</ng-container>
+
+<ng-template #notHandset>
+  <div class="row col-xl-9 mx-auto mb-3 mat-elevation-z6">
+    <mat-table #table class="w-100" [dataSource]="matchingCombos">
+      <ng-container matColumnDef="mainNums">
+        <mat-header-cell *matHeaderCellDef>Main Numbers</mat-header-cell>
+        <mat-cell *matCellDef="let combo">
+          <app-number-svg [numsArray]="combo.mainNums" bgFill="#ffd740" txtColor="#343a40"></app-number-svg>
+        </mat-cell>
+      </ng-container>
+
+      <ng-container matColumnDef="jackpot">
+        <mat-header-cell *matHeaderCellDef>Powerball</mat-header-cell>
+        <mat-cell *matCellDef="let combo">
+          <app-number-svg [numsArray]="[combo.jackpot]" bgFill="#F44336FF"></app-number-svg>
+        </mat-cell>
+      </ng-container>
+
+      <ng-container matColumnDef="drawDate">
+        <mat-header-cell *matHeaderCellDef>Draw Date</mat-header-cell>
+        <mat-cell *matCellDef="let combo">{{combo.dateAdded.toString()}}</mat-cell>
+      </ng-container>
+
+      <mat-header-row *matHeaderRowDef="tableColumns; sticky: true"></mat-header-row>
+      <mat-row *matRowDef="let row; columns: tableColumns;"></mat-row>
+    </mat-table>
+
+    <mat-paginator [length]="matchingCombos.length" pageSize="3" aria-label="Matching Combinations"></mat-paginator>
+  </div>
+</ng-template>

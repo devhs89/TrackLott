@@ -1,5 +1,5 @@
 import {HttpEvent, HttpHandler, HttpInterceptor, HttpRequest} from "@angular/common/http";
-import {LoadingService} from "../services/loading.service";
+import {ProgressIndicatorService} from "../services/progress-indicator.service";
 import {delay, finalize, Observable} from "rxjs";
 import {Injectable, OnInit} from "@angular/core";
 
@@ -8,7 +8,7 @@ import {Injectable, OnInit} from "@angular/core";
 })
 export class LoadingInterceptor implements HttpInterceptor {
 
-  constructor(private loadingService: LoadingService) {
+  constructor(private loadingService: ProgressIndicatorService) {
   }
 
   intercept(httpRequest: HttpRequest<unknown>, httpHandler: HttpHandler): Observable<HttpEvent<unknown>> {

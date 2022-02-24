@@ -1,5 +1,5 @@
 import {Component, OnInit} from '@angular/core';
-import {DeviceBreakpoint} from "../services/device-breakpoint.service";
+import {DeviceBreakpointService} from "../services/device-breakpoint.service";
 import {FormControl, FormGroup, Validators} from "@angular/forms";
 import {Observable} from "rxjs";
 import {Breakpoints} from "@angular/cdk/layout";
@@ -36,7 +36,7 @@ export class AddComponent implements OnInit {
   minDate: Date;
   maxDate: Date;
 
-  constructor(private deviceBreakpoint: DeviceBreakpoint, private combinationsService: CombinationsService, private matSnackBar: MatSnackBar) {
+  constructor(private deviceBreakpoint: DeviceBreakpointService, private combinationsService: CombinationsService, private matSnackBar: MatSnackBar) {
   }
 
   ngOnInit(): void {

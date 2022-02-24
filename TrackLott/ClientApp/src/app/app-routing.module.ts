@@ -4,11 +4,11 @@ import {HomeComponent} from "./home/home.component";
 import {AddComponent} from "./add/add.component";
 import {PlayComponent} from "./play/play.component";
 import {TermsComponent} from "./terms/terms.component";
-import {AuthGuard} from "./services/auth-guard";
+import {AuthGuardService} from "./services/auth-guard.service";
 
 const routes = [
   {path: 'home', component: HomeComponent},
-  {path: 'add', component: AddComponent, canActivate: [AuthGuard]},
+  {path: 'add', component: AddComponent, canActivate: [AuthGuardService]},
   {path: 'play', component: PlayComponent},
   {path: 'terms', component: TermsComponent},
   {

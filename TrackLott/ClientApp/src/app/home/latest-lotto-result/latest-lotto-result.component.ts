@@ -4,7 +4,7 @@ import {Subscription} from "rxjs";
 import {LottoResult} from "../../models/lotto-result";
 import {MatSnackBar} from "@angular/material/snack-bar";
 import {parseError} from "../../helpers/parse-error";
-import {LoadingService} from "../../services/loading.service";
+import {ProgressIndicatorService} from "../../services/progress-indicator.service";
 
 @Component({
   selector: 'app-latest-lotto-result',
@@ -16,7 +16,7 @@ export class LatestLottoResultComponent implements OnInit, OnDestroy {
   latestLottoResult: LottoResult;
   isLoading$ = this.loadingService.isLoading$;
 
-  constructor(private loadingService: LoadingService, private lottoResultService: LottoResultService, private matSnackBar: MatSnackBar) {
+  constructor(private loadingService: ProgressIndicatorService, private lottoResultService: LottoResultService, private matSnackBar: MatSnackBar) {
   }
 
   ngOnInit(): void {

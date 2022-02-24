@@ -9,7 +9,7 @@ import {parseError} from "../helpers/parse-error";
 @Injectable({
   providedIn: "root"
 })
-export class AuthGuard implements CanActivate {
+export class AuthGuardService implements CanActivate {
   isAuthenticated: boolean = false;
 
   constructor(private router: Router, private accountService: AccountService, private matSnackBar: MatSnackBar) {

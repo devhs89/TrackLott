@@ -1,0 +1,15 @@
+.mat-column-mainNums {
+  flex: 6;
+}
+
+.mat-column-jackpot {
+  flex: 1;
+}
+
+.mat-column-drawDate {
+  flex: 2;
+}
+
+mat-cell.mat-column-mainNums, mat-cell.mat-column-jackpot {
+  align-self: start;
+}

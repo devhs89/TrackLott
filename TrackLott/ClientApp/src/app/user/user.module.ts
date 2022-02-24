@@ -7,14 +7,14 @@ import {CommonModule} from "@angular/common";
 import {MaterialModule} from "../material/material.module";
 import {FormsModule, ReactiveFormsModule} from "@angular/forms";
 import {AccountComponent} from "./account/account.component";
-import {AuthGuard} from "../services/auth-guard";
+import {AuthGuardService} from "../services/auth-guard.service";
 
 @NgModule({
   imports: [
     RouterModule.forChild([
       {path: 'login', component: LoginComponent},
       {path: 'register', component: RegisterComponent},
-      {path: 'account', component: AccountComponent, canActivate: [AuthGuard]},
+      {path: 'account', component: AccountComponent, canActivate: [AuthGuardService]},
       {path: 'forgot', component: ForgotComponent},
       {path: '', redirectTo: 'login', pathMatch: 'full'}
     ]),

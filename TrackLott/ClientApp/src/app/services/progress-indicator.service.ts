@@ -4,7 +4,7 @@ import {BehaviorSubject} from "rxjs";
 @Injectable({
   providedIn: "root"
 })
-export class LoadingService {
+export class ProgressIndicatorService {
   private isLoading = new BehaviorSubject<boolean>(false);
   isLoading$ = this.isLoading.asObservable();
 

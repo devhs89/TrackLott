@@ -15,8 +15,8 @@ import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
 import {MatchComboComponent} from './home/match-combo/match-combo.component';
 import {MaterialModule} from "./material/material.module";
 import {JwtInterceptor} from "./interceptors/jwt.interceptor";
-import {MatProgressSpinnerModule} from "@angular/material/progress-spinner";
 import {LoadingInterceptor} from "./interceptors/loading.interceptor";
+import {NumberSvgComponent} from './common/number-svg/number-svg.component';
 
 @NgModule({
   declarations: [
@@ -27,7 +27,8 @@ import {LoadingInterceptor} from "./interceptors/loading.interceptor";
     AddComponent,
     PlayComponent,
     TermsComponent,
-    MatchComboComponent
+    MatchComboComponent,
+    NumberSvgComponent
   ],
   imports: [
     BrowserModule.withServerTransition({appId: 'ng-cli-universal'}),
@@ -36,8 +37,7 @@ import {LoadingInterceptor} from "./interceptors/loading.interceptor";
     ReactiveFormsModule,
     AppRoutingModule,
     BrowserAnimationsModule,
-    MaterialModule,
-    MatProgressSpinnerModule
+    MaterialModule
   ],
   providers: [
     {provide: HTTP_INTERCEPTORS, useClass: JwtInterceptor, multi: true},
