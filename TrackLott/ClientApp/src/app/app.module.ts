@@ -15,6 +15,8 @@ import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
 import {MatchComboComponent} from './home/match-combo/match-combo.component';
 import {MaterialModule} from "./material/material.module";
 import {JwtInterceptor} from "./interceptors/jwt.interceptor";
+import {LoadingInterceptor} from "./interceptors/loading.interceptor";
+import {NumberSvgComponent} from './common/number-svg/number-svg.component';
 
 @NgModule({
   declarations: [
@@ -25,7 +27,8 @@ import {JwtInterceptor} from "./interceptors/jwt.interceptor";
     AddComponent,
     PlayComponent,
     TermsComponent,
-    MatchComboComponent
+    MatchComboComponent,
+    NumberSvgComponent
   ],
   imports: [
     BrowserModule.withServerTransition({appId: 'ng-cli-universal'}),
@@ -37,7 +40,8 @@ import {JwtInterceptor} from "./interceptors/jwt.interceptor";
     MaterialModule
   ],
   providers: [
-    {provide: HTTP_INTERCEPTORS, useClass: JwtInterceptor, multi: true}
+    {provide: HTTP_INTERCEPTORS, useClass: JwtInterceptor, multi: true},
+    {provide: HTTP_INTERCEPTORS, useClass: LoadingInterceptor, multi: true}
   ],
   bootstrap: [AppComponent]
 })

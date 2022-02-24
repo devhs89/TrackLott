@@ -1,6 +1,6 @@
 using Microsoft.AspNetCore.Identity;
 using TrackLott.Data;
-using TrackLott.Models;
+using TrackLott.Entities;
 
 namespace TrackLott
 {

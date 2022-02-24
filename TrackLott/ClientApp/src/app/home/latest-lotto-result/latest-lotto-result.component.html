@@ -1,43 +1,17 @@
 <mat-card class="row col-xl-9 mx-auto mb-3 mat-elevation-z6"
-          *ngIf="latestLottoResult && latestLottoResult.drawName.length > 0; else noResult">
+          *ngIf="latestLottoResult && latestLottoResult.drawName.length > 0">
   <mat-card-title class="text-capitalize">{{latestLottoResult.drawName}}</mat-card-title>
   <mat-divider class="my-3" inset></mat-divider>
   <mat-card-content>
-    <div class="d-inline-flex gap-1 me-md-3">
-      <div *ngFor="let num of latestLottoResult.winningNumbers">
-        <ng-container
-          *ngTemplateOutlet="numbersSvg; context: {$implicit: {number: num, bgFill: '#673ab7'}}"></ng-container>
-      </div>
+    <div class="d-inline-flex me-md-3">
+      <app-number-svg [numsArray]="latestLottoResult.winningNumbers"></app-number-svg>
     </div>
-    <div class="d-inline-flex gap-1">
-      <div *ngFor="let num of latestLottoResult.suppNumbers">
-        <ng-container
-          *ngTemplateOutlet="numbersSvg; context: {$implicit: {number: num, bgFill: '#607D8B'}}"></ng-container>
-      </div>
+    <div class="d-inline-flex">
+      <app-number-svg [numsArray]="latestLottoResult.suppNumbers" bgFill="#607D8B"></app-number-svg>
     </div>
   </mat-card-content>
 </mat-card>
 
-<ng-template #numbersSvg let-options>
-  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 48" width="48" height="48">
-    <style>
-      .textNum {
-        font: 500 1.6rem 'Roboto Mono', monospace;
-        fill: #f8f9fa;
-      }
-    </style>
-    <g>
-      <circle r="24" cx="24" cy="24" [ngStyle]="{'fill': options.bgFill}"></circle>
-      <text x="24" y="33" text-anchor="middle" class="textNum">{{options.number}}</text>
-    </g>
-  </svg>
-</ng-template>
-
-<ng-template #noResult>
-  <mat-card class="row col-xl-9 mx-auto mb-3 mat-elevation-z6">
-    <mat-card-content>
-      <span style="color: var(--color-warn)">Error: </span>
-      <span>Unable to connect to the database. Please try again later.</span>
-    </mat-card-content>
-  </mat-card>
-</ng-template>
+<div class="spinner-overlay" *ngIf="isLoading$ | async">
+  <mat-spinner diameter="50" color="accent"></mat-spinner>
+</div>

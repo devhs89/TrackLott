@@ -1,10 +1,12 @@
 import {Component, OnDestroy, OnInit} from '@angular/core';
-import {FormControl, FormGroup, NgForm, Validators} from "@angular/forms";
+import {FormControl, FormGroup, Validators} from "@angular/forms";
 import {Subscription} from "rxjs";
 import {AccountService} from "../../services/account.service";
 import {Router} from "@angular/router";
 import {setLocalUserToken, setSessionUserToken} from "../../helpers/local-storage";
 import {UserLogin} from "../../models/user-login";
+import {MatSnackBar} from "@angular/material/snack-bar";
+import {parseError} from "../../helpers/parse-error";
 
 @Component({
   selector: 'app-login',
@@ -16,7 +18,7 @@ export class LoginComponent implements OnInit, OnDestroy {
   subscription = new Subscription();
   formInvalid = false;
 
-  constructor(private accountService: AccountService, private router: Router) {
+  constructor(private accountService: AccountService, private router: Router, private matSnackBar: MatSnackBar) {
   }
 
   ngOnInit(): void {
@@ -33,13 +35,16 @@ export class LoginComponent implements OnInit, OnDestroy {
       this.subscription = this.accountService.onLogin({
         userName: userCredentials.userName,
         password: userCredentials.password
-      }).subscribe((response: any) => {
-        if (response["userName"] && response["token"]) {
-          this.accountService.appUserReplaySubject.next(response);
-          userCredentials.rememberMe ? setLocalUserToken(response) : setSessionUserToken(response);
-          this.router.navigate(["/home"]);
-        }
-      }, error => console.log(error.message()));
+      }).subscribe({
+        next: response => {
+          console.log(response);
+          if (response.userName && response.token) {
+            userCredentials.rememberMe ? setLocalUserToken(response) : setSessionUserToken(response);
+            this.router.navigate(["/home"]);
+          }
+        },
+        error: err => this.matSnackBar.open(parseError(err.error), "Dismiss")
+      });
     }
   }
 

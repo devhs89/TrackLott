@@ -4,8 +4,8 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using TrackLott.Data;
 using TrackLott.DTOs;
+using TrackLott.Entities;
 using TrackLott.Extensions;
-using TrackLott.Models;
 
 namespace TrackLott.Controllers;
 
@@ -26,17 +26,19 @@ public class CombinationsController : BaseApiController
 
     if (appUser == null) return BadRequest("User not found");
 
-    var lottoResult = CheckLottery(combinationDto.LottoName?.ToLower()).Result;
-
-    if (lottoResult == null) return BadRequest("Lottery name not found");
-
     var combination = new Combination()
     {
       MemberId = appUser.Id,
-      LotteryResultId = lottoResult.Id,
-      DateAdded = new DateTime(combinationDto.DateAdded.Millisecond),
+      DateAdded = combinationDto.DateAdded,
       PickedNumbers = JsonSerializer.Serialize(combinationDto.PickedNumbers),
     };
+
+    if (combinationDto.LottoName != null && combinationDto.LottoName != "default")
+    {
+      var lottoResult = CheckLottery(combinationDto.LottoName.ToLower()).Result;
+      if (lottoResult == null) return BadRequest("Lottery name not found");
+      combination.LotteryResultId = lottoResult.Id;
+    }
 
     await _context.Combinations.AddAsync(combination);
     await _context.SaveChangesAsync();
@@ -44,7 +46,7 @@ public class CombinationsController : BaseApiController
     return "Combination Saved";
   }
 
-  [HttpPost("match-combos")]
+  [HttpPost("matchCombos")]
   [Authorize]
   public async Task<ActionResult<List<MatchCombinationDto>>> GetMatchingCombos(string lottoName)
   {
@@ -52,14 +54,15 @@ public class CombinationsController : BaseApiController
 
     if (appUser == null) return BadRequest("User not found");
 
-    var matchingLottoName =
+    var lotteryResult =
       await _context.LotteryResults.FirstOrDefaultAsync(result => result.DrawName.Equals(lottoName.ToLower()));
 
-    if (matchingLottoName == null) return BadRequest("No last draw to match combinations against");
-
+    if (lotteryResult == null) return BadRequest("No last draw to match combinations against");
 
     var combinationsResult = _context.Combinations
-      .Where(result => result.LotteryResultId == matchingLottoName.Id && result.MemberId == appUser.Id);
+      .Where(result => result.LotteryResultId == lotteryResult.Id && result.MemberId == appUser.Id);
+
+    if (combinationsResult.Any() == false) return BadRequest("No matching combinations found");
 
     var matchingCombos = new List<MatchCombinationDto>();
 

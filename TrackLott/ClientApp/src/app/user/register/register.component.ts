@@ -30,9 +30,8 @@ export class RegisterComponent implements OnInit, OnDestroy {
     let userDetails: UserRegister = {...ngFormObj.value};
 
     this.registerSubscription = this.accountService.onRegister(userDetails).subscribe({
-      next: (resp: any) => {
-        if (resp["userName"] && resp["token"]) {
-          this.accountService.appUserReplaySubject.next(resp);
+      next: resp => {
+        if (resp.userName && resp.token) {
           setSessionUserToken(resp);
           this.router.navigate(["/user/account"]);
         }
