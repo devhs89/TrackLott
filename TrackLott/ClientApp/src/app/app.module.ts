@@ -15,6 +15,8 @@ import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
 import {MatchComboComponent} from './home/match-combo/match-combo.component';
 import {MaterialModule} from "./material/material.module";
 import {JwtInterceptor} from "./interceptors/jwt.interceptor";
+import {MatProgressSpinnerModule} from "@angular/material/progress-spinner";
+import {LoadingInterceptor} from "./interceptors/loading.interceptor";
 
 @NgModule({
   declarations: [
@@ -34,10 +36,12 @@ import {JwtInterceptor} from "./interceptors/jwt.interceptor";
     ReactiveFormsModule,
     AppRoutingModule,
     BrowserAnimationsModule,
-    MaterialModule
+    MaterialModule,
+    MatProgressSpinnerModule
   ],
   providers: [
-    {provide: HTTP_INTERCEPTORS, useClass: JwtInterceptor, multi: true}
+    {provide: HTTP_INTERCEPTORS, useClass: JwtInterceptor, multi: true},
+    {provide: HTTP_INTERCEPTORS, useClass: LoadingInterceptor, multi: true}
   ],
   bootstrap: [AppComponent]
 })
