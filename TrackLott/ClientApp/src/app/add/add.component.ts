@@ -122,7 +122,7 @@ export class AddComponent implements OnInit {
     if (this.addCombosForm.valid && this.allPickedNums.length > 0) {
       this.combinations = {
         lottoName: this.lotteryNameSelected.name,
-        dateAdded: this.dateAddedControl.value.toLocaleString(),
+        dateAdded: this.dateAddedControl.value.toString(),
         pickedNumbers: this.allPickedNums
       };
       this.combinationsService.addCombinations(this.combinations).subscribe({

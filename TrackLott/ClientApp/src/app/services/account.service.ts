@@ -8,23 +8,38 @@ import {UserToken} from "../models/user-token";
 import {UserInfo} from "../models/user-info";
 import {UserPassword} from "../models/user-password";
 import {UserUpdateInfo} from "../models/user-update-info";
+import {map} from "rxjs/operators";
 
 @Injectable({
   providedIn: "root"
 })
 export class AccountService {
-  appUserReplaySubject = new ReplaySubject<UserToken | null>(1);
-  appUser$ = this.appUserReplaySubject.asObservable();
+  private appUserBehaviorSubject = new ReplaySubject<UserToken | null>(1);
+  appUser$ = this.appUserBehaviorSubject.asObservable();
 
   constructor(private httpClient: HttpClient) {
   }
 
+  emitAppUser(userToken: UserToken) {
+    this.appUserBehaviorSubject.next(userToken);
+  }
+
+  removeAppUser() {
+    this.appUserBehaviorSubject.next(null);
+  }
+
   onRegister(userRegister: UserRegister) {
-    return this.httpClient.post(`${BASE_URL}/account/register`, userRegister);
+    return this.httpClient.post<UserToken>(`${BASE_URL}/account/register`, userRegister).pipe(map(value => {
+      this.emitAppUser(value);
+      return value;
+    }));
   }
 
   onLogin(userCredentials: UserLogin) {
-    return this.httpClient.post(`${BASE_URL}/account/login`, userCredentials);
+    return this.httpClient.post<UserToken>(`${BASE_URL}/account/login`, userCredentials).pipe(map(value => {
+      this.emitAppUser(value);
+      return value;
+    }));
   }
 
   showUser() {

@@ -31,7 +31,7 @@ export class NavbarComponent implements OnInit, OnDestroy {
   }
 
   logout() {
-    this.accountService.appUserReplaySubject.next(null);
+    this.accountService.removeAppUser();
     removeLocalUserToken();
     removeSessionUserToken();
     this.userLoggedIn = false;

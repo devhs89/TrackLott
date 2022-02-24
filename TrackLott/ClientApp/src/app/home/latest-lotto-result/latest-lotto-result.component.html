@@ -32,3 +32,7 @@
     </g>
   </svg>
 </ng-template>
+
+<div class="spinner-overlay" *ngIf="isLoading$ | async">
+  <mat-spinner diameter="50" color="accent"></mat-spinner>
+</div>

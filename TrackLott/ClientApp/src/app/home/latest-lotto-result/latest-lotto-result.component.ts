@@ -4,6 +4,7 @@ import {Subscription} from "rxjs";
 import {LottoResult} from "../../models/lotto-result";
 import {MatSnackBar} from "@angular/material/snack-bar";
 import {parseError} from "../../helpers/parse-error";
+import {LoadingService} from "../../services/loading.service";
 
 @Component({
   selector: 'app-latest-lotto-result',
@@ -13,13 +14,14 @@ import {parseError} from "../../helpers/parse-error";
 export class LatestLottoResultComponent implements OnInit, OnDestroy {
   private subscription = new Subscription();
   latestLottoResult: LottoResult;
+  isLoading$ = this.loadingService.isLoading$;
 
-  constructor(private trackLottService: LottoResultService, private matSnackBar: MatSnackBar) {
+  constructor(private loadingService: LoadingService, private lottoResultService: LottoResultService, private matSnackBar: MatSnackBar) {
   }
 
   ngOnInit(): void {
-    this.subscription = this.trackLottService.latestResult().subscribe({
-      next: resp => this.latestLottoResult = {...resp},
+    this.subscription = this.lottoResultService.latestResult().subscribe({
+      next: (resp) => this.latestLottoResult = {...resp},
       error: err => this.matSnackBar.open(parseError(err.error), "Dismiss")
     });
   }
