@@ -7,4 +7,5 @@ export interface MatchingCombo {
   dateAdded: string;
   mainNums: number[];
   jackpot?: number;
+  matches: number;
 }
