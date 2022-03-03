@@ -12,7 +12,7 @@ export class CombinationsService {
   constructor(private httpClient: HttpClient) {
   }
 
-  addCombinations(combinations: Combination) {
+  addCombinations(combinations: Combination[]) {
     return this.httpClient.post(`${BASE_URL}/combinations/add`, combinations, {responseType: "text"});
   }
 

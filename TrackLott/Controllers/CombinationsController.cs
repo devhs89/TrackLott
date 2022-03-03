@@ -20,30 +20,50 @@ public class CombinationsController : BaseApiController
 
   [HttpPost("add")]
   [Authorize]
-  public async Task<ActionResult<string>> AddCombo(CombinationDto combinationDto)
+  public async Task<ActionResult<string>> AddCombo(CombinationDto[] combinationDto)
   {
     var appUser = await GetUser();
 
     if (appUser == null) return BadRequest("User not found");
 
-    var combination = new Combination()
-    {
-      MemberId = appUser.Id,
-      DateAdded = combinationDto.DateAdded,
-      PickedNumbers = JsonSerializer.Serialize(combinationDto.PickedNumbers),
-    };
+    var saveResp = "Combination Saved";
+    var allCombinations = new List<Combination>();
 
-    if (combinationDto.LottoName != null && combinationDto.LottoName != "default")
+    foreach (var combo in combinationDto)
     {
-      var lottoResult = CheckLottery(combinationDto.LottoName.ToLower()).Result;
-      if (lottoResult == null) return BadRequest("Lottery name not found");
-      combination.LotteryResultId = lottoResult.Id;
+      var combination = new Combination()
+      {
+        MemberId = appUser.Id,
+        DateAdded = combo.DateAdded,
+        PickedNumbers = JsonSerializer.Serialize(combo.PickedNumbers),
+      };
+
+      if (combo.LottoName != null)
+      {
+        var lottoName = combo.LottoName.ToLower();
+
+        Console.WriteLine(lottoName);
+
+        if (lottoName.Equals("mondaylotto") || lottoName.Equals("ozlotto") || lottoName.Equals("wednesdaylotto") ||
+            lottoName.Equals("powerball") || lottoName.Equals("tattslotto"))
+        {
+          var lottoResult = CheckLottery(lottoName).Result;
+          combination.LotteryResultId = lottoResult?.Id;
+        }
+        else
+        {
+          saveResp = "Combination saved without lottery name";
+        }
+      }
+
+      allCombinations.Add(combination);
     }
 
-    await _context.Combinations.AddAsync(combination);
-    await _context.SaveChangesAsync();
+    await _context.Combinations.AddRangeAsync(allCombinations);
+    allCombinations.Clear();
 
-    return "Combination Saved";
+    await _context.SaveChangesAsync();
+    return saveResp;
   }
 
   [HttpPost("matchCombos")]

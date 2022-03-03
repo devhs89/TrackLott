@@ -12,6 +12,7 @@ import {MatPaginator, PageEvent} from "@angular/material/paginator";
 import {MatSort} from "@angular/material/sort";
 import {MatTableDataSource} from "@angular/material/table";
 import {LottoResult} from "../../models/lotto-result";
+import {UserToken} from "../../models/user-token";
 
 @Component({
   selector: 'app-match-combo',
@@ -21,6 +22,7 @@ import {LottoResult} from "../../models/lotto-result";
 export class MatchComboComponent implements OnInit, OnDestroy {
   subscriptions: Subscription[] = [];
   isHandset$: Observable<boolean>;
+  appUser$: Observable<UserToken | null>;
   latestLottoResult$: Observable<LottoResult | null>;
   latestLottoResult: LottoResult;
   matchingCombos: MatchingCombo[] = [];
@@ -36,6 +38,7 @@ export class MatchComboComponent implements OnInit, OnDestroy {
 
   ngOnInit(): void {
     this.isHandset$ = this.deviceBreakpointService.handsetBreakpoint(Breakpoints.XSmall);
+    this.appUser$ = this.accountService.appUser$.pipe(take(1));
     this.latestLottoResult$ = this.lottoResultService.latestLottoResult$;
 
     this.accountService.appUser$.pipe(take(1)).subscribe(userToken => {
@@ -61,8 +64,12 @@ export class MatchComboComponent implements OnInit, OnDestroy {
     });
   }
 
-  pageSize(event: PageEvent) {
+  onPageEvent(event: PageEvent) {
     this.matchingCombosSliced = this.matchingCombos.slice((event.pageIndex * event.pageSize), (event.pageSize * (event.pageIndex + 1)));
+  }
+
+  ngOnDestroy() {
+    this.subscriptions.forEach(sub => sub.unsubscribe());
   }
 
   private parseMatchingCombos(value: MatchingComboResult[], lottoResult: LottoResult): MatchingCombo[] {
@@ -79,8 +86,7 @@ export class MatchComboComponent implements OnInit, OnDestroy {
         parsedMatchingCombos.push({
           dateAdded: dateStr.toDateString(),
           mainNums: pickedMainNums,
-          jackpot: numObj.jackpot,
-          matches: totalMatches
+          jackpot: numObj.jackpot
         });
       });
     });
@@ -109,9 +115,5 @@ export class MatchComboComponent implements OnInit, OnDestroy {
       }
     });
     return totalMatches;
-  }
-
-  ngOnDestroy() {
-    this.subscriptions.forEach(sub => sub.unsubscribe());
   }
 }
