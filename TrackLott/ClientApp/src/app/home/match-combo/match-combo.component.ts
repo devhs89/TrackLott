@@ -4,7 +4,7 @@ import {Observable, Subscription} from "rxjs";
 import {LottoResultService} from "../../services/lotto-result.service";
 import {AccountService} from "../../services/account.service";
 import {take} from "rxjs/operators";
-import {MatchingCombo, MatchingComboResult} from "../../models/matching-combo";
+import {CombinationsResponse, MatchingCombo} from "../../models/matching-combo";
 import {PickedNumbers} from "../../models/combination";
 import {DeviceBreakpointService} from "../../services/device-breakpoint.service";
 import {Breakpoints} from "@angular/cdk/layout";
@@ -28,10 +28,11 @@ export class MatchComboComponent implements OnInit, OnDestroy {
   matchingCombos: MatchingCombo[] = [];
   matchingCombosSliced: MatchingCombo[] = [];
   tableColumns = ["mainNums", "drawDate"];
+  datasource: MatTableDataSource<MatchingCombo>;
+  initialPageIndex: number = 0;
+  initialPageSize: number = 5;
   @ViewChild(MatPaginator) paginator: MatPaginator;
   @ViewChild(MatSort) sort: MatSort;
-  datasource: MatTableDataSource<MatchingCombo>;
-  paginatorDefaultPageSize: number = 5;
 
   constructor(private deviceBreakpointService: DeviceBreakpointService, private lottoResultService: LottoResultService, private accountService: AccountService, private combinationsService: CombinationsService) {
   }
@@ -51,9 +52,12 @@ export class MatchComboComponent implements OnInit, OnDestroy {
               if (lottoResult.drawName === "powerball") this.tableColumns.push("jackpot");
 
               this.subscriptions.push(
-                this.combinationsService.matchCombinations(lottoResult.drawName)
-                  .subscribe(value => {
-                    this.matchingCombos = this.parseMatchingCombos(value, lottoResult);
+                this.combinationsService.matchCombinations(lottoResult.drawName,
+                  this.paginator ? this.paginator.pageIndex : this.initialPageIndex,
+                  this.paginator ? this.paginator.pageSize : this.initialPageSize)
+                  .subscribe((value) => {
+                    // @ts-ignore
+                    this.matchingCombos = this.parseMatchingCombos(value.combinationsList, lottoResult);
                     this.paginateData();
                   })
               );
@@ -72,23 +76,33 @@ export class MatchComboComponent implements OnInit, OnDestroy {
     this.subscriptions.forEach(sub => sub.unsubscribe());
   }
 
-  private parseMatchingCombos(value: MatchingComboResult[], lottoResult: LottoResult): MatchingCombo[] {
+  private parseMatchingCombos(value: CombinationsResponse[], lottoResult: LottoResult): MatchingCombo[] {
     let parsedMatchingCombos: MatchingCombo[] = [];
 
     value.forEach(result => {
       const dateStr = new Date(result.dateAdded);
 
-      JSON.parse(result.pickedNumbers).forEach((numObj: PickedNumbers) => {
-        const winningNums = lottoResult.winningNumbers.map(Number);
-        const pickedMainNums = numObj.mainNums.map(Number);
-        const totalMatches = this.findTotalMatches(pickedMainNums, winningNums);
+      const pickedNumbers: PickedNumbers = JSON.parse(result.pickedNumbers);
 
-        parsedMatchingCombos.push({
-          dateAdded: dateStr.toDateString(),
-          mainNums: pickedMainNums,
-          jackpot: numObj.jackpot
-        });
+      console.log(pickedNumbers);
+
+      parsedMatchingCombos.push({
+        dateAdded: dateStr.toDateString(),
+        mainNums: pickedNumbers.mainNums,
+        jackpot: pickedNumbers.jackpot
       });
+
+      // JSON.parse(result.pickedNumbers).forEach((numObj: PickedNumbers) => {
+      //   const winningNums = lottoResult.winningNumbers.map(Number);
+      //   const pickedMainNums = numObj.mainNums.map(Number);
+      //   const totalMatches = this.findTotalMatches(pickedMainNums, winningNums);
+      //
+      //   parsedMatchingCombos.push({
+      //     dateAdded: dateStr.toDateString(),
+      //     mainNums: pickedMainNums,
+      //     jackpot: numObj.jackpot
+      //   });
+      // });
     });
     return parsedMatchingCombos;
   }
@@ -97,7 +111,7 @@ export class MatchComboComponent implements OnInit, OnDestroy {
     this.subscriptions.push(
       this.isHandset$.subscribe(value => {
         if (value) {
-          this.matchingCombosSliced = this.matchingCombos.slice(0, this.matchingCombos.length < this.paginatorDefaultPageSize ? this.matchingCombos.length : this.paginatorDefaultPageSize);
+          this.matchingCombosSliced = this.matchingCombos.slice(0, this.matchingCombos.length < this.initialPageSize ? this.matchingCombos.length : this.initialPageSize);
         } else {
           this.datasource = new MatTableDataSource<MatchingCombo>(this.matchingCombos);
           this.datasource.paginator = this.paginator;

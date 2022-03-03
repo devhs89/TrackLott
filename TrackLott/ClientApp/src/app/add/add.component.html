@@ -10,7 +10,7 @@
             <mat-label>Lottery Name</mat-label>
             <mat-select formControlName="lotteryNameControl" (selectionChange)="onLotterySelect($event)">
               <mat-option *ngFor="let lotto of lotteryNames | keyvalue"
-                          value="{{lotto.key}}">{{lotto.value.name}}</mat-option>
+                          value="{{lotto.value.name}}">{{lotto.value.name}}</mat-option>
             </mat-select>
             <mat-hint>Select a lottery name</mat-hint>
             <mat-error>Invalid lottery name</mat-error>

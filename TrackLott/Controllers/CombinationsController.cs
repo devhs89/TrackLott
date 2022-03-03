@@ -35,17 +35,16 @@ public class CombinationsController : BaseApiController
       {
         MemberId = appUser.Id,
         DateAdded = combo.DateAdded,
-        PickedNumbers = JsonSerializer.Serialize(combo.PickedNumbers),
+        PickedNumbers = JsonSerializer.Serialize(combo.PickedNumbers,
+          new JsonSerializerOptions() {PropertyNamingPolicy = JsonNamingPolicy.CamelCase}),
       };
 
       if (combo.LottoName != null)
       {
         var lottoName = combo.LottoName.ToLower();
 
-        Console.WriteLine(lottoName);
-
-        if (lottoName.Equals("mondaylotto") || lottoName.Equals("ozlotto") || lottoName.Equals("wednesdaylotto") ||
-            lottoName.Equals("powerball") || lottoName.Equals("tattslotto"))
+        if (lottoName.Equals("monday lotto") || lottoName.Equals("oz lotto") || lottoName.Equals("wednesday lotto") ||
+            lottoName.Equals("powerball") || lottoName.Equals("tatts lotto"))
         {
           var lottoResult = CheckLottery(lottoName).Result;
           combination.LotteryResultId = lottoResult?.Id;
@@ -68,50 +67,53 @@ public class CombinationsController : BaseApiController
 
   [HttpPost("matchCombos")]
   [Authorize]
-  public async Task<ActionResult<List<MatchCombinationDto>>> GetMatchingCombos(string lottoName)
+  public async Task<ActionResult<MatchComboResponseDto>> GetMatchingCombos(string lottoName, int pageIndex,
+    int pageSize)
   {
     var appUser = await GetUser();
 
     if (appUser == null) return BadRequest("User not found");
 
-    var lotteryResult =
-      await _context.LotteryResults.FirstOrDefaultAsync(result => result.DrawName.Equals(lottoName.ToLower()));
+    var lotteryResult = await CheckLottery(lottoName);
 
     if (lotteryResult == null) return BadRequest("No last draw to match combinations against");
 
+    var combinationsCount =
+      await _context.Combinations.CountAsync(combo =>
+        combo.LotteryResultId == lotteryResult.Id && combo.MemberId == appUser.Id);
+
+    if (combinationsCount < 1) return BadRequest("No matching combinations found");
+
     var combinationsResult = _context.Combinations
-      .Where(result => result.LotteryResultId == lotteryResult.Id && result.MemberId == appUser.Id);
+      .Where(combo => combo.LotteryResultId == lotteryResult.Id && combo.MemberId == appUser.Id)
+      .OrderByDescending(combo => combo.DateAdded).Skip(pageIndex * pageSize).Take(pageSize);
 
-    if (combinationsResult.Any() == false) return BadRequest("No matching combinations found");
-
-    var matchingCombos = new List<MatchCombinationDto>();
+    var matchingCombos = new List<MatchingCombinationDto>();
 
     foreach (var combination in combinationsResult)
     {
-      matchingCombos.Add(new MatchCombinationDto()
+      matchingCombos.Add(new MatchingCombinationDto()
       {
         DateAdded = combination.DateAdded,
         PickedNumbers = combination.PickedNumbers
       });
     }
 
-    return matchingCombos;
+    return new MatchComboResponseDto() {CombinationsList = matchingCombos, totalMatches = combinationsCount};
   }
 
   private async Task<Member?> GetUser()
   {
     var userName = User.GetUserName();
 
-    // TODO - Find a way to make this Guid a readonly static property to increase performance
     var member =
       await _context.Users.SingleOrDefaultAsync(member => userName != null && member.UserName.Equals(userName));
 
     return member;
   }
 
-  private async Task<LotteryResult?> CheckLottery(string? lottoName)
+  private async Task<LotteryResult?> CheckLottery(string lottoName)
   {
-    return await _context.LotteryResults.Where(result => result.DrawName.Equals(lottoName))
-      .FirstOrDefaultAsync();
+    return await _context.LotteryResults.FirstOrDefaultAsync(result => result.DrawName.Equals(lottoName.ToLower()));
   }
 }

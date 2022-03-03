@@ -64,19 +64,19 @@ export class AddComponent implements OnInit {
     this.clearCurrentPickedNumbers();
 
     switch (event.value) {
-      case "mondayLotto":
+      case "Monday Lotto":
         this.lotteryNameSelected = this.lotteryNames.mondayLotto;
         break;
-      case "ozLotto":
+      case "Oz Lotto":
         this.lotteryNameSelected = this.lotteryNames.ozLotto;
         break;
-      case "wednesdayLotto":
+      case "Wednesday Lotto":
         this.lotteryNameSelected = this.lotteryNames.wednesdayLotto;
         break;
-      case "powerball":
+      case "Powerball":
         this.lotteryNameSelected = this.lotteryNames.powerball;
         break;
-      case "tattsLotto":
+      case "Tatts Lotto":
         this.lotteryNameSelected = this.lotteryNames.tattsLotto;
         break;
     }
