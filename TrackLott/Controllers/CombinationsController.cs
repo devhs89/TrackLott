@@ -26,6 +26,7 @@ public class CombinationsController : BaseApiController
 
     if (appUser == null) return BadRequest("User not found");
 
+    var missingLottoNames = 0;
     var saveResp = "Combination Saved";
     var allCombinations = new List<Combination>();
 
@@ -51,12 +52,19 @@ public class CombinationsController : BaseApiController
         }
         else
         {
-          saveResp = "Combination saved without lottery name";
+          missingLottoNames++;
         }
+      }
+      else
+      {
+        missingLottoNames++;
       }
 
       allCombinations.Add(combination);
     }
+
+
+    if (missingLottoNames > 0) saveResp = missingLottoNames + " combinations saved without lottery name";
 
     await _context.Combinations.AddRangeAsync(allCombinations);
     allCombinations.Clear();
