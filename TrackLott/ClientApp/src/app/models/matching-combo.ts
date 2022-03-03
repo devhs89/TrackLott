@@ -4,8 +4,8 @@ export interface MatchingComboResponse {
 }
 
 export interface CombinationsResponse {
-  dateAdded: string,
-  pickedNumbers: string
+  dateAdded: string;
+  pickedNumbers: string;
 }
 
 export interface MatchingCombo {
