@@ -8,7 +8,7 @@ import {CombinationsResponse, MatchingCombo, MatchingComboResponse} from "../../
 import {PickedNumbers} from "../../models/combination";
 import {DeviceBreakpointService} from "../../services/device-breakpoint.service";
 import {Breakpoints} from "@angular/cdk/layout";
-import {MatPaginator, PageEvent} from "@angular/material/paginator";
+import {MatPaginator} from "@angular/material/paginator";
 import {MatSort} from "@angular/material/sort";
 import {MatTableDataSource} from "@angular/material/table";
 import {LottoResult} from "../../models/lotto-result";
@@ -45,7 +45,6 @@ export class MatchComboComponent implements OnInit, OnDestroy {
 
     this.accountService.appUser$.pipe(take(1)).subscribe(userToken => {
       if (userToken?.token) {
-
         this.lottoResultService.latestLottoResult$.pipe(take(1)).subscribe({
           next: lottoResult => {
             if (lottoResult?.drawName) {
@@ -59,12 +58,8 @@ export class MatchComboComponent implements OnInit, OnDestroy {
     });
   }
 
-  onPageEvent(event: PageEvent) {
-    if (event.previousPageIndex !== event.pageIndex) {
-      this.getMatchingCombinations(this.latestLottoResult);
-    }
-
-    this.matchingCombosSliced = this.matchingCombos.slice((event.pageIndex * event.pageSize), (event.pageSize * (event.pageIndex + 1)));
+  onPageEvent() {
+    this.getMatchingCombinations(this.latestLottoResult);
   }
 
   ngOnDestroy() {
@@ -106,24 +101,11 @@ export class MatchComboComponent implements OnInit, OnDestroy {
     this.subscriptions.push(
       this.isHandset$.subscribe(value => {
         if (value) {
-          this.matchingCombosSliced = this.matchingCombos.slice(0, this.matchingCombos.length < this.initialPageSize ? this.matchingCombos.length : this.initialPageSize);
+          this.matchingCombosSliced = this.matchingCombos;
         } else {
           this.datasource = new MatTableDataSource<MatchingCombo>(this.matchingCombos);
-          this.datasource.paginator = this.paginator;
-          this.datasource.sort = this.sort;
-          console.log(this.datasource);
         }
       })
     );
-  }
-
-  private findTotalMatches(mainNums: number[], winningNums: number[]) {
-    let totalMatches = 0;
-    mainNums.forEach(num => {
-      if (winningNums.indexOf(num) >= 0) {
-        totalMatches++;
-      }
-    });
-    return totalMatches;
   }
 }

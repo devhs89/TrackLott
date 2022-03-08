@@ -2,4 +2,7 @@
   <div class="container">
     <router-outlet></router-outlet>
   </div>
+  <div class="spinner-overlay" *ngIf="isLoading$ | async">
+    <mat-spinner diameter="50" color="accent"></mat-spinner>
+  </div>
 </app-navbar>

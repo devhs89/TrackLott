@@ -46,6 +46,7 @@
 
   <ng-template #paginator>
     <mat-paginator [length]="totalMatchingCombos" [pageSize]="initialPageSize"
-                   aria-label="Matching Combinations" (page)="onPageEvent($event)"></mat-paginator>
+                   [pageSizeOptions]="[initialPageSize, initialPageSize + 5]"
+                   aria-label="Matching Combinations" (page)="onPageEvent()"></mat-paginator>
   </ng-template>
 </ng-container>
