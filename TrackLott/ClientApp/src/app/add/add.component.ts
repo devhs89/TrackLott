@@ -31,8 +31,7 @@ export class AddComponent implements OnInit {
   lotteryNameControl: FormControl;
   dateAddedControl: FormControl;
   currPickedNums: PickedNumbers = {mainNums: []};
-  allPickedNums: PickedNumbers[] = [];
-  combinations: Combination;
+  allCombinations: Combination[] = [];
   minDate: Date;
   maxDate: Date;
 
@@ -62,23 +61,22 @@ export class AddComponent implements OnInit {
   }
 
   public onLotterySelect(event: MatSelectChange) {
-    this.clearAllPickedNumbers();
     this.clearCurrentPickedNumbers();
 
     switch (event.value) {
-      case "mondayLotto":
+      case "Monday Lotto":
         this.lotteryNameSelected = this.lotteryNames.mondayLotto;
         break;
-      case "ozLotto":
+      case "Oz Lotto":
         this.lotteryNameSelected = this.lotteryNames.ozLotto;
         break;
-      case "wednesdayLotto":
+      case "Wednesday Lotto":
         this.lotteryNameSelected = this.lotteryNames.wednesdayLotto;
         break;
-      case "powerball":
+      case "Powerball":
         this.lotteryNameSelected = this.lotteryNames.powerball;
         break;
-      case "tattsLotto":
+      case "Tatts Lotto":
         this.lotteryNameSelected = this.lotteryNames.tattsLotto;
         break;
     }
@@ -115,17 +113,12 @@ export class AddComponent implements OnInit {
   }
 
   onClear(dex: number) {
-    this.allPickedNums.splice(dex, 1);
+    this.allCombinations.splice(dex, 1);
   }
 
   onSaveCombinations() {
-    if (this.addCombosForm.valid && this.allPickedNums.length > 0) {
-      this.combinations = {
-        lottoName: this.lotteryNameSelected.name,
-        dateAdded: this.dateAddedControl.value.toString(),
-        pickedNumbers: this.allPickedNums
-      };
-      this.combinationsService.addCombinations(this.combinations).subscribe({
+    if (this.addCombosForm.valid && this.allCombinations.length > 0) {
+      this.combinationsService.addCombinations(this.allCombinations).subscribe({
         next: resp => {
           this.matSnackBar.open(resp, "Dismiss");
           this.clearCurrentPickedNumbers();
@@ -157,11 +150,15 @@ export class AddComponent implements OnInit {
   }
 
   private clearAllPickedNumbers() {
-    this.allPickedNums = [];
+    this.allCombinations = [];
   }
 
   private addCombination() {
-    this.allPickedNums.unshift({mainNums: this.currPickedNums.mainNums, jackpot: this.currPickedNums.jackpot});
+    this.allCombinations.unshift({
+      lottoName: this.lotteryNameControl.value || undefined,
+      dateAdded: this.dateAddedControl.value,
+      pickedNumbers: {mainNums: this.currPickedNums.mainNums, jackpot: this.currPickedNums.jackpot}
+    });
     this.clearCurrentPickedNumbers();
   }
 

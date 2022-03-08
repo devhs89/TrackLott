@@ -8,5 +8,12 @@ public class CombinationDto
 
   public string DateAdded { get; set; }
 
-  public JsonObject[] PickedNumbers { get; set; }
+  public PickedNumbersDto PickedNumbers { get; set; }
+}
+
+public class PickedNumbersDto
+{
+  public JsonArray MainNums { get; set; }
+
+  public int Jackpot { get; set; }
 }

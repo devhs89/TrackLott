@@ -14,9 +14,8 @@ import {ProgressIndicatorService} from "../../services/progress-indicator.servic
 export class LatestLottoResultComponent implements OnInit, OnDestroy {
   private subscription = new Subscription();
   latestLottoResult: LottoResult;
-  isLoading$ = this.loadingService.isLoading$;
 
-  constructor(private loadingService: ProgressIndicatorService, private lottoResultService: LottoResultService, private matSnackBar: MatSnackBar) {
+  constructor(private lottoResultService: LottoResultService, private matSnackBar: MatSnackBar) {
   }
 
   ngOnInit(): void {

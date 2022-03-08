@@ -27,6 +27,7 @@
 
   <mat-sidenav-content>
     <mat-toolbar color="primary" class="mat-elevation-z6">
+
       <button mat-icon-button type="button" aria-label="Toggle Sidenav" (click)="drawer.toggle()"
               *ngIf="(isHandset$ | async)">
         <mat-icon aria-label="Side nav toggle icon">menu</mat-icon>
@@ -34,7 +35,7 @@
 
       <a mat-button color="accent" class="navBrand" [routerLink]="'/home'">TrackLott</a>
 
-      <ng-container *ngIf="!(isHandset$| async)">
+      <ng-container *ngIf="!(isHandset$ | async)">
         <a mat-button class="text-uppercase" [routerLink]="'/home'">Home</a>
 
         <a mat-button class="text-uppercase" [routerLink]="'/add'">Add</a>

@@ -61,14 +61,15 @@ body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif !important; 
   font-size: 2rem;
 }
 
-spinner-overlay {
-  height: 100vh !important;
-  width: 100% !important;
+.spinner-overlay {
+  position: absolute !important;
+  display: block !important;
   background-color: rgba(0, 0, 0, 0.286) !important;
-  z-index: 998 !important;
+  z-index: 990 !important;
   top: 0 !important;
+  right: 0 !important;
+  bottom: 0 !important;
   left: 0 !important;
-  position: fixed !important;
 }
 
 mat-spinner {
