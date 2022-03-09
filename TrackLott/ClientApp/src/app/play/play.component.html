@@ -21,23 +21,25 @@
               (click)="onClickBtn($event, 2)" [disabled]="rowThreeNum > 0 && (rowThreeNum !== num)"
               *ngFor="let num of deltaNums[2]">{{num}}</button>
     </div>
-    <div>
+    <div class="mb-3">
       <div class="mb-1">Pick two numbers</div>
       <button mat-mini-fab type="button" class="m-1"
               [color]="rowFourNums.length > 0 && rowFourNums.includes(num) ? 'accent' : 'primary'"
               (click)="onClickBtn($event, 3)" [disabled]="rowFourNums.length > 1 && !(rowFourNums.includes(num))"
               *ngFor="let num of deltaNums[3]">{{num}}</button>
     </div>
+
+    <mat-card-subtitle class="fw-light text-end">Total -
+      <span [class]="numTotal > 45 ? 'text-warning' : 'text-secondary'">{{numTotal}}</span>/45
+    </mat-card-subtitle>
+    <mat-divider inset class="mb-2"></mat-divider>
+    <div class="d-flex justify-content-center">
+      <button mat-flat-button type="button" class="w-50 text-uppercase" color="primary" [disabled]="!isDeltaGameValid"
+              (click)="onSubmitDeltaNums()">
+        Submit
+      </button>
+    </div>
   </mat-card-content>
-  <mat-card-subtitle class="fw-light text-end">Total -
-    <span [class]="numTotal > 45 ? 'text-warning' : 'text-secondary'">{{numTotal}}</span>/45
-  </mat-card-subtitle>
-  <mat-divider inset class="my-2"></mat-divider>
-  <mat-card-actions align="end" class="py-1">
-    <button mat-flat-button type="button" color="primary" [disabled]="!isDeltaGameValid" (click)="onSubmitDeltaNums()">
-      Submit
-    </button>
-  </mat-card-actions>
 </mat-card>
 
 <mat-card class="row col-xl-9 mx-auto mb-3 mat-elevation-z6" *ngIf="resultNums.length > 0">
