@@ -116,15 +116,19 @@ export class AccountComponent implements OnInit, OnDestroy {
       this.userPasswords.newPassword = this.newPassword.value;
       this.userPasswords.repeatPassword = this.repeatPassword.value;
 
-      this.updateInfoSubscription = this.accountService.onUpdatePassword(this.userPasswords)
-        .subscribe({
-          next: resp => this.matSnackBar.open(resp, "Dismiss"),
-          error: err => this.matSnackBar.open(parseError(err.error), "Dismiss"),
-          complete: () => {
-            this.resetPasswordForm();
-            this.disablePasswordControls = true;
-          }
-        });
+      if (this.userPasswords.newPassword === this.userPasswords.repeatPassword) {
+        this.updateInfoSubscription = this.accountService.onUpdatePassword(this.userPasswords)
+          .subscribe({
+            next: resp => this.matSnackBar.open(resp, "Dismiss"),
+            error: err => this.matSnackBar.open(parseError(err.error), "Dismiss"),
+            complete: () => {
+              this.resetPasswordForm();
+              this.disablePasswordControls = true;
+            }
+          });
+      } else {
+        this.matSnackBar.open(parseError("New passwords do not match"), "Dismiss")
+      }
     }
   }
 
