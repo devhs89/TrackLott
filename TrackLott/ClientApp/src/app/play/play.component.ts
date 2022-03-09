@@ -1,4 +1,4 @@
-import {Component, OnInit} from '@angular/core';
+import {Component} from '@angular/core';
 import {MatSnackBar} from "@angular/material/snack-bar";
 
 @Component({
@@ -6,7 +6,7 @@ import {MatSnackBar} from "@angular/material/snack-bar";
   templateUrl: './play.component.html',
   styleUrls: ['./play.component.scss']
 })
-export class PlayComponent implements OnInit {
+export class PlayComponent {
   deltaNums: number[][] = [
     [1, 2, 3, 4, 5],
     [1, 2, 3, 4, 5, 6, 7],
@@ -25,9 +25,6 @@ export class PlayComponent implements OnInit {
   constructor(private matSnackBar: MatSnackBar) {
   }
 
-  ngOnInit(): void {
-  }
-
   onClickBtn(event: MouseEvent, outerDex: number) {
     // @ts-ignore
     const btnSelected = +event.target?.textContent;
@@ -37,7 +34,6 @@ export class PlayComponent implements OnInit {
       this.confirmNumbers(outerDex, btnSelected);
       this.matSnackBar.open("Sum of selected numbers exceeds 45. Please select a lower number.", "Dismiss");
     }
-
     this.isDeltaGameValid = this.rowOneNum > 0 && this.rowTwoNums.length == 2 && this.rowThreeNum > 0 && this.rowFourNums.length == 2 && this.numTotal <= 45;
   }
 
@@ -58,7 +54,6 @@ export class PlayComponent implements OnInit {
       const num6 = num5 + this.allPickedNumbers[5];
 
       this.resultNums = [num1, num2, num3, num4, num5, num6];
-      console.log(this.resultNums);
       this.resetDeltaGame();
     }
   }
