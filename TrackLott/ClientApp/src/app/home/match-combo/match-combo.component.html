@@ -5,10 +5,11 @@
       <mat-card-title>{{combo.dateAdded}}</mat-card-title>
       <mat-card-content>
         <div class="d-inline-flex me-md-3">
-          <app-number-svg [numsArray]="combo.mainNums" bgFill="#ffd740" txtColor="#343a40"></app-number-svg>
+          <app-number-svg [svgNum]="num" bgFill="#ffd740" txtColor="#343a40"
+                          *ngFor="let num of combo.mainNums"></app-number-svg>
         </div>
-        <div class="d-inline-flex">
-          <app-number-svg [numsArray]="[combo.jackpot]" bgFill="#F44336FF" *ngIf="combo.jackpot"></app-number-svg>
+        <div class="d-inline-flex" *ngIf="combo.jackpot">
+          <app-number-svg bgFill="#F44336FF" [svgNum]="combo.jackpot"></app-number-svg>
         </div>
       </mat-card-content>
     </mat-card>
@@ -20,14 +21,15 @@
         <ng-container matColumnDef="mainNums">
           <mat-header-cell *matHeaderCellDef>Main Numbers</mat-header-cell>
           <mat-cell *matCellDef="let combo">
-            <app-number-svg [numsArray]="combo.mainNums" bgFill="#ffd740" txtColor="#343a40"></app-number-svg>
+            <app-number-svg [svgNum]="num" bgFill="#ffd740" txtColor="#343a40"
+                            *ngFor="let num of combo.mainNums"></app-number-svg>
           </mat-cell>
         </ng-container>
 
         <ng-container matColumnDef="jackpot" *ngIf="latestLottoResult && latestLottoResult.drawName === 'powerball'">
           <mat-header-cell *matHeaderCellDef>Powerball</mat-header-cell>
           <mat-cell *matCellDef="let combo">
-            <app-number-svg [numsArray]="[combo.jackpot]" bgFill="#F44336FF"></app-number-svg>
+            <app-number-svg [svgNum]="combo.jackpot" bgFill="#F44336FF"></app-number-svg>
           </mat-cell>
         </ng-container>
 

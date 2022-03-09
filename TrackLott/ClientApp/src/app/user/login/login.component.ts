@@ -37,7 +37,6 @@ export class LoginComponent implements OnInit, OnDestroy {
         password: userCredentials.password
       }).subscribe({
         next: response => {
-          console.log(response);
           if (response.userName && response.token) {
             userCredentials.rememberMe ? setLocalUserToken(response) : setSessionUserToken(response);
             this.router.navigate(["/home"]);
