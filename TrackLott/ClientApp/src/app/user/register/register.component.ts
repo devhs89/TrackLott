@@ -7,6 +7,7 @@ import {Router} from "@angular/router";
 import {UserRegister} from "../../models/user-register";
 import {setSessionUserToken} from "../../helpers/local-storage";
 import {MatSnackBar} from "@angular/material/snack-bar";
+import {ProgressIndicatorService} from "../../services/progress-indicator.service";
 
 @Component({
   selector: 'app-register',
@@ -14,11 +15,12 @@ import {MatSnackBar} from "@angular/material/snack-bar";
   styleUrls: ['./register.component.scss']
 })
 export class RegisterComponent implements OnInit, OnDestroy {
+  isLoading$ = this.loadingService.isLoading$;
   registerSubscription = new Subscription();
   loginSubscription = new Subscription();
   countries: string[] = COUNTRIES;
 
-  constructor(private accountService: AccountService, private router: Router, private matSnackBar: MatSnackBar) {
+  constructor(private loadingService: ProgressIndicatorService, private accountService: AccountService, private router: Router, private matSnackBar: MatSnackBar) {
   }
 
   ngOnInit(): void {
@@ -26,7 +28,6 @@ export class RegisterComponent implements OnInit, OnDestroy {
 
   onSubmit(ngFormObj: NgForm) {
     if (ngFormObj.invalid) return;
-
     let userDetails: UserRegister = {...ngFormObj.value};
 
     this.registerSubscription = this.accountService.onRegister(userDetails).subscribe({

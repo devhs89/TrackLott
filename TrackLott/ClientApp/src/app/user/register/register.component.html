@@ -91,3 +91,7 @@
     </form>
   </mat-card-content>
 </mat-card>
+
+<div class="spinner-overlay" *ngIf="isLoading$ | async">
+  <mat-spinner diameter="50" color="accent"></mat-spinner>
+</div>
