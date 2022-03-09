@@ -34,7 +34,7 @@ export class NavbarComponent implements OnInit, OnDestroy {
     removeLocalUserToken();
     removeSessionUserToken();
     this.userLoggedIn = false;
-    this.router.navigate(['/home']);
+    this.router.url === "/home" ? window.location.reload() : this.router.navigate(['/home']);
   }
 
   ngOnDestroy(): void {
