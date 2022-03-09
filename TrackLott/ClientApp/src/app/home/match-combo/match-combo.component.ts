@@ -13,6 +13,7 @@ import {MatSort} from "@angular/material/sort";
 import {MatTableDataSource} from "@angular/material/table";
 import {LottoResult} from "../../models/lotto-result";
 import {UserToken} from "../../models/user-token";
+import {ProgressIndicatorService} from "../../services/progress-indicator.service";
 
 @Component({
   selector: 'app-match-combo',
@@ -20,9 +21,10 @@ import {UserToken} from "../../models/user-token";
   styleUrls: ['./match-combo.component.scss']
 })
 export class MatchComboComponent implements OnInit, OnDestroy {
-  subscriptions: Subscription[] = [];
   isHandset$: Observable<boolean>;
+  isLoading$ = this.loadingService.isLoading$;
   appUser$: Observable<UserToken | null>;
+  subscriptions: Subscription[] = [];
   latestLottoResult$: Observable<LottoResult | null>;
   latestLottoResult: LottoResult;
   matchingCombos: MatchingCombo[] = [];
@@ -35,7 +37,7 @@ export class MatchComboComponent implements OnInit, OnDestroy {
   @ViewChild(MatPaginator) paginator: MatPaginator;
   @ViewChild(MatSort) sort: MatSort;
 
-  constructor(private deviceBreakpointService: DeviceBreakpointService, private lottoResultService: LottoResultService, private accountService: AccountService, private combinationsService: CombinationsService) {
+  constructor(private deviceBreakpointService: DeviceBreakpointService, private loadingService: ProgressIndicatorService, private lottoResultService: LottoResultService, private accountService: AccountService, private combinationsService: CombinationsService) {
   }
 
   ngOnInit(): void {

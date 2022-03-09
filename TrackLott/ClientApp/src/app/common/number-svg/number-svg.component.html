@@ -1,15 +1,13 @@
-<i>
-  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 40 40" width="40" height="40"
-       class="mt-1 mx-1 rounded-circle shadow-num-btn">
-    <style>
-      .textNum {
-        font: 400 1.1rem 'Roboto Mono', monospace;
-      }
-    </style>
-    <g>
-      <circle r="20" cx="20" cy="20" [ngStyle]="{'fill': bgFill}"></circle>
-      <text x="20" y="26" text-anchor="middle" class="textNum"
-            [ngStyle]="{'fill': txtColor}">{{svgNum}}</text>
-    </g>
-  </svg>
-</i>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 40 40" width="40" height="40"
+     class="mt-1 mx-1 rounded-circle shadow-num-btn">
+  <style>
+    .textNum {
+      font: 400 1.1rem 'Roboto Mono', monospace;
+    }
+  </style>
+  <g>
+    <circle r="20" cx="20" cy="20" [ngStyle]="{'fill': bgFill}"></circle>
+    <text x="20" y="26" text-anchor="middle" class="textNum"
+          [ngStyle]="{'fill': txtColor}">{{svgNum}}</text>
+  </g>
+</svg>
