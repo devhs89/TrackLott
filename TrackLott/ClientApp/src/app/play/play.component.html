@@ -3,32 +3,49 @@
   <mat-divider inset class="my-3"></mat-divider>
   <mat-card-content>
     <div class="mb-3">
-      <p>Pick a number</p>
-      <ng-container *ngFor="let num of deltaNums[0]; index as dex">
-        <ng-container
-          *ngTemplateOutlet="rowOne; context: {$implicit: {currRow: 0, actualNum: num, numDex: dex}}"></ng-container>
-      </ng-container>
+      <div class="mb-1">Pick a number</div>
+      <button mat-mini-fab type="button" class="m-1" [color]="rowOneNum === num ? 'accent' : 'primary'"
+              (click)="onClickBtn($event, 0)" [disabled]="rowOneNum > 0 && rowOneNum !== num"
+              *ngFor="let num of deltaNums[0]">{{num}}</button>
     </div>
     <div class="mb-3">
-      <p>Pick two numbers</p>
-      <ng-container *ngFor="let num of deltaNums[1]; index as dex">
-        <ng-container
-          *ngTemplateOutlet="rowTwo; context: {$implicit: {currRow: 1, actualNum: num, numDex: dex}}"></ng-container>
-      </ng-container>
+      <div class="mb-1">Pick two numbers</div>
+      <button mat-mini-fab type="button" class="m-1"
+              [color]="rowTwoNums.length > 0 && rowTwoNums.includes(num) ? 'accent' : 'primary'"
+              (click)="onClickBtn($event, 1)" [disabled]="rowTwoNums.length > 1 && !(rowTwoNums.includes(num))"
+              *ngFor="let num of deltaNums[1]">{{num}}</button>
+    </div>
+    <div class="mb-3">
+      <div class="mb-1">Pick one number</div>
+      <button mat-mini-fab type="button" class="m-1" [color]="rowThreeNum === num ? 'accent' : 'primary'"
+              (click)="onClickBtn($event, 2)" [disabled]="rowThreeNum > 0 && (rowThreeNum !== num)"
+              *ngFor="let num of deltaNums[2]">{{num}}</button>
+    </div>
+    <div>
+      <div class="mb-1">Pick two numbers</div>
+      <button mat-mini-fab type="button" class="m-1"
+              [color]="rowFourNums.length > 0 && rowFourNums.includes(num) ? 'accent' : 'primary'"
+              (click)="onClickBtn($event, 3)" [disabled]="rowFourNums.length > 1 && !(rowFourNums.includes(num))"
+              *ngFor="let num of deltaNums[3]">{{num}}</button>
+    </div>
+  </mat-card-content>
+  <mat-card-subtitle class="fw-light text-end">Total -
+    <span [class]="numTotal > 45 ? 'text-warning' : 'text-secondary'">{{numTotal}}</span>/45
+  </mat-card-subtitle>
+  <mat-divider inset class="my-2"></mat-divider>
+  <mat-card-actions align="end" class="py-1">
+    <button mat-flat-button type="button" color="primary" [disabled]="!isDeltaGameValid" (click)="onSubmitDeltaNums()">
+      Submit
+    </button>
+  </mat-card-actions>
+</mat-card>
+
+<mat-card class="row col-xl-9 mx-auto mb-3 mat-elevation-z6" *ngIf="resultNums.length > 0">
+  <mat-card-title>Your Numbers</mat-card-title>
+  <mat-divider class="my-3" inset></mat-divider>
+  <mat-card-content>
+    <div class="d-inline-flex me-md-3">
+      <app-number-svg [svgNum]="num" bgFill="green" *ngFor="let num of resultNums"></app-number-svg>
     </div>
   </mat-card-content>
 </mat-card>
-
-<ng-template #rowOne let-options>
-  <button mat-mini-fab type="button" class="m-1"
-          [color]="rowOnePickedNum > 0 && rowOnePickedNum === options.numDex + 1 ? 'warn': 'primary'"
-          (click)="onClickBtn($event, options.currRow)"
-          [disabled]="rowOnePickedNum > 0 && rowOnePickedNum !== options.numDex + 1">{{options.actualNum}}</button>
-</ng-template>
-
-<ng-template #rowTwo let-options>
-  <button mat-mini-fab type="button" class="m-1"
-          [color]="rowTwoPickedNums.includes(options.numDex + 1) ? 'warn': 'primary'"
-          (click)="onClickBtn($event, options.currRow)"
-          [disabled]="rowTwoPickedNums.length > 1 && !(rowTwoPickedNums.includes(options.numDex + 1))">{{options.actualNum}}</button>
-</ng-template>

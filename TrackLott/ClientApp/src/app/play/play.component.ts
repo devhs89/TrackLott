@@ -1,4 +1,5 @@
 import {Component, OnInit} from '@angular/core';
+import {MatSnackBar} from "@angular/material/snack-bar";
 
 @Component({
   selector: 'app-play',
@@ -12,12 +13,16 @@ export class PlayComponent implements OnInit {
     [7, 9],
     [8, 9, 10, 11, 12, 13, 14, 15]
   ];
-  rowOnePickedNum: number = 0;
-  rowTwoPickedNums: number[] = [];
-  rowThreePickedNum: number = 0;
-  rowFourPickedNums: number[] = [];
+  numTotal: number = 0;
+  rowOneNum: number = 0;
+  rowTwoNums: number[] = [];
+  rowThreeNum: number = 0;
+  rowFourNums: number[] = [];
+  allPickedNumbers: number[] = [];
+  resultNums: number[] = [];
+  isDeltaGameValid: boolean = false;
 
-  constructor() {
+  constructor(private matSnackBar: MatSnackBar) {
   }
 
   ngOnInit(): void {
@@ -25,17 +30,89 @@ export class PlayComponent implements OnInit {
 
   onClickBtn(event: MouseEvent, outerDex: number) {
     // @ts-ignore
-    const btnSelected: number = +event.target?.textContent;
+    const btnSelected = +event.target?.textContent;
+    this.confirmNumbers(outerDex, btnSelected);
+
+    if (this.numTotal > 45) {
+      this.confirmNumbers(outerDex, btnSelected);
+      this.matSnackBar.open("Sum of selected numbers exceeds 45. Please select a lower number.", "Dismiss");
+    }
+
+    this.isDeltaGameValid = this.rowOneNum > 0 && this.rowTwoNums.length == 2 && this.rowThreeNum > 0 && this.rowFourNums.length == 2 && this.numTotal <= 45;
+  }
+
+  onSubmitDeltaNums() {
+    if (this.isDeltaGameValid) {
+      this.allPickedNumbers.push(this.rowOneNum);
+      this.allPickedNumbers = this.allPickedNumbers.concat(this.rowTwoNums);
+      this.allPickedNumbers.push(this.rowThreeNum);
+      this.allPickedNumbers = this.allPickedNumbers.concat(this.rowFourNums);
+
+      this.allPickedNumbers.sort((a, b) => Math.random() - 0.5);
+
+      const num1 = this.allPickedNumbers[0];
+      const num2 = num1 + this.allPickedNumbers[1];
+      const num3 = num2 + this.allPickedNumbers[2];
+      const num4 = num3 + this.allPickedNumbers[3];
+      const num5 = num4 + this.allPickedNumbers[4];
+      const num6 = num5 + this.allPickedNumbers[5];
+
+      this.resultNums = [num1, num2, num3, num4, num5, num6];
+      console.log(this.resultNums);
+      this.resetDeltaGame();
+    }
+  }
+
+  private confirmNumbers(outerDex: number, btnSelected: number) {
+    this.allPickedNumbers = [];
 
     switch (outerDex) {
       case 0:
-        this.rowOnePickedNum === btnSelected ? this.rowOnePickedNum = 0 : this.rowOnePickedNum = btnSelected;
+        if (this.rowOneNum === btnSelected) {
+          this.rowOneNum = 0;
+          this.numTotal -= btnSelected;
+        } else {
+          this.rowOneNum = btnSelected;
+          this.numTotal += btnSelected;
+        }
         break;
       case 1:
-        this.rowTwoPickedNums.includes(btnSelected)
-          ? this.rowTwoPickedNums.splice(this.rowTwoPickedNums.findIndex(item => item === btnSelected), 1)
-          : this.rowTwoPickedNums.push(btnSelected);
+        if (this.rowTwoNums.includes(btnSelected)) {
+          this.rowTwoNums.splice(this.rowTwoNums.findIndex(item => item === btnSelected), 1);
+          this.numTotal -= btnSelected;
+        } else {
+          this.rowTwoNums.push(btnSelected);
+          this.numTotal += btnSelected;
+        }
+        break;
+      case 2:
+        if (this.rowThreeNum === btnSelected) {
+          this.rowThreeNum = 0;
+          this.numTotal -= btnSelected;
+        } else {
+          this.rowThreeNum = btnSelected;
+          this.numTotal += btnSelected;
+        }
+        break;
+      case 3:
+        if (this.rowFourNums.includes(btnSelected)) {
+          this.rowFourNums.splice(this.rowFourNums.findIndex(item => item === btnSelected), 1);
+          this.numTotal -= btnSelected;
+        } else {
+          this.rowFourNums.push(btnSelected);
+          this.numTotal += btnSelected;
+        }
         break;
     }
+  }
+
+  private resetDeltaGame() {
+    this.allPickedNumbers = [];
+    this.rowOneNum = 0;
+    this.rowTwoNums = [];
+    this.rowThreeNum = 0;
+    this.rowFourNums = [];
+    this.numTotal = 0;
+    this.isDeltaGameValid = false;
   }
 }
