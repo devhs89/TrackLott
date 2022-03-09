@@ -12,10 +12,11 @@ import {ProgressIndicatorService} from "../../services/progress-indicator.servic
   styleUrls: ['./latest-lotto-result.component.scss']
 })
 export class LatestLottoResultComponent implements OnInit, OnDestroy {
+  isLoading$ = this.loadingService.isLoading$;
   private subscription = new Subscription();
   latestLottoResult: LottoResult;
 
-  constructor(private lottoResultService: LottoResultService, private matSnackBar: MatSnackBar) {
+  constructor(private loadingService: ProgressIndicatorService, private lottoResultService: LottoResultService, private matSnackBar: MatSnackBar) {
   }
 
   ngOnInit(): void {

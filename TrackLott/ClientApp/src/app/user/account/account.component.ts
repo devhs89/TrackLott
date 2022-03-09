@@ -9,6 +9,7 @@ import {MatSnackBar} from "@angular/material/snack-bar";
 import {capitalizeString} from "../../helpers/capitalize-string";
 import {parseError} from "../../helpers/parse-error";
 import {UserUpdateInfo} from "../../models/user-update-info";
+import {ProgressIndicatorService} from "../../services/progress-indicator.service";
 
 @Component({
   selector: 'app-account',
@@ -16,6 +17,7 @@ import {UserUpdateInfo} from "../../models/user-update-info";
   styleUrls: ['./account.component.scss']
 })
 export class AccountComponent implements OnInit, OnDestroy {
+  isLoading$ = this.loadingService.isLoading$;
   updateInfoSubscription = new Subscription();
   updatePasswordSubscription = new Subscription();
   showUserSubscription = new Subscription();
@@ -35,7 +37,7 @@ export class AccountComponent implements OnInit, OnDestroy {
   private info: UserInfo;
   private userPasswords: UserPassword = {currentPassword: "", newPassword: "", repeatPassword: ""};
 
-  constructor(private formBuilder: FormBuilder, private accountService: AccountService, private matSnackBar: MatSnackBar) {
+  constructor(private loadingService: ProgressIndicatorService, private formBuilder: FormBuilder, private accountService: AccountService, private matSnackBar: MatSnackBar) {
   }
 
   ngOnInit(): void {
@@ -114,15 +116,19 @@ export class AccountComponent implements OnInit, OnDestroy {
       this.userPasswords.newPassword = this.newPassword.value;
       this.userPasswords.repeatPassword = this.repeatPassword.value;
 
-      this.updateInfoSubscription = this.accountService.onUpdatePassword(this.userPasswords)
-        .subscribe({
-          next: resp => this.matSnackBar.open(resp, "Dismiss"),
-          error: err => this.matSnackBar.open(parseError(err.error), "Dismiss"),
-          complete: () => {
-            this.resetPasswordForm();
-            this.disablePasswordControls = true;
-          }
-        });
+      if (this.userPasswords.newPassword === this.userPasswords.repeatPassword) {
+        this.updateInfoSubscription = this.accountService.onUpdatePassword(this.userPasswords)
+          .subscribe({
+            next: resp => this.matSnackBar.open(resp, "Dismiss"),
+            error: err => this.matSnackBar.open(parseError(err.error), "Dismiss"),
+            complete: () => {
+              this.resetPasswordForm();
+              this.disablePasswordControls = true;
+            }
+          });
+      } else {
+        this.matSnackBar.open(parseError("New passwords do not match"), "Dismiss")
+      }
     }
   }
 

@@ -6,7 +6,6 @@ import {removeLocalUserToken, removeSessionUserToken} from "../helpers/local-sto
 import {DeviceBreakpointService} from "../services/device-breakpoint.service";
 import {Breakpoints} from "@angular/cdk/layout";
 import {Router} from "@angular/router";
-import {ProgressIndicatorService} from "../services/progress-indicator.service";
 
 @Component({
   selector: 'app-navbar',
@@ -35,7 +34,7 @@ export class NavbarComponent implements OnInit, OnDestroy {
     removeLocalUserToken();
     removeSessionUserToken();
     this.userLoggedIn = false;
-    this.router.navigate(['/home']);
+    this.router.url === "/home" ? window.location.reload() : this.router.navigate(['/home']);
   }
 
   ngOnDestroy(): void {

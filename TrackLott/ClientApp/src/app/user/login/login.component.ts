@@ -7,6 +7,7 @@ import {setLocalUserToken, setSessionUserToken} from "../../helpers/local-storag
 import {UserLogin} from "../../models/user-login";
 import {MatSnackBar} from "@angular/material/snack-bar";
 import {parseError} from "../../helpers/parse-error";
+import {ProgressIndicatorService} from "../../services/progress-indicator.service";
 
 @Component({
   selector: 'app-login',
@@ -14,11 +15,11 @@ import {parseError} from "../../helpers/parse-error";
   styleUrls: ['./login.component.scss']
 })
 export class LoginComponent implements OnInit, OnDestroy {
+  isLoading$ = this.loadingService.isLoading$;
   loginForm: FormGroup;
   subscription = new Subscription();
-  formInvalid = false;
 
-  constructor(private accountService: AccountService, private router: Router, private matSnackBar: MatSnackBar) {
+  constructor(private loadingService: ProgressIndicatorService, private accountService: AccountService, private router: Router, private matSnackBar: MatSnackBar) {
   }
 
   ngOnInit(): void {

@@ -8,9 +8,8 @@ import {ProgressIndicatorService} from "./services/progress-indicator.service";
   templateUrl: './app.component.html'
 })
 export class AppComponent implements OnInit {
-  isLoading$ = this.loadingService.isLoading$;
 
-  constructor(private loadingService: ProgressIndicatorService, private accountService: AccountService) {
+  constructor(private accountService: AccountService) {
   }
 
   ngOnInit() {

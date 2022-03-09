@@ -62,7 +62,7 @@
           </div>
         </div>
 
-        <div class="col-12 col-md-6" [ngClass]="{'mb-3': (isHandset$ | async)}">
+        <div class="col-12 col-md-6">
           <div class="border rounded-3 p-2 justify-content-center text-center">
             <button mat-mini-fab type="button" class="m-1" color="primary"
                     (click)="onMainNumClick(num)"
@@ -82,7 +82,8 @@
         </ng-container>
       </div>
 
-      <div class="d-flex justify-content-center my-3">
+      <mat-divider inset class="mb-2"></mat-divider>
+      <div class="d-flex justify-content-center">
         <button mat-flat-button type="submit" color="primary" class="w-50 text-uppercase">
           Save
         </button>
