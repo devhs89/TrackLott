@@ -4,7 +4,6 @@ import {Injectable} from "@angular/core";
 import {ActivatedRouteSnapshot, CanActivate, Router, RouterStateSnapshot, UrlTree} from "@angular/router";
 import {Observable} from "rxjs";
 import {MatSnackBar} from "@angular/material/snack-bar";
-import {parseError} from "../helpers/parse-error";
 
 @Injectable({
   providedIn: "root"
@@ -17,19 +16,16 @@ export class AuthGuardService implements CanActivate {
 
   canActivate(route: ActivatedRouteSnapshot, state: RouterStateSnapshot)
     : Observable<boolean | UrlTree> | Promise<boolean | UrlTree> | boolean | UrlTree {
-
-    this.accountService.appUser$.pipe(take(1)).subscribe({
-      next: value => {
-        if (value?.token) {
-          this.isAuthenticated = true;
-        } else {
-          this.matSnackBar.open("Please login first", "Dismiss");
-          this.router.navigate(["/user/login"]);
-          this.isAuthenticated = false;
-        }
-      }, error: err => this.matSnackBar.open(parseError(err.error), "Dismiss")
+    this.accountService.appUser$.pipe(take(1)).subscribe(value => {
+      if (value?.token) {
+        this.isAuthenticated = true;
+      }
     });
 
+    if (!this.isAuthenticated) {
+      this.matSnackBar.open("Please login first", "Dismiss");
+      this.router.navigate(["/user/login"]);
+    }
     return this.isAuthenticated;
   }
 }
