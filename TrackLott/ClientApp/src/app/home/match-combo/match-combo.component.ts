@@ -9,7 +9,6 @@ import {PickedNumbers} from "../../models/combination";
 import {DeviceBreakpointService} from "../../services/device-breakpoint.service";
 import {Breakpoints} from "@angular/cdk/layout";
 import {MatPaginator} from "@angular/material/paginator";
-import {MatSort} from "@angular/material/sort";
 import {MatTableDataSource} from "@angular/material/table";
 import {LottoResult} from "../../models/lotto-result";
 import {UserToken} from "../../models/user-token";
@@ -31,7 +30,6 @@ export class MatchComboComponent implements OnInit, OnDestroy {
   tableDataSource: MatTableDataSource<MatchingCombo>;
   totalMatchingCombos: number = 0;
   @ViewChild(MatPaginator) paginator: MatPaginator;
-  @ViewChild(MatSort) sort: MatSort;
 
   constructor(private deviceBreakpointService: DeviceBreakpointService, private loadingService: ProgressIndicatorService, private lottoResultService: LottoResultService, private accountService: AccountService, private combinationsService: CombinationsService) {
   }
@@ -46,7 +44,7 @@ export class MatchComboComponent implements OnInit, OnDestroy {
           next: lottoResult => {
             if (lottoResult?.drawName) {
               this.lotResult = lottoResult;
-              if (lottoResult.drawName === "powerball") this.tableColumns.push("jackpot");
+              if (lottoResult.drawName === "powerball") this.tableColumns.splice(1, 0, "jackpot");
               this.getMatchingCombinations(lottoResult);
             }
           }
@@ -73,7 +71,14 @@ export class MatchComboComponent implements OnInit, OnDestroy {
           this.totalMatchingCombos = value.totalMatches;
           // @ts-ignore
           this.matchingCombos = this.parseMatchingCombos(value.combinationsList);
-          this.paginateData();
+
+          this.subscriptions.push(
+            this.isHandset$.subscribe(handset => {
+              if (!handset) {
+                this.tableDataSource = new MatTableDataSource<MatchingCombo>(this.matchingCombos);
+              }
+            })
+          );
         })
     );
   }
@@ -105,15 +110,5 @@ export class MatchComboComponent implements OnInit, OnDestroy {
     });
     parsedMatchingCombos.sort((a, b) => b.matchesPerCombo - a.matchesPerCombo);
     return parsedMatchingCombos;
-  }
-
-  private paginateData() {
-    this.subscriptions.push(
-      this.isHandset$.subscribe(value => {
-        if (!value) {
-          this.tableDataSource = new MatTableDataSource<MatchingCombo>(this.matchingCombos);
-        }
-      })
-    );
   }
 }
