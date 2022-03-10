@@ -45,7 +45,11 @@ namespace TrackLott
       app.UseDefaultFiles();
       app.UseStaticFiles();
 
-      app.UseEndpoints(endpoints => { endpoints.MapControllers(); });
+      app.UseEndpoints(endpoints =>
+      {
+        endpoints.MapControllers();
+        endpoints.MapFallbackToController("Index", "Fallback");
+      });
     }
   }
 }
