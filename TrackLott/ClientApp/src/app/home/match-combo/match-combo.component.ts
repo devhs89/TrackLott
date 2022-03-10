@@ -13,6 +13,7 @@ import {MatTableDataSource} from "@angular/material/table";
 import {LottoResult} from "../../models/lotto-result";
 import {UserToken} from "../../models/user-token";
 import {ProgressIndicatorService} from "../../services/progress-indicator.service";
+import {parseError} from "../../helpers/parse-error";
 
 @Component({
   selector: 'app-match-combo',
@@ -25,6 +26,7 @@ export class MatchComboComponent implements OnInit, OnDestroy {
   appUser$: Observable<UserToken | null>;
   subscriptions: Subscription[] = [];
   lotResult: LottoResult;
+  errorMessage: string | null = null;
   matchingCombos: MatchingCombo[] = [];
   tableColumns = ["mainNums", "drawDate"];
   tableDataSource: MatTableDataSource<MatchingCombo>;
@@ -66,19 +68,22 @@ export class MatchComboComponent implements OnInit, OnDestroy {
       this.combinationsService.matchCombinations(lottoResult.drawName,
         this.paginator ? this.paginator.pageIndex : 0,
         this.paginator ? this.paginator.pageSize : 5)
-        .subscribe((value: MatchingComboResponse[]) => {
-          // @ts-ignore
-          this.totalMatchingCombos = value.totalMatches;
-          // @ts-ignore
-          this.matchingCombos = this.parseMatchingCombos(value.combinationsList);
+        .subscribe({
+          next: (value: MatchingComboResponse[]) => {
+            // @ts-ignore
+            this.totalMatchingCombos = value.totalMatches;
+            // @ts-ignore
+            this.matchingCombos = this.parseMatchingCombos(value.combinationsList);
 
-          this.subscriptions.push(
-            this.isHandset$.subscribe(handset => {
-              if (!handset) {
-                this.tableDataSource = new MatTableDataSource<MatchingCombo>(this.matchingCombos);
-              }
-            })
-          );
+            this.subscriptions.push(
+              this.isHandset$.subscribe(handset => {
+                if (!handset) {
+                  this.tableDataSource = new MatTableDataSource<MatchingCombo>(this.matchingCombos!);
+                }
+              })
+            );
+          },
+          error: err => this.errorMessage = parseError(err.error)
         })
     );
   }
