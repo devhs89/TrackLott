@@ -10,6 +10,7 @@ export interface CombinationsResponse {
 
 export interface MatchingCombo {
   dateAdded: string;
+  matchesPerCombo: number;
   mainNums: number[];
   jackpot?: number;
 }

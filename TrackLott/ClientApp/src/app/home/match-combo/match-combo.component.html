@@ -1,15 +1,16 @@
 <ng-container *ngIf="(appUser$ | async)">
   <ng-container *ngIf="(isHandset$ | async); else notHandset">
     <ng-container *ngTemplateOutlet="paginator"></ng-container>
-    <mat-card class="row col-xl-9 mx-auto mb-3 mat-elevation-z6" *ngFor="let combo of matchingCombosSliced">
+    <mat-card class="row col-xl-9 mx-auto mb-3 mat-elevation-z6" *ngFor="let combo of matchingCombos">
       <mat-card-title>{{combo.dateAdded}}</mat-card-title>
       <mat-card-content>
         <div class="d-inline-flex flex-wrap me-md-3">
-          <app-number-svg [svgNum]="num" bgFill="#ffd740" txtColor="#343a40"
+          <app-number-svg [svgNum]="num" [bgFill]="lotResult.winNums.includes(num) ? '#673ab7' : '#ffd740'"
                           *ngFor="let num of combo.mainNums"></app-number-svg>
         </div>
         <div class="d-inline-flex" *ngIf="combo.jackpot">
-          <app-number-svg bgFill="#F44336FF" [svgNum]="combo.jackpot"></app-number-svg>
+          <app-number-svg [bgFill]="lotResult.suppNums.includes(combo.jackpot) ? '#607d8b' : '#f44336'"
+                          [svgNum]="combo.jackpot"></app-number-svg>
         </div>
       </mat-card-content>
     </mat-card>
@@ -17,27 +18,28 @@
 
   <ng-template #notHandset>
     <div class="row col-xl-9 mx-auto mb-3 mat-elevation-z6">
-      <mat-table #table class="w-100" [dataSource]="datasource">
+      <mat-table #table class="w-100" [dataSource]="tableDataSource">
         <ng-container matColumnDef="mainNums">
           <mat-header-cell *matHeaderCellDef>Main Numbers</mat-header-cell>
           <mat-cell *matCellDef="let combo">
             <div class="d-inline-flex flex-wrap">
-              <app-number-svg [svgNum]="num" bgFill="#ffd740" txtColor="#343a40"
+              <app-number-svg [svgNum]="num" [bgFill]="lotResult.winNums.includes(num) ? '#673ab7' : '#ffd740'"
                               *ngFor="let num of combo.mainNums"></app-number-svg>
             </div>
           </mat-cell>
         </ng-container>
 
-        <ng-container matColumnDef="jackpot" *ngIf="latestLottoResult && latestLottoResult.drawName === 'powerball'">
+        <ng-container matColumnDef="jackpot" *ngIf="lotResult && lotResult.drawName === 'powerball'">
           <mat-header-cell *matHeaderCellDef>Powerball</mat-header-cell>
           <mat-cell *matCellDef="let combo">
-            <app-number-svg [svgNum]="combo.jackpot" bgFill="#F44336FF"></app-number-svg>
+            <app-number-svg [svgNum]="combo.jackpot"
+                            [bgFill]="lotResult.suppNums.includes(combo.jackpot) ? '#607d8b' : '#f44336'"></app-number-svg>
           </mat-cell>
         </ng-container>
 
         <ng-container matColumnDef="drawDate">
           <mat-header-cell *matHeaderCellDef>Draw Date</mat-header-cell>
-          <mat-cell *matCellDef="let combo">{{combo.dateAdded.toString()}}</mat-cell>
+          <mat-cell *matCellDef="let combo">{{combo.dateAdded}}</mat-cell>
         </ng-container>
 
         <mat-header-row *matHeaderRowDef="tableColumns; sticky: true"></mat-header-row>
@@ -49,8 +51,7 @@
   </ng-template>
 
   <ng-template #paginator>
-    <mat-paginator [length]="totalMatchingCombos" [pageSize]="initialPageSize"
-                   [pageSizeOptions]="[initialPageSize, initialPageSize + 5]"
+    <mat-paginator [length]="totalMatchingCombos" [pageSize]="5" [pageSizeOptions]="[5, 10]"
                    aria-label="Matching Combinations" (page)="onPageEvent()"></mat-paginator>
   </ng-template>
 </ng-container>
