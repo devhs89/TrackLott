@@ -27,10 +27,10 @@ public class LottoResultController : BaseApiController
     return new LottoResultDto()
     {
       DrawName = result.DrawName,
-      DrawNumber = result.DrawNumber,
-      DrawDateTime = result.DrawDateTime,
-      WinningNumbers = result.WinningNumbers.Split(','),
-      SuppNumbers = result.SuppNumbers.Split(',')
+      DrawNum = result.DrawNumber,
+      DrawDate = result.DrawDateTime,
+      WinNums = result.WinningNumbers.Split(','),
+      SuppNums = result.SuppNumbers.Split(',')
     };
   }
 }

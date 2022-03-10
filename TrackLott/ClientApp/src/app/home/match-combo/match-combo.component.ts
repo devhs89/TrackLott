@@ -9,7 +9,6 @@ import {PickedNumbers} from "../../models/combination";
 import {DeviceBreakpointService} from "../../services/device-breakpoint.service";
 import {Breakpoints} from "@angular/cdk/layout";
 import {MatPaginator} from "@angular/material/paginator";
-import {MatSort} from "@angular/material/sort";
 import {MatTableDataSource} from "@angular/material/table";
 import {LottoResult} from "../../models/lotto-result";
 import {UserToken} from "../../models/user-token";
@@ -25,17 +24,12 @@ export class MatchComboComponent implements OnInit, OnDestroy {
   isLoading$ = this.loadingService.isLoading$;
   appUser$: Observable<UserToken | null>;
   subscriptions: Subscription[] = [];
-  latestLottoResult$: Observable<LottoResult | null>;
-  latestLottoResult: LottoResult;
+  lotResult: LottoResult;
   matchingCombos: MatchingCombo[] = [];
-  matchingCombosSliced: MatchingCombo[] = [];
   tableColumns = ["mainNums", "drawDate"];
-  datasource: MatTableDataSource<MatchingCombo>;
-  initialPageIndex: number = 0;
-  initialPageSize: number = 5;
+  tableDataSource: MatTableDataSource<MatchingCombo>;
   totalMatchingCombos: number = 0;
   @ViewChild(MatPaginator) paginator: MatPaginator;
-  @ViewChild(MatSort) sort: MatSort;
 
   constructor(private deviceBreakpointService: DeviceBreakpointService, private loadingService: ProgressIndicatorService, private lottoResultService: LottoResultService, private accountService: AccountService, private combinationsService: CombinationsService) {
   }
@@ -43,15 +37,14 @@ export class MatchComboComponent implements OnInit, OnDestroy {
   ngOnInit(): void {
     this.isHandset$ = this.deviceBreakpointService.handsetBreakpoint(Breakpoints.XSmall);
     this.appUser$ = this.accountService.appUser$.pipe(take(1));
-    this.latestLottoResult$ = this.lottoResultService.latestLottoResult$;
 
     this.accountService.appUser$.pipe(take(1)).subscribe(userToken => {
       if (userToken?.token) {
         this.lottoResultService.latestLottoResult$.pipe(take(1)).subscribe({
           next: lottoResult => {
             if (lottoResult?.drawName) {
-              this.latestLottoResult = lottoResult;
-              if (lottoResult.drawName === "powerball") this.tableColumns.push("jackpot");
+              this.lotResult = lottoResult;
+              if (lottoResult.drawName === "powerball") this.tableColumns.splice(1, 0, "jackpot");
               this.getMatchingCombinations(lottoResult);
             }
           }
@@ -61,7 +54,7 @@ export class MatchComboComponent implements OnInit, OnDestroy {
   }
 
   onPageEvent() {
-    this.getMatchingCombinations(this.latestLottoResult);
+    this.getMatchingCombinations(this.lotResult);
   }
 
   ngOnDestroy() {
@@ -71,14 +64,21 @@ export class MatchComboComponent implements OnInit, OnDestroy {
   private getMatchingCombinations(lottoResult: LottoResult) {
     this.subscriptions.push(
       this.combinationsService.matchCombinations(lottoResult.drawName,
-        this.paginator ? this.paginator.pageIndex : this.initialPageIndex,
-        this.paginator ? this.paginator.pageSize : this.initialPageSize)
+        this.paginator ? this.paginator.pageIndex : 0,
+        this.paginator ? this.paginator.pageSize : 5)
         .subscribe((value: MatchingComboResponse[]) => {
           // @ts-ignore
           this.totalMatchingCombos = value.totalMatches;
           // @ts-ignore
           this.matchingCombos = this.parseMatchingCombos(value.combinationsList);
-          this.paginateData();
+
+          this.subscriptions.push(
+            this.isHandset$.subscribe(handset => {
+              if (!handset) {
+                this.tableDataSource = new MatTableDataSource<MatchingCombo>(this.matchingCombos);
+              }
+            })
+          );
         })
     );
   }
@@ -89,25 +89,26 @@ export class MatchComboComponent implements OnInit, OnDestroy {
     value.forEach(result => {
       const dateStr = new Date(result.dateAdded);
       const pickedNumbers: PickedNumbers = JSON.parse(result.pickedNumbers);
+      let numMatches: number = 0;
+
+      pickedNumbers.mainNums.forEach(num => {
+        this.lotResult.winNums.includes(num) && numMatches++;
+      });
+
+      if (pickedNumbers.jackpot) {
+        if (this.lotResult.drawName === "Powerball") {
+          this.lotResult.suppNums.includes(pickedNumbers.jackpot) && numMatches++;
+        }
+      }
 
       parsedMatchingCombos.push({
         dateAdded: dateStr.toDateString(),
         mainNums: pickedNumbers.mainNums,
-        jackpot: pickedNumbers.jackpot
+        jackpot: pickedNumbers.jackpot,
+        matchesPerCombo: numMatches
       });
     });
+    parsedMatchingCombos.sort((a, b) => b.matchesPerCombo - a.matchesPerCombo);
     return parsedMatchingCombos;
-  }
-
-  private paginateData() {
-    this.subscriptions.push(
-      this.isHandset$.subscribe(value => {
-        if (value) {
-          this.matchingCombosSliced = this.matchingCombos;
-        } else {
-          this.datasource = new MatTableDataSource<MatchingCombo>(this.matchingCombos);
-        }
-      })
-    );
   }
 }

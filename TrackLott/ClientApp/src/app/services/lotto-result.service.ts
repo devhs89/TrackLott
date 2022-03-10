@@ -17,8 +17,15 @@ export class LottoResultService {
 
   latestResult() {
     return this.httpClient.get<LottoResult>(`${BASE_URL}/lottoresult`).pipe(map(value => {
-      this.latestLottoResult.next(value);
-      return value;
+      let lotResult: LottoResult = {
+        drawName: value.drawName,
+        drawNum: value.drawNum,
+        drawDate: value.drawDate,
+        winNums: value.winNums.map(Number),
+        suppNums: value.suppNums.map(Number)
+      };
+      this.latestLottoResult.next(lotResult);
+      return lotResult;
     }));
   }
 }

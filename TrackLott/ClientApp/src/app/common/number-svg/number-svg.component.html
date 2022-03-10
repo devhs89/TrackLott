@@ -3,11 +3,11 @@
   <style>
     .textNum {
       font: 400 1.1rem 'Roboto Mono', monospace;
+      fill: #f8f9fa;
     }
   </style>
   <g>
     <circle r="20" cx="20" cy="20" [ngStyle]="{'fill': bgFill}"></circle>
-    <text x="20" y="26" text-anchor="middle" class="textNum"
-          [ngStyle]="{'fill': txtColor}">{{svgNum}}</text>
+    <text x="20" y="26" text-anchor="middle" class="textNum">{{svgNum}}</text>
   </g>
 </svg>
