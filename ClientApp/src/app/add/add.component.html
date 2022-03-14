@@ -19,13 +19,13 @@
 
         <div class="col-12 col-md-6">
           <mat-form-field appearance="outline" class="w-100">
-            <mat-label>Draw Date</mat-label>
+            <mat-label>Purchase Date</mat-label>
             <!--suppress TypeScriptValidateTypes -->
-            <input matInput formControlName="dateAddedControl" [min]="minDate" [max]="maxDate"
+            <input matInput formControlName="purchaseDateControl" [min]="minDate" [max]="maxDate"
                    placeholder="dd/mm/yyyy"
-                   [matDatepicker]="playedDatePicker">
-            <mat-datepicker-toggle matSuffix [for]="playedDatePicker"></mat-datepicker-toggle>
-            <mat-datepicker #playedDatePicker [touchUi]="(isHandset$ | async)"></mat-datepicker>
+                   [matDatepicker]="purchaseDatePicker">
+            <mat-datepicker-toggle matSuffix [for]="purchaseDatePicker"></mat-datepicker-toggle>
+            <mat-datepicker #purchaseDatePicker [touchUi]="(isHandset$ | async)"></mat-datepicker>
             <mat-hint>When were/would these combinations be played?</mat-hint>
             <mat-error>Invalid date</mat-error>
           </mat-form-field>

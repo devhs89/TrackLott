@@ -29,7 +29,7 @@ export class AddComponent implements OnInit {
   isHandset$: Observable<boolean>;
   addCombosForm: FormGroup;
   lotteryNameControl: FormControl;
-  dateAddedControl: FormControl;
+  purchaseDateControl: FormControl;
   currPickedNums: PickedNumbers = {mainNums: []};
   allCombinations: Combination[] = [];
   minDate: Date;
@@ -50,11 +50,11 @@ export class AddComponent implements OnInit {
 
   private initializeForm() {
     this.lotteryNameControl = new FormControl(null, [Validators.maxLength(54)]);
-    this.dateAddedControl = new FormControl(new Date(), Validators.required);
+    this.purchaseDateControl = new FormControl(new Date(), Validators.required);
 
     this.addCombosForm = new FormGroup({
       lotteryNameControl: this.lotteryNameControl,
-      dateAddedControl: this.dateAddedControl
+      purchaseDateControl: this.purchaseDateControl
     });
 
     this.numButtons();
@@ -156,7 +156,7 @@ export class AddComponent implements OnInit {
   private addCombination() {
     this.allCombinations.unshift({
       lottoName: this.lotteryNameControl.value || undefined,
-      dateAdded: this.dateAddedControl.value,
+      dateAdded: this.purchaseDateControl.value,
       pickedNumbers: {mainNums: this.currPickedNums.mainNums, jackpot: this.currPickedNums.jackpot}
     });
     this.clearCurrentPickedNumbers();
