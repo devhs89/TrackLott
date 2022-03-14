@@ -19,7 +19,7 @@ namespace TrackLott
       services.AddCors(options =>
         options.AddPolicy(name: "MyAllowPolicy",
           builder => builder.AllowAnyHeader().AllowAnyMethod().WithOrigins("https://localhost:44497")));
-      
+
       services.AddApplicationServices(_config);
       services.AddIdentityServices(_config);
     }
@@ -42,7 +42,14 @@ namespace TrackLott
 
       app.UseAuthorization();
 
-      app.UseEndpoints(endpoints => { endpoints.MapControllers(); });
+      app.UseDefaultFiles();
+      app.UseStaticFiles();
+
+      app.UseEndpoints(endpoints =>
+      {
+        endpoints.MapControllers();
+        endpoints.MapFallbackToController("Index", "Fallback");
+      });
     }
   }
 }
