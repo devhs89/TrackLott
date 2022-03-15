@@ -20,7 +20,7 @@ namespace TrackLott
         options.AddPolicy(name: "MyAllowPolicy",
           builder => builder.AllowAnyHeader().AllowAnyMethod().WithOrigins("https://localhost:44497")));
 
-      services.AddApplicationServices(_config);
+      services.AddApplicationServices();
       services.AddIdentityServices(_config);
     }
 
