@@ -15,11 +15,6 @@ namespace TrackLott
     public void ConfigureServices(IServiceCollection services)
     {
       services.AddControllers();
-
-      services.AddCors(options =>
-        options.AddPolicy(name: "MyAllowPolicy",
-          builder => builder.AllowAnyHeader().AllowAnyMethod().WithOrigins("https://localhost:44497")));
-
       services.AddApplicationServices();
       services.AddIdentityServices(_config);
     }
@@ -36,7 +31,8 @@ namespace TrackLott
 
       app.UseRouting();
 
-      app.UseCors("MyAllowPolicy");
+      if (env.IsDevelopment())
+        app.UseCors(builder => builder.AllowAnyHeader().AllowAnyMethod().WithOrigins("https://localhost:44497"));
 
       app.UseAuthentication();
 
