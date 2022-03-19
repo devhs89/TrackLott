@@ -1,3 +1,4 @@
+using Microsoft.AspNetCore.HttpOverrides;
 using TrackLott.Extensions;
 
 namespace TrackLott
@@ -22,9 +23,14 @@ namespace TrackLott
     // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
     public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
     {
-      if (env.IsDevelopment())
+      if (env.IsDevelopment()) app.UseDeveloperExceptionPage();
+
+      if (env.IsProduction())
       {
-        app.UseDeveloperExceptionPage();
+        app.UseForwardedHeaders(new ForwardedHeadersOptions()
+        {
+          ForwardedHeaders = ForwardedHeaders.XForwardedFor | ForwardedHeaders.XForwardedProto
+        });
       }
 
       app.UseHttpsRedirection();
