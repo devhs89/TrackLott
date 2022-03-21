@@ -1,3 +1,4 @@
+using System.Net;
 using Microsoft.AspNetCore.Identity;
 using TrackLott.Data;
 using TrackLott.Entities;
@@ -30,6 +31,23 @@ namespace TrackLott
 
     private static IHostBuilder CreateHostBuilder(string[] args) =>
       Host.CreateDefaultBuilder(args)
-        .ConfigureWebHostDefaults(webBuilder => { webBuilder.UseStartup<Startup>(); });
+        .ConfigureWebHostDefaults(webBuilder =>
+        {
+          webBuilder.ConfigureKestrel(options =>
+          {
+            options.Listen(IPAddress.Loopback, 5000);
+
+            var httpCert = Environment.GetEnvironmentVariable("HTTPS_CERT");
+            var httpsCertPass = Environment.GetEnvironmentVariable("HTTPS_CERT_PASS");
+
+            if (httpCert != null && httpsCertPass != null)
+            {
+              options.Listen(IPAddress.Loopback, 5001,
+                listenOptions => listenOptions.UseHttps(httpCert, httpsCertPass));
+            }
+          });
+
+          webBuilder.UseStartup<Startup>();
+        });
   }
 }
