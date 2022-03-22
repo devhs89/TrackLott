@@ -1,3 +1,5 @@
+using System.Net;
+using System.Security.Cryptography.X509Certificates;
 using Microsoft.AspNetCore.Identity;
 using TrackLott.Data;
 using TrackLott.Entities;
@@ -30,6 +32,23 @@ namespace TrackLott
 
     private static IHostBuilder CreateHostBuilder(string[] args) =>
       Host.CreateDefaultBuilder(args)
-        .ConfigureWebHostDefaults(webBuilder => { webBuilder.UseStartup<Startup>(); });
+        .ConfigureWebHostDefaults(webBuilder =>
+        {
+          webBuilder.ConfigureKestrel(options =>
+          {
+            options.Listen(IPAddress.Loopback, 5000);
+
+            var pemCertEnv = Environment.GetEnvironmentVariable("HTTPS_CERT");
+            var pemKeyEnv = Environment.GetEnvironmentVariable("HTTPS_CERT_KEY");
+
+            if (pemCertEnv == null || pemKeyEnv == null) return;
+
+            var httpsCert = X509Certificate2.CreateFromPemFile(pemCertEnv, pemKeyEnv);
+            options.Listen(IPAddress.Loopback, 5001,
+              listenOptions => listenOptions.UseHttps(httpsCert));
+          });
+
+          webBuilder.UseStartup<Startup>();
+        });
   }
 }
