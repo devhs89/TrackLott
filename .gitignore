@@ -33,6 +33,7 @@ riderModule.iml
 **/launchSettings.json
 **/appsettings.json
 **/appsettings.Development.json
+**/appsettings.Production.json
 
 # Others
 **/bootstrap

@@ -1,4 +1,5 @@
 using System.Net;
+using System.Security.Cryptography.X509Certificates;
 using Microsoft.AspNetCore.Identity;
 using TrackLott.Data;
 using TrackLott.Entities;
@@ -37,14 +38,14 @@ namespace TrackLott
           {
             options.Listen(IPAddress.Loopback, 5000);
 
-            var httpCert = Environment.GetEnvironmentVariable("HTTPS_CERT");
-            var httpsCertPass = Environment.GetEnvironmentVariable("HTTPS_CERT_PASS");
+            var httpsPemCert = Environment.GetEnvironmentVariable("HTTPS_CERT");
+            var httpsCertKey = Environment.GetEnvironmentVariable("HTTPS_CERT_KEY");
 
-            if (httpCert != null && httpsCertPass != null)
-            {
-              options.Listen(IPAddress.Loopback, 5001,
-                listenOptions => listenOptions.UseHttps(httpCert, httpsCertPass));
-            }
+            if (httpsPemCert == null || httpsCertKey == null) return;
+
+            var httpsCert = X509Certificate2.CreateFromPemFile(httpsPemCert, httpsCertKey);
+            options.Listen(IPAddress.Loopback, 5001,
+              listenOptions => listenOptions.UseHttps(httpsCert));
           });
 
           webBuilder.UseStartup<Startup>();
