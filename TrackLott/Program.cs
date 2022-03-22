@@ -38,12 +38,12 @@ namespace TrackLott
           {
             options.Listen(IPAddress.Loopback, 5000);
 
-            var httpsPemCert = Environment.GetEnvironmentVariable("HTTPS_CERT");
-            var httpsCertKey = Environment.GetEnvironmentVariable("HTTPS_CERT_KEY");
+            var pemCertEnv = Environment.GetEnvironmentVariable("HTTPS_CERT");
+            var pemKeyEnv = Environment.GetEnvironmentVariable("HTTPS_CERT_KEY");
 
-            if (httpsPemCert == null || httpsCertKey == null) return;
+            if (pemCertEnv == null || pemKeyEnv == null) return;
 
-            var httpsCert = X509Certificate2.CreateFromPemFile(httpsPemCert, httpsCertKey);
+            var httpsCert = X509Certificate2.CreateFromPemFile(pemCertEnv, pemKeyEnv);
             options.Listen(IPAddress.Loopback, 5001,
               listenOptions => listenOptions.UseHttps(httpsCert));
           });
