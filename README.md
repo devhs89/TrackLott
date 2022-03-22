@@ -6,9 +6,12 @@
 An Angular-Asp.Net web application that lets you track your previously played lottery number combinations and play a lottery game to predict lucky lotto combinations.
 
 ##### Development
-1. Set "SQL_DEV_URL" environment variable for connection string
-2. Set "ASPNETCORE_ENVIRONMENT" environment variable as "Development"
-3. Set "TOKEN_KEY" environment variable with key or your choice
-4. Create TrackLott/appsettings.json file for any global settings
-5. Setup MySQL database and create database "tracklott"
-6. Build and run to test everything is working
+1. Set following envrionment variables -
+   1. "ASPNETCORE_ENVIRONMENT" = "Development"
+   2. "SQL_DEV_URL" = [Insert Connection String - Install appropriate Entity Framework package if using database other than MySQL]
+   3. "TOKEN_KEY" = [Insert strong password here]
+2. For Https requests, visit https://docs.microsoft.com/en-us/dotnet/core/additional-tools/self-signed-certificates-guide
+3. Create TrackLott/appsettings.json file for any initial settings
+4. Setup MySQL database and create database "tracklott"
+5. Run "dotnet ef database update" to apply any pending changes
+6. Build and run application with "dotnet run --build"

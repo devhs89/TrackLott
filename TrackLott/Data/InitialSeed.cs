@@ -4,7 +4,7 @@ using TrackLott.Entities;
 
 namespace TrackLott.Data;
 
-public class Seed
+public class InitialSeed
 {
   public static async Task SeedData(TrackLottContext trackLottContext, RoleManager<Ability> roleManager)
   {
