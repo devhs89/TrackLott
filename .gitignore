@@ -30,11 +30,12 @@ obj/
 /packages/
 riderModule.iml
 /_ReSharper.Caches/
+
+# My Ignores
 **/launchSettings.json
 **/appsettings.json
 **/appsettings.Development.json
 **/appsettings.Production.json
-
-# Others
+**/wwwroot
 **/bootstrap
 /Release
