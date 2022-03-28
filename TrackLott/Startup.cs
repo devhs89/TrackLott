@@ -1,5 +1,4 @@
 using Microsoft.AspNetCore.HttpOverrides;
-using Microsoft.AspNetCore.WebSockets;
 using TrackLott.Extensions;
 
 namespace TrackLott
