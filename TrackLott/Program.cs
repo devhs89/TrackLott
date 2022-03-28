@@ -34,19 +34,22 @@ namespace TrackLott
       Host.CreateDefaultBuilder(args)
         .ConfigureWebHostDefaults(webBuilder =>
         {
-          webBuilder.ConfigureKestrel(options =>
+          var env = Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT");
+
+          if (env is "Production")
           {
-            options.Listen(IPAddress.Loopback, 5000);
+            webBuilder.ConfigureKestrel(options =>
+            {
+              var pemCertEnv = Environment.GetEnvironmentVariable("HTTPS_CERT");
+              var pemKeyEnv = Environment.GetEnvironmentVariable("HTTPS_CERT_KEY");
 
-            var pemCertEnv = Environment.GetEnvironmentVariable("HTTPS_CERT");
-            var pemKeyEnv = Environment.GetEnvironmentVariable("HTTPS_CERT_KEY");
+              if (pemCertEnv == null || pemKeyEnv == null) return;
 
-            if (pemCertEnv == null || pemKeyEnv == null) return;
-
-            var httpsCert = X509Certificate2.CreateFromPemFile(pemCertEnv, pemKeyEnv);
-            options.Listen(IPAddress.Loopback, 5001,
-              listenOptions => listenOptions.UseHttps(httpsCert));
-          });
+              var httpsCert = X509Certificate2.CreateFromPemFile(pemCertEnv, pemKeyEnv);
+              options.Listen(IPAddress.Loopback, 5001,
+                listenOptions => listenOptions.UseHttps(httpsCert));
+            });
+          }
 
           webBuilder.UseStartup<Startup>();
         });
