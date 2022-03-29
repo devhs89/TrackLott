@@ -37,7 +37,7 @@ namespace TrackLott
 
       app.UseRouting();
 
-      if (env.IsDevelopment())
+      if (!env.IsProduction())
         app.UseCors(builder => builder.AllowAnyHeader().AllowAnyMethod().WithOrigins("https://localhost:44497"));
 
       app.UseAuthentication();
