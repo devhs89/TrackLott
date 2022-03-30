@@ -1,4 +1,6 @@
 import {UserToken} from "../models/user-token";
+import {LottoResult, SavedLottoResult} from "../models/lotto-result";
+import {splitDateTime} from "./split-date-time";
 
 export const setLocalUserToken = (userToken: UserToken) => {
   localStorage.setItem("user", JSON.stringify(userToken));
@@ -22,4 +24,16 @@ export const getSessionUserToken = () => {
 
 export const removeSessionUserToken = () => {
   sessionStorage.removeItem("user");
+};
+
+export const getSavedLotResult = (): SavedLottoResult | null => {
+  const lotResultSaved = localStorage.getItem('lottoresult');
+  return lotResultSaved ? JSON.parse(lotResultSaved) : null;
+};
+
+export const setLocalLotResult = (lotResult: LottoResult) => {
+  localStorage.setItem("lottoresult", JSON.stringify({
+    dateSaved: splitDateTime(new Date()),
+    result: lotResult
+  }));
 };
