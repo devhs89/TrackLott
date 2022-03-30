@@ -1,5 +1,5 @@
 <ng-container *ngIf="(appUser$ | async)">
-  <mat-card class="row col-xl-9 mx-auto mb-3 mat-elevation-z6" *ngIf="errorMessage">
+  <mat-card class="row col-xl-9 mx-auto mb-3 mat-elevation-z6" *ngIf="lotResult && errorMessage">
     <mat-card-title>No Results Found</mat-card-title>
     <mat-divider inset class="my-3"></mat-divider>
     <mat-card-content>
@@ -18,11 +18,11 @@
         <mat-card-content>
           <div class="d-inline-flex flex-wrap me-md-3">
             <app-number-svg [svgNum]="num" [bgFill]="lotResult.winNums.includes(num) ? '#673ab7' : '#ffd740'"
-                            *ngFor="let num of combo.mainNums"></app-number-svg>
+              *ngFor="let num of combo.mainNums"></app-number-svg>
           </div>
           <div class="d-inline-flex" *ngIf="combo.jackpot">
             <app-number-svg [bgFill]="lotResult.suppNums.includes(combo.jackpot) ? '#607d8b' : '#f44336'"
-                            [svgNum]="combo.jackpot"></app-number-svg>
+              [svgNum]="combo.jackpot"></app-number-svg>
           </div>
         </mat-card-content>
       </mat-card>
@@ -36,7 +36,7 @@
             <mat-cell *matCellDef="let combo">
               <div class="d-inline-flex flex-wrap">
                 <app-number-svg [svgNum]="num" [bgFill]="lotResult.winNums.includes(num) ? '#673ab7' : '#ffd740'"
-                                *ngFor="let num of combo.mainNums"></app-number-svg>
+                  *ngFor="let num of combo.mainNums"></app-number-svg>
               </div>
             </mat-cell>
           </ng-container>
@@ -45,7 +45,7 @@
             <mat-header-cell *matHeaderCellDef>Powerball</mat-header-cell>
             <mat-cell *matCellDef="let combo">
               <app-number-svg [svgNum]="combo.jackpot"
-                              [bgFill]="lotResult.suppNums.includes(combo.jackpot) ? '#607d8b' : '#f44336'"></app-number-svg>
+                [bgFill]="lotResult.suppNums.includes(combo.jackpot) ? '#607d8b' : '#f44336'"></app-number-svg>
             </mat-cell>
           </ng-container>
 
@@ -64,7 +64,7 @@
 
     <ng-template #paginator>
       <mat-paginator [length]="totalMatchingCombos" [pageSize]="5" [pageSizeOptions]="[5, 10]"
-                     aria-label="Matching Combinations" (page)="onPageEvent()"></mat-paginator>
+        aria-label="Matching Combinations" (page)="onPageEvent()"></mat-paginator>
     </ng-template>
   </ng-container>
 </ng-container>
