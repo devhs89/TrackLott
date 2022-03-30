@@ -53,8 +53,8 @@
           <mat-form-field class="w-100" appearance="fill">
             <mat-label>Country</mat-label>
             <mat-select formControlName="country">
-              <mat-option class="text-capitalize" *ngFor="let country of countries"
-                          value="{{country}}">{{country}}</mat-option>
+              <mat-option class="text-capitalize" *ngFor="let country of countries" value="{{country}}">{{country}}
+              </mat-option>
             </mat-select>
           </mat-form-field>
         </div>
@@ -72,8 +72,8 @@
     <form [formGroup]="passwordsForm" (ngSubmit)="onSubmitPasswords()">
       <div class="row row-cols-1 row-cols-md-2 justify-content-center mb-4">
         <div class="col-8 col-md-4">
-          <button mat-flat-button type="button" class="w-100" [color]="disablePasswordControls ? 'primary': 'warn'"
-                  (click)="showPasswordControls()">
+          <button mat-flat-button type="button" class="w-100 mb-2 mb-md-0"
+            [color]="disablePasswordControls ? 'primary': 'warn'" (click)="showPasswordControls()">
             {{disablePasswordControls ? 'Change Password' : 'Cancel'}}
           </button>
         </div>
