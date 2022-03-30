@@ -4,8 +4,8 @@
   "scripts": {
     "ng": "ng",
     "start": "run-script-os",
-    "start:windows": "ng serve --port 44497 --ssl --ssl-cert %APPDATA%\\ASP.NET\\https\\%npm_package_name%.pem --ssl-key %APPDATA%\\ASP.NET\\https\\%npm_package_name%.key --configuration development",
-    "start:default": "ng serve --port 44497 --ssl --ssl-cert $HOME/.aspnet/https/${npm_package_name}.pem --ssl-key $HOME/.aspnet/https/${npm_package_name}.key --configuration development",
+    "start:windows": "ng serve --port 44497 --configuration development --open --ssl --ssl-cert %APPDATA%\\ASP.NET\\https\\%npm_package_name%.pem --ssl-key %APPDATA%\\ASP.NET\\https\\%npm_package_name%.key",
+    "start:default": "ng serve --port 44497 --configuration development --open --ssl --ssl-cert $HOME/.aspnet/https/${npm_package_name}.pem --ssl-key $HOME/.aspnet/https/${npm_package_name}.key",
     "build": "ng build",
     "watch": "ng build --watch --configuration development",
     "test": "ng test"
