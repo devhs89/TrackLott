@@ -11,132 +11,135 @@ namespace TrackLott.Controllers;
 
 public class AccountController : BaseApiController
 {
-  private readonly UserManager<Member> _userManager;
-  private readonly SignInManager<Member> _signInManager;
-  private readonly TokenService _tokenService;
+    private readonly UserManager<Member> _userManager;
+    private readonly SignInManager<Member> _signInManager;
+    private readonly TokenService _tokenService;
 
-  public AccountController(UserManager<Member> userManager, SignInManager<Member> signInManager,
-    TokenService tokenService)
-  {
-    _userManager = userManager;
-    _signInManager = signInManager;
-    _tokenService = tokenService;
-  }
-
-  [HttpPost("register")]
-  public async Task<ActionResult<UserTokenDto>> Register(RegisterDto registerDto)
-  {
-    if (await UserExists(registerDto.Email)) return BadRequest("Email is already associated with another account.");
-
-    var user = new Member()
+    public AccountController(UserManager<Member> userManager, SignInManager<Member> signInManager,
+        TokenService tokenService)
     {
-      UserName = registerDto.UserName.ToLower(),
-      Email = registerDto.Email.ToLower(),
-      GivenName = registerDto.GivenName.ToLower(),
-      Surname = registerDto.Surname.ToLower(),
-      Dob = DateTime.Parse(registerDto.Dob),
-      TermsCheck = registerDto.TermsCheck,
-      Country = registerDto.Country.ToLower()
-    };
+        _userManager = userManager;
+        _signInManager = signInManager;
+        _tokenService = tokenService;
+    }
 
-    var result = await _userManager.CreateAsync(user, registerDto.Password);
-
-    if (!result.Succeeded) return BadRequest(result.Errors);
-
-    var roleResult = await _userManager.AddToRoleAsync(user, "Member");
-
-    if (!roleResult.Succeeded) return BadRequest(roleResult.Errors);
-
-    return new UserTokenDto()
+    [HttpPost("register")]
+    public async Task<ActionResult<UserTokenDto>> Register(RegisterDto registerDto)
     {
-      UserName = user.UserName,
-      Token = await _tokenService.CreateToken(user)
-    };
-  }
+        if (await CheckEmailTaken(registerDto.Email))
+            return BadRequest("Email is already associated with another account.");
 
-  [HttpPost("login")]
-  public async Task<ActionResult<UserTokenDto>> Login(LoginDto loginDto)
-  {
-    var user = await _userManager.Users
-      .SingleOrDefaultAsync(rec => rec.UserName.Equals(loginDto.UserName.ToLower()));
+        var user = new Member()
+        {
+            UserName = registerDto.UserName.ToLower(),
+            Email = registerDto.Email.ToLower(),
+            GivenName = registerDto.GivenName.ToLower(),
+            Surname = registerDto.Surname.ToLower(),
+            Dob = DateTime.Parse(registerDto.Dob),
+            TermsCheck = registerDto.TermsCheck,
+            Country = registerDto.Country.ToLower()
+        };
 
-    if (user == null) return Unauthorized("Invalid email or password");
+        var result = await _userManager.CreateAsync(user, registerDto.Password);
 
-    var result = await _signInManager.CheckPasswordSignInAsync(user, loginDto.Password, false);
+        if (!result.Succeeded) return BadRequest(result.Errors);
 
-    if (!result.Succeeded) return Unauthorized();
+        var roleResult = await _userManager.AddToRoleAsync(user, "Member");
 
-    return new UserTokenDto()
+        if (!roleResult.Succeeded) return BadRequest(roleResult.Errors);
+
+        return new UserTokenDto()
+        {
+            UserName = user.UserName,
+            Token = await _tokenService.CreateToken(user)
+        };
+    }
+
+    [HttpPost("login")]
+    public async Task<ActionResult<UserTokenDto>> Login(LoginDto loginDto)
     {
-      UserName = user.UserName,
-      Token = await _tokenService.CreateToken(user)
-    };
-  }
+        var user = await _userManager.Users
+            .SingleOrDefaultAsync(rec => rec.UserName.Equals(loginDto.UserName.ToLower()));
 
-  [HttpPost("show")]
-  [Authorize]
-  public async Task<ActionResult<AccountDto>> ShowMember()
-  {
-    var userName = User.GetUserName();
+        if (user == null) return Unauthorized("Invalid email or password");
 
-    var member = await _userManager.Users.SingleOrDefaultAsync(rec => rec.UserName.Equals(userName));
+        var result = await _signInManager.CheckPasswordSignInAsync(user, loginDto.Password, false);
 
-    if (member == null) return BadRequest("User not found");
+        if (!result.Succeeded) return Unauthorized();
 
-    return new AccountDto()
+        return new UserTokenDto()
+        {
+            UserName = user.UserName,
+            Token = await _tokenService.CreateToken(user)
+        };
+    }
+
+    [HttpPost("show")]
+    [Authorize]
+    public async Task<ActionResult<AccountDto>> ShowMember()
     {
-      UserName = member.UserName,
-      Email = member.Email,
-      GivenName = member.GivenName,
-      Surname = member.Surname,
-      Dob = member.Dob,
-      Country = member.Country
-    };
-  }
+        var userName = User.GetUserName();
 
-  [HttpPost("updatePassword")]
-  [Authorize]
-  public async Task<ActionResult<string>> UpdatePassword(PasswordDto passwordDto)
-  {
-    if (!passwordDto.newPassword.Equals(passwordDto.repeatPassword)) return BadRequest("New passwords do not match");
+        var member = await _userManager.Users.SingleOrDefaultAsync(rec => rec.UserName.Equals(userName));
 
-    var username = User.GetUserName();
+        if (member == null) return BadRequest("User not found");
 
-    var member = await _userManager.Users.SingleOrDefaultAsync(rec => rec.UserName.Equals(username));
+        return new AccountDto()
+        {
+            UserName = member.UserName,
+            Email = member.Email,
+            GivenName = member.GivenName,
+            Surname = member.Surname,
+            Dob = member.Dob,
+            Country = member.Country
+        };
+    }
 
-    if (member == null) return BadRequest("No user found");
+    [HttpPost("updatePassword")]
+    [Authorize]
+    public async Task<ActionResult<string>> UpdatePassword(PasswordDto passwordDto)
+    {
+        if (!passwordDto.newPassword.Equals(passwordDto.repeatPassword))
+            return BadRequest("New passwords do not match");
 
-    var result = await _userManager.ChangePasswordAsync(member, passwordDto.currentPassword, passwordDto.newPassword);
+        var username = User.GetUserName();
 
-    return !result.Succeeded ? result.Errors.GetEnumerator().Current.Description : "Password updated successfully";
-  }
+        var member = await _userManager.Users.SingleOrDefaultAsync(rec => rec.UserName.Equals(username));
 
-  [HttpPut("updateInfo")]
-  [Authorize]
-  public async Task<ActionResult<string>> UpdateInfo(AccountUpdateDto accountUpdateDto)
-  {
-    var userName = User.GetUserName();
+        if (member == null) return BadRequest("No user found");
 
-    var member = await _userManager.Users.SingleOrDefaultAsync(rec => rec.UserName.Equals(userName));
+        var result =
+            await _userManager.ChangePasswordAsync(member, passwordDto.currentPassword, passwordDto.newPassword);
 
-    if (member == null) return BadRequest("No user found");
+        return !result.Succeeded ? result.Errors.GetEnumerator().Current.Description : "Password updated successfully";
+    }
 
-    if (accountUpdateDto.Email != null) member.Email = accountUpdateDto.Email;
-    if (accountUpdateDto.GivenName != null) member.GivenName = accountUpdateDto.GivenName;
-    if (accountUpdateDto.Surname != null) member.Surname = accountUpdateDto.Surname;
-    if (accountUpdateDto.Country != null) member.Country = accountUpdateDto.Country;
+    [HttpPut("updateInfo")]
+    [Authorize]
+    public async Task<ActionResult<string>> UpdateInfo(AccountUpdateDto accountUpdateDto)
+    {
+        var userName = User.GetUserName();
 
-    var res = await _userManager.UpdateAsync(member);
+        var member = await _userManager.Users.SingleOrDefaultAsync(rec => rec.UserName.Equals(userName));
 
-    if (res == null) return BadRequest("Something went wrong");
+        if (member == null) return BadRequest("No user found");
 
-    if (res.ToString() == "Succeeded") return NoContent();
+        if (accountUpdateDto.Email != null) member.Email = accountUpdateDto.Email;
+        if (accountUpdateDto.GivenName != null) member.GivenName = accountUpdateDto.GivenName;
+        if (accountUpdateDto.Surname != null) member.Surname = accountUpdateDto.Surname;
+        if (accountUpdateDto.Country != null) member.Country = accountUpdateDto.Country;
 
-    return BadRequest("Something went wrong");
-  }
+        var res = await _userManager.UpdateAsync(member);
 
-  private async Task<bool> UserExists(string username)
-  {
-    return await _userManager.Users.AnyAsync(entry => entry.Email.Equals(username.ToLower()));
-  }
+        if (res == null) return BadRequest("Something went wrong");
+
+        if (res.ToString() == "Succeeded") return NoContent();
+
+        return BadRequest("Something went wrong");
+    }
+
+    private async Task<bool> CheckEmailTaken(string email)
+    {
+        return await _userManager.Users.AnyAsync(entry => entry.Email.Equals(email.ToLower()));
+    }
 }
