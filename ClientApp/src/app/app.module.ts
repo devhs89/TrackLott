@@ -17,6 +17,7 @@ import {MaterialModule} from "./material/material.module";
 import {JwtInterceptor} from "./interceptors/jwt.interceptor";
 import {LoadingInterceptor} from "./interceptors/loading.interceptor";
 import {NumberSvgComponent} from './common/number-svg/number-svg.component';
+import { LicenseComponent } from './license/license.component';
 
 @NgModule({
   declarations: [
@@ -28,7 +29,8 @@ import {NumberSvgComponent} from './common/number-svg/number-svg.component';
     PlayComponent,
     TermsComponent,
     MatchComboComponent,
-    NumberSvgComponent
+    NumberSvgComponent,
+    LicenseComponent
   ],
   imports: [
     BrowserModule.withServerTransition({appId: 'ng-cli-universal'}),
