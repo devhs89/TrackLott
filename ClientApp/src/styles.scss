@@ -27,7 +27,7 @@ $default-custom-config: mat.define-typography-config(
 
 html, body { margin: 0 !important; padding: 0 !important;}
 
-body { font-family: Roboto, "Helvetica Neue", sans-serif !important; }
+body { font-family: Roboto, "Helvetica Neue", sans-serif !important; background-color: #fafafa !important }
 
 .color-primary {
   color: var(--color-primary);
