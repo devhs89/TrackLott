@@ -22,6 +22,10 @@
 
         <a mat-list-item class="text-uppercase" (click)="logout()">Logout</a>
       </ng-template>
+
+      <mat-divider></mat-divider>
+
+      <a mat-list-item class="text-uppercase" [routerLink]="'/license'">License</a>
     </mat-nav-list>
   </mat-sidenav>
 
@@ -41,6 +45,8 @@
         <a mat-button class="text-uppercase" [routerLink]="'/add'">Add</a>
 
         <a mat-button class="text-uppercase" [routerLink]="'/play'">Play</a>
+
+        <a mat-button class="text-uppercase" [routerLink]="'/license'">License</a>
 
         <span class="space-div"></span>
 

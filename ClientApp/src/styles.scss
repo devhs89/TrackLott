@@ -25,9 +25,9 @@ $default-custom-config: mat.define-typography-config(
   --color-warn: #f44336;
 }
 
-html, body { height: 100% !important; }
+html, body { margin: 0 !important; padding: 0 !important;}
 
-body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif !important; }
+body { font-family: Roboto, "Helvetica Neue", sans-serif !important; }
 
 .color-primary {
   color: var(--color-primary);
@@ -62,7 +62,7 @@ body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif !important; 
 }
 
 .spinner-overlay {
-  position: absolute !important;
+  position: fixed !important;
   display: block !important;
   background-color: rgba(0, 0, 0, 0.286) !important;
   z-index: 990 !important;
@@ -70,6 +70,7 @@ body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif !important; 
   right: 0 !important;
   bottom: 0 !important;
   left: 0 !important;
+  min-height: 100vh !important;
 }
 
 mat-spinner {
