@@ -1,6 +1,5 @@
 <mat-sidenav-container class="sidenav-container">
-  <mat-sidenav #drawer class="sidenav" fixedInViewport="false" [attr.role]="'dialog'" [mode]="'over'"
-               [opened]="false">
+  <mat-sidenav #drawer fixedInViewport="false" [attr.role]="'dialog'" [mode]="'over'" [opened]="false">
     <mat-toolbar color="primary">TrackLott</mat-toolbar>
     <mat-nav-list *ngIf="(isHandset$ | async)">
       <a mat-list-item class="text-uppercase" [routerLink]="'/home'">Home</a>
@@ -30,7 +29,7 @@
   </mat-sidenav>
 
   <mat-sidenav-content>
-    <mat-toolbar color="primary" class="mat-elevation-z6">
+    <mat-toolbar color="primary" class="mat-elevation-z6 main-mat-toolbar">
 
       <button mat-icon-button type="button" aria-label="Toggle Sidenav" (click)="drawer.toggle()"
               *ngIf="(isHandset$ | async)">
@@ -63,6 +62,8 @@
         </ng-template>
       </ng-container>
     </mat-toolbar>
+
     <ng-content></ng-content>
+
   </mat-sidenav-content>
 </mat-sidenav-container>
