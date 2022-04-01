@@ -1,7 +1,3 @@
-export const parseError = (err: string): string => {
-  try {
-    return JSON.parse(err).title;
-  } catch (ex) {
-    return err;
-  }
+export const parseError = (err: { code: string, description: string } | string): string => {
+  return (typeof err !== "string" && err.description) ? err.description : "Something went wrong. Incident reported.";
 };

@@ -2,10 +2,11 @@
 
 public enum ErrorCodes
 {
-    DuplicateUserName,
-    DuplicateEmail,
-    InvalidUsernameOrPassword,
-    InvalidUser,
-    PasswordsMismatch,
-    DefaultError
+  DuplicateEmail,
+  LoginMismatch,
+  InvalidUser,
+  PasswordsMismatch,
+  DefaultError,
+  NoLatestLotto,
+  NoCombos
 }

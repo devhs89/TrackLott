@@ -2,6 +2,7 @@ using System.Text.Json;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using TrackLott.Constants;
 using TrackLott.Data;
 using TrackLott.DTOs;
 using TrackLott.Entities;
@@ -24,7 +25,9 @@ public class CombinationsController : BaseApiController
   {
     var appUser = await GetUser();
 
-    if (appUser == null) return BadRequest("User not found");
+    if (appUser == null)
+      return BadRequest(new ErrorResponseDto()
+        {Code = ErrorCodes.InvalidUser.ToString(), Description = "User not found"});
 
     var missingLottoNames = 0;
     var saveResp = "Combination Saved";
@@ -80,17 +83,23 @@ public class CombinationsController : BaseApiController
   {
     var appUser = await GetUser();
 
-    if (appUser == null) return BadRequest("User not found");
+    if (appUser == null)
+      return BadRequest(new ErrorResponseDto()
+        {Code = ErrorCodes.InvalidUser.ToString(), Description = "User not found"});
 
     var lotteryResult = await CheckLottery(lottoName);
 
-    if (lotteryResult == null) return BadRequest("No last draw to match combinations against");
+    if (lotteryResult == null)
+      return BadRequest(new ErrorResponseDto()
+        {Code = ErrorCodes.NoLatestLotto.ToString(), Description = "No last draw to match combinations against"});
 
     var combinationsCount =
       await _context.Combinations.CountAsync(combo =>
         combo.LotteryResultId == lotteryResult.Id && combo.MemberId == appUser.Id);
 
-    if (combinationsCount < 1) return BadRequest("No matching combinations found");
+    if (combinationsCount < 1)
+      return BadRequest(new ErrorResponseDto()
+        {Code = ErrorCodes.NoCombos.ToString(), Description = "No matching combinations found"});
 
     var combinationsResult = _context.Combinations
       .Where(combo => combo.LotteryResultId == lotteryResult.Id && combo.MemberId == appUser.Id)

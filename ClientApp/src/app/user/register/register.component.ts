@@ -8,6 +8,7 @@ import {UserRegister} from "../../models/user-register";
 import {setSessionUserToken} from "../../helpers/local-storage";
 import {MatSnackBar} from "@angular/material/snack-bar";
 import {ProgressIndicatorService} from "../../services/progress-indicator.service";
+import {parseError} from "../../helpers/parse-error";
 
 @Component({
   selector: 'app-register',
@@ -37,7 +38,7 @@ export class RegisterComponent implements OnInit, OnDestroy {
           this.router.navigate(["/user/account"]);
         }
       },
-      error: resp => this.matSnackBar.open(resp.error, "Dismiss")
+      error: resp => this.matSnackBar.open(parseError(resp.error), "Dismiss")
     });
   }
 

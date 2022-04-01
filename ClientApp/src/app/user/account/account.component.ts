@@ -127,7 +127,7 @@ export class AccountComponent implements OnInit, OnDestroy {
             }
           });
       } else {
-        this.matSnackBar.open(parseError("New passwords do not match"), "Dismiss")
+        this.matSnackBar.open("New passwords do not match", "Dismiss")
       }
     }
   }
@@ -147,7 +147,7 @@ export class AccountComponent implements OnInit, OnDestroy {
           country: resp.country ? capitalizeString(resp.country) : ''
         });
       },
-      error: err => this.matSnackBar.open(err.error, "Dismiss")
+      error: err => this.matSnackBar.open(parseError(err.error), "Dismiss")
     });
   }
 
