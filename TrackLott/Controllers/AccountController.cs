@@ -120,7 +120,10 @@ public class AccountController : BaseApiController
     var result =
       await _userManager.ChangePasswordAsync(member, passwordDto.currentPassword, passwordDto.newPassword);
 
-    return !result.Succeeded ? result.Errors.GetEnumerator().Current.Description : "Password updated successfully";
+    return result.Succeeded
+      ? "Password updated successfully"
+      : BadRequest(new ErrorResponseDto()
+        {Code = ErrorCodes.ChangePasswordFail.ToString(), Description = "Change password failed for user."});
   }
 
   [HttpPut("updateInfo")]

@@ -127,7 +127,7 @@ export class AccountComponent implements OnInit, OnDestroy {
             }
           });
       } else {
-        this.matSnackBar.open("New passwords do not match", "Dismiss")
+        this.matSnackBar.open("New passwords do not match", "Dismiss");
       }
     }
   }
