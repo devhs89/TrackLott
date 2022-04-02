@@ -6,6 +6,7 @@ using TrackLott.Constants;
 using TrackLott.DTOs;
 using TrackLott.Entities;
 using TrackLott.Extensions;
+using TrackLott.Interfaces;
 using TrackLott.Services;
 
 namespace TrackLott.Controllers;
@@ -15,13 +16,15 @@ public class AccountController : BaseApiController
   private readonly UserManager<Member> _userManager;
   private readonly SignInManager<Member> _signInManager;
   private readonly TokenService _tokenService;
+  private readonly IMailNoticeService _mailNotice;
 
   public AccountController(UserManager<Member> userManager, SignInManager<Member> signInManager,
-    TokenService tokenService)
+    TokenService tokenService, IMailNoticeService mailNotice)
   {
     _userManager = userManager;
     _signInManager = signInManager;
     _tokenService = tokenService;
+    _mailNotice = mailNotice;
   }
 
   [HttpPost("register")]
@@ -50,6 +53,8 @@ public class AccountController : BaseApiController
 
     if (!roleResult.Succeeded) return BadRequest(roleResult.Errors);
 
+    await _mailNotice.RegisterNotification(user);
+
     return new UserTokenDto()
     {
       UserName = user.UserName,
@@ -69,7 +74,15 @@ public class AccountController : BaseApiController
 
     var result = await _signInManager.CheckPasswordSignInAsync(user, loginDto.Password, false);
 
-    if (!result.Succeeded) return Unauthorized();
+    switch (result.Succeeded)
+    {
+      case true:
+        await _mailNotice.LoginNotification(user, true);
+        break;
+      default:
+        await _mailNotice.LoginNotification(user, false);
+        return Unauthorized();
+    }
 
     return new UserTokenDto()
     {
