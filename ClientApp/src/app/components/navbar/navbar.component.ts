@@ -1,9 +1,9 @@
 import {Component, OnDestroy, OnInit} from '@angular/core';
-import {AccountService} from "../services/account.service";
+import {AccountService} from "../../services/account.service";
 import {Observable, Subscription} from "rxjs";
-import {UserToken} from "../models/user-token";
-import {removeLocalUserToken, removeSessionUserToken} from "../helpers/local-storage";
-import {DeviceBreakpointService} from "../services/device-breakpoint.service";
+import {UserToken} from "../../models/user-token";
+import {removeLocalUserToken, removeSessionUserToken} from "../../helpers/local-storage";
+import {DeviceBreakpointService} from "../../services/device-breakpoint.service";
 import {Breakpoints} from "@angular/cdk/layout";
 import {Router} from "@angular/router";
 

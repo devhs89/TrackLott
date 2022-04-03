@@ -1,15 +1,15 @@
 import {Component, OnDestroy, OnInit} from '@angular/core';
 import {FormBuilder, FormControl, FormGroup, Validators} from "@angular/forms";
-import {COUNTRIES} from "../../constants/countries";
+import {COUNTRIES} from "../../../constants/countries";
 import {Subscription} from "rxjs";
-import {AccountService} from "../../services/account.service";
-import {UserInfo} from "../../models/user-info";
-import {UserPassword} from "../../models/user-password";
+import {AccountService} from "../../../services/account.service";
+import {UserInfo} from "../../../models/user-info";
+import {UserPassword} from "../../../models/user-password";
 import {MatSnackBar} from "@angular/material/snack-bar";
-import {capitalizeString} from "../../helpers/capitalize-string";
-import {parseError} from "../../helpers/parse-error";
-import {UserUpdateInfo} from "../../models/user-update-info";
-import {ProgressIndicatorService} from "../../services/progress-indicator.service";
+import {capitalizeString} from "../../../helpers/capitalize-string";
+import {parseError} from "../../../helpers/parse-error";
+import {UserUpdateInfo} from "../../../models/user-update-info";
+import {ProgressIndicatorService} from "../../../services/progress-indicator.service";
 
 @Component({
   selector: 'app-account',

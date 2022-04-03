@@ -1,10 +1,10 @@
 import {Component, OnDestroy, OnInit} from '@angular/core';
-import {LottoResultService} from "../../services/lotto-result.service";
+import {LottoResultService} from "../../../services/lotto-result.service";
 import {Subscription} from "rxjs";
-import {LottoResult} from "../../models/lotto-result";
+import {LottoResult} from "../../../models/lotto-result";
 import {MatSnackBar} from "@angular/material/snack-bar";
-import {parseError} from "../../helpers/parse-error";
-import {ProgressIndicatorService} from "../../services/progress-indicator.service";
+import {parseError} from "../../../helpers/parse-error";
+import {ProgressIndicatorService} from "../../../services/progress-indicator.service";
 
 @Component({
   selector: 'app-latest-lotto-result',

@@ -1,15 +1,15 @@
 import {Component, OnInit} from '@angular/core';
-import {DeviceBreakpointService} from "../services/device-breakpoint.service";
+import {DeviceBreakpointService} from "../../services/device-breakpoint.service";
 import {FormControl, FormGroup, Validators} from "@angular/forms";
 import {Observable} from "rxjs";
 import {Breakpoints} from "@angular/cdk/layout";
-import {CombinationsService} from "../services/combinations.service";
-import {LotteryNameOptions} from "../models/lottery-name-options";
+import {CombinationsService} from "../../services/combinations.service";
+import {LotteryNameOptions} from "../../models/lottery-name-options";
 import {MatSelectChange} from "@angular/material/select";
-import {Combination, PickedNumbers} from "../models/combination";
-import {allLottoNames} from "../constants/lotto-names";
+import {Combination, PickedNumbers} from "../../models/combination";
+import {allLottoNames} from "../../constants/lotto-names";
 import {MatSnackBar} from "@angular/material/snack-bar";
-import {parseError} from "../helpers/parse-error";
+import {parseError} from "../../helpers/parse-error";
 
 @Component({
   selector: 'app-add',

@@ -1,14 +1,14 @@
 import {Component, OnDestroy, OnInit} from '@angular/core';
-import {COUNTRIES} from "../../constants/countries";
+import {COUNTRIES} from "../../../constants/countries";
 import {NgForm} from "@angular/forms";
 import {Subscription} from "rxjs";
-import {AccountService} from "../../services/account.service";
+import {AccountService} from "../../../services/account.service";
 import {Router} from "@angular/router";
-import {UserRegister} from "../../models/user-register";
-import {setSessionUserToken} from "../../helpers/local-storage";
+import {UserRegister} from "../../../models/user-register";
+import {setSessionUserToken} from "../../../helpers/local-storage";
 import {MatSnackBar} from "@angular/material/snack-bar";
-import {ProgressIndicatorService} from "../../services/progress-indicator.service";
-import {parseError} from "../../helpers/parse-error";
+import {ProgressIndicatorService} from "../../../services/progress-indicator.service";
+import {parseError} from "../../../helpers/parse-error";
 
 @Component({
   selector: 'app-register',

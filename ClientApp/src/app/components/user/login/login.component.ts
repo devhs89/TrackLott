@@ -1,13 +1,13 @@
 import {Component, OnDestroy, OnInit} from '@angular/core';
 import {FormControl, FormGroup, Validators} from "@angular/forms";
 import {Subscription} from "rxjs";
-import {AccountService} from "../../services/account.service";
+import {AccountService} from "../../../services/account.service";
 import {Router} from "@angular/router";
-import {setLocalUserToken, setSessionUserToken} from "../../helpers/local-storage";
-import {UserLogin} from "../../models/user-login";
+import {setLocalUserToken, setSessionUserToken} from "../../../helpers/local-storage";
+import {UserLogin} from "../../../models/user-login";
 import {MatSnackBar} from "@angular/material/snack-bar";
-import {parseError} from "../../helpers/parse-error";
-import {ProgressIndicatorService} from "../../services/progress-indicator.service";
+import {parseError} from "../../../helpers/parse-error";
+import {ProgressIndicatorService} from "../../../services/progress-indicator.service";
 
 @Component({
   selector: 'app-login',

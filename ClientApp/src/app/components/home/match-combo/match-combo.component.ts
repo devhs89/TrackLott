@@ -1,19 +1,19 @@
 import {Component, OnDestroy, OnInit, ViewChild} from '@angular/core';
-import {CombinationsService} from "../../services/combinations.service";
+import {CombinationsService} from "../../../services/combinations.service";
 import {Observable, Subscription} from "rxjs";
-import {LottoResultService} from "../../services/lotto-result.service";
-import {AccountService} from "../../services/account.service";
+import {LottoResultService} from "../../../services/lotto-result.service";
+import {AccountService} from "../../../services/account.service";
 import {take} from "rxjs/operators";
-import {CombinationsResponse, MatchingCombo, MatchingComboResponse} from "../../models/matching-combo";
-import {PickedNumbers} from "../../models/combination";
-import {DeviceBreakpointService} from "../../services/device-breakpoint.service";
+import {CombinationsResponse, MatchingCombo, MatchingComboResponse} from "../../../models/matching-combo";
+import {PickedNumbers} from "../../../models/combination";
+import {DeviceBreakpointService} from "../../../services/device-breakpoint.service";
 import {Breakpoints} from "@angular/cdk/layout";
 import {MatPaginator} from "@angular/material/paginator";
 import {MatTableDataSource} from "@angular/material/table";
-import {LottoResult} from "../../models/lotto-result";
-import {UserToken} from "../../models/user-token";
-import {ProgressIndicatorService} from "../../services/progress-indicator.service";
-import {parseError} from "../../helpers/parse-error";
+import {LottoResult} from "../../../models/lotto-result";
+import {UserToken} from "../../../models/user-token";
+import {ProgressIndicatorService} from "../../../services/progress-indicator.service";
+import {parseError} from "../../../helpers/parse-error";
 
 @Component({
   selector: 'app-match-combo',
