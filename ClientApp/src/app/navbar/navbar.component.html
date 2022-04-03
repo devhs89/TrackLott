@@ -10,6 +10,12 @@
 
       <mat-divider></mat-divider>
 
+      <a mat-list-item class="text-uppercase" [routerLink]="'/license'">License</a>
+
+      <a mat-list-item class="text-uppercase" [routerLink]="'/terms'">Terms</a>
+
+      <mat-divider></mat-divider>
+
       <ng-container *ngIf="!userLoggedIn; else sideLinkNotShow">
         <a mat-list-item class="text-uppercase" [routerLink]="'user/login'">Login</a>
 
@@ -22,9 +28,6 @@
         <a mat-list-item class="text-uppercase" (click)="logout()">Logout</a>
       </ng-template>
 
-      <mat-divider></mat-divider>
-
-      <a mat-list-item class="text-uppercase" [routerLink]="'/license'">License</a>
     </mat-nav-list>
   </mat-sidenav>
 
@@ -46,6 +49,8 @@
         <a mat-button class="text-uppercase" [routerLink]="'/play'">Play</a>
 
         <a mat-button class="text-uppercase" [routerLink]="'/license'">License</a>
+
+        <a mat-button class="text-uppercase" [routerLink]="'/terms'">Terms</a>
 
         <span class="space-div"></span>
 
