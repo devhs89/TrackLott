@@ -1,6 +1,7 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using TrackLott.Constants;
 using TrackLott.Data;
 using TrackLott.DTOs;
 
@@ -22,7 +23,8 @@ public class LottoResultController : BaseApiController
     var result = await _context.LotteryResults.OrderByDescending(lottery => lottery.DrawDateTime)
       .FirstOrDefaultAsync();
 
-    if (result?.Id == null) return NotFound("No Result Found");
+    if (result?.Id == null)
+      return NotFound(new ErrorResponseDto() {Code = ErrorCodes.NoLatestLotto.ToString(), Description = "No Result Found"});
 
     return new LottoResultDto()
     {

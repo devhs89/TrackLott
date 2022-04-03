@@ -33,7 +33,6 @@ riderModule.iml
 
 # My Ignores
 **/launchSettings.json
-**/appsettings.json
 **/appsettings.Development.json
 **/appsettings.Production.json
 **/wwwroot

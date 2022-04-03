@@ -1,0 +1,13 @@
+<svg class="mt-1 mx-1 rounded-circle shadow-num-btn" height="40" viewBox="0 0 40 40" width="40"
+     xmlns="http://www.w3.org/2000/svg">
+  <style>
+    .textNum {
+      font: 400 1.1rem 'Roboto Mono', monospace;
+      fill: #f8f9fa;
+    }
+  </style>
+  <g>
+    <circle [ngStyle]="{'fill': bgFill}" cx="20" cy="20" r="20"></circle>
+    <text class="textNum" text-anchor="middle" x="20" y="26">{{svgNum}}</text>
+  </g>
+</svg>

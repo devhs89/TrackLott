@@ -3,21 +3,21 @@ import {FormsModule, ReactiveFormsModule} from '@angular/forms';
 import {HTTP_INTERCEPTORS, HttpClientModule} from '@angular/common/http';
 
 import {AppComponent} from './app.component';
-import {HomeComponent} from './home/home.component';
+import {HomeComponent} from './components/home/home.component';
 import {BrowserModule} from "@angular/platform-browser";
-import {AddComponent} from "./add/add.component";
+import {AddComponent} from "./components/add/add.component";
 import {AppRoutingModule} from "./app-routing.module";
-import {PlayComponent} from './play/play.component';
-import {LatestLottoResultComponent} from "./home/latest-lotto-result/latest-lotto-result.component";
-import {TermsComponent} from './terms/terms.component';
-import {NavbarComponent} from "./navbar/navbar.component";
+import {PlayComponent} from './components/play/play.component';
+import {LatestLottoResultComponent} from "./components/home/latest-lotto-result/latest-lotto-result.component";
+import {TermsComponent} from './components/terms/terms.component';
+import {NavbarComponent} from "./components/navbar/navbar.component";
 import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
-import {MatchComboComponent} from './home/match-combo/match-combo.component';
-import {MaterialModule} from "./material/material.module";
+import {MatchComboComponent} from './components/home/match-combo/match-combo.component';
+import {MaterialModule} from "./modules/material.module";
 import {JwtInterceptor} from "./interceptors/jwt.interceptor";
 import {LoadingInterceptor} from "./interceptors/loading.interceptor";
-import {NumberSvgComponent} from './common/number-svg/number-svg.component';
-import { LicenseComponent } from './license/license.component';
+import {NumberSvgComponent} from './components/common/number-svg/number-svg.component';
+import {LicenseComponent} from './components/license/license.component';
 
 @NgModule({
   declarations: [
