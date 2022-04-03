@@ -2,20 +2,20 @@
   <mat-card-title>Register</mat-card-title>
   <mat-divider class="my-3" inset></mat-divider>
   <mat-card-content>
-    <form (ngSubmit)="onSubmit(ngFormObj)" #ngFormObj="ngForm">
+    <form #ngFormObj="ngForm" (ngSubmit)="onSubmit(ngFormObj)">
 
       <div class="row">
         <div class="col-12 col-md-6">
           <mat-form-field appearance="outline" class="w-100">
             <mat-label>Username</mat-label>
-            <input ngModel matInput required name="username" type="text" placeholder="Ex. user123">
+            <input matInput name="username" ngModel placeholder="Ex. user123" required type="text">
             <mat-error>Invalid username</mat-error>
           </mat-form-field>
         </div>
         <div class="col-12 col-md-6">
-          <mat-form-field class="w-100" appearance="outline">
+          <mat-form-field appearance="outline" class="w-100">
             <mat-label>Password</mat-label>
-            <input ngModel matInput required name="password" type="password" placeholder="a-z A-Z 0-9">
+            <input matInput name="password" ngModel placeholder="a-z A-Z 0-9" required type="password">
             <mat-error>Invalid password</mat-error>
           </mat-form-field>
         </div>
@@ -23,26 +23,26 @@
 
       <div class="row">
         <div class="col-md-4">
-          <mat-form-field class="w-100" appearance="outline">
+          <mat-form-field appearance="outline" class="w-100">
             <mat-label>Given Name</mat-label>
-            <input ngModel matInput required name="givenName" type="text" placeholder="e.g. John">
+            <input matInput name="givenName" ngModel placeholder="e.g. John" required type="text">
             <mat-error>Invalid given name</mat-error>
           </mat-form-field>
         </div>
 
         <div class="col-md-4">
-          <mat-form-field class="w-100" appearance="outline">
+          <mat-form-field appearance="outline" class="w-100">
             <mat-label>Surname</mat-label>
-            <input ngModel matInput required name="surname" type="text" placeholder="e.g. Smith">
+            <input matInput name="surname" ngModel placeholder="e.g. Smith" required type="text">
             <mat-error>Invalid surname</mat-error>
           </mat-form-field>
         </div>
 
         <div class="col-md-4">
-          <mat-form-field class="w-100" appearance="outline">
+          <mat-form-field appearance="outline" class="w-100">
             <mat-label>Date of Birth</mat-label>
-            <input ngModel matInput required name="dob" [matDatepicker]="dobPicker" placeholder="dd/mm/yyyy">
-            <mat-datepicker-toggle matSuffix [for]="dobPicker"></mat-datepicker-toggle>
+            <input [matDatepicker]="dobPicker" matInput name="dob" ngModel placeholder="dd/mm/yyyy" required>
+            <mat-datepicker-toggle [for]="dobPicker" matSuffix></mat-datepicker-toggle>
             <mat-datepicker #dobPicker></mat-datepicker>
             <mat-error>Invalid date</mat-error>
           </mat-form-field>
@@ -51,17 +51,17 @@
 
       <div class="row">
         <div class="col-md-6">
-          <mat-form-field class="w-100" appearance="outline">
+          <mat-form-field appearance="outline" class="w-100">
             <mat-label>Email address</mat-label>
-            <input ngModel matInput email required name="email" type="email" placeholder="user@example.com">
+            <input email matInput name="email" ngModel placeholder="user@example.com" required type="email">
             <mat-error>Invalid email</mat-error>
           </mat-form-field>
         </div>
 
         <div class="col-md-6">
-          <mat-form-field class="w-100" appearance="outline">
+          <mat-form-field appearance="outline" class="w-100">
             <mat-label>Country</mat-label>
-            <mat-select ngModel required name="country" aria-label="Select Country">
+            <mat-select aria-label="Select Country" name="country" ngModel required>
               <mat-option *ngFor="let country of countries"
                           value="{{country}}">{{country}}</mat-option>
             </mat-select>
@@ -72,10 +72,10 @@
 
       <div class="row mb-4">
         <div class="col-12">
-          <mat-checkbox #termsCheck ngModel required="true" name="termsCheck" color="primary">
+          <mat-checkbox #termsCheck color="primary" name="termsCheck" ngModel required="true">
             Agree to
-            <a routerLink="/terms"
-               [ngStyle]="{'color': (ngFormObj.submitted && !termsCheck.checked)? 'red': ''}">
+            <a [ngStyle]="{'color': (ngFormObj.submitted && !termsCheck.checked)? 'red': ''}"
+               routerLink="/terms">
               terms and conditions
             </a>
           </mat-checkbox>
@@ -84,7 +84,7 @@
 
       <div class="row mb-3">
         <div class="col-8 col-md-4 mx-auto">
-          <button mat-flat-button class="w-100" color="primary" type="submit">Register</button>
+          <button class="w-100" color="primary" mat-flat-button type="submit">Register</button>
         </div>
       </div>
 
@@ -92,6 +92,6 @@
   </mat-card-content>
 </mat-card>
 
-<div class="spinner-overlay" *ngIf="isLoading$ | async">
-  <mat-spinner diameter="50" color="accent"></mat-spinner>
+<div *ngIf="isLoading$ | async" class="spinner-overlay">
+  <mat-spinner color="accent" diameter="50"></mat-spinner>
 </div>

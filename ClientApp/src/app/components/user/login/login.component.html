@@ -1,28 +1,28 @@
 <mat-card class="row col-md-6 mx-auto mb-3 mat-elevation-z6">
   <mat-card-title>Login</mat-card-title>
-  <mat-divider inset class="my-3"></mat-divider>
+  <mat-divider class="my-3" inset></mat-divider>
   <mat-card-content>
 
-    <form class="row" [formGroup]="loginForm" (ngSubmit)="onSubmit()">
+    <form (ngSubmit)="onSubmit()" [formGroup]="loginForm" class="row">
       <mat-form-field appearance="outline">
         <mat-label>Username</mat-label>
-        <input matInput required class="mat-typography" type="text" placeholder="Enter a username"
-               formControlName="userName">
+        <input class="mat-typography" formControlName="userName" matInput placeholder="Enter a username" required
+               type="text">
         <mat-error>Invalid username</mat-error>
       </mat-form-field>
 
       <mat-form-field appearance="outline">
         <mat-label>Password</mat-label>
-        <input matInput required type="password" placeholder="Enter your password" formControlName="password">
+        <input formControlName="password" matInput placeholder="Enter your password" required type="password">
         <mat-error>Invalid password</mat-error>
       </mat-form-field>
 
-      <button mat-flat-button color="primary" class="w-50 mb-3 mx-auto text-uppercase" type="submit">Login</button>
+      <button class="w-50 mb-3 mx-auto text-uppercase" color="primary" mat-flat-button type="submit">Login</button>
     </form>
 
   </mat-card-content>
 </mat-card>
 
-<div class="spinner-overlay" *ngIf="isLoading$ | async">
-  <mat-spinner diameter="50" color="accent"></mat-spinner>
+<div *ngIf="isLoading$ | async" class="spinner-overlay">
+  <mat-spinner color="accent" diameter="50"></mat-spinner>
 </div>

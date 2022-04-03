@@ -17,6 +17,16 @@ export class LottoResultService {
   constructor(private httpClient: HttpClient) {
   }
 
+  private static mapRespToLottoResult(value: LottoResult): LottoResult {
+    return {
+      drawName: value.drawName,
+      drawNum: value.drawNum,
+      drawDate: value.drawDate,
+      winNums: value.winNums.map(Number),
+      suppNums: value.suppNums.map(Number),
+    };
+  }
+
   latestResult() {
     const savedLot = getSavedLotResult();
 
@@ -42,15 +52,5 @@ export class LottoResultService {
         return lotResult;
       })
     );
-  }
-
-  private static mapRespToLottoResult(value: LottoResult): LottoResult {
-    return {
-      drawName: value.drawName,
-      drawNum: value.drawNum,
-      drawDate: value.drawDate,
-      winNums: value.winNums.map(Number),
-      suppNums: value.suppNums.map(Number),
-    };
   }
 }

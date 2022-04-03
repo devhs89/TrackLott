@@ -132,6 +132,12 @@ export class AccountComponent implements OnInit, OnDestroy {
     }
   }
 
+  ngOnDestroy() {
+    this.updateInfoSubscription.unsubscribe();
+    this.updatePasswordSubscription.unsubscribe();
+    this.showUserSubscription.unsubscribe();
+  }
+
   private getUserAccount() {
     this.showUserSubscription = this.accountService.showUser().subscribe({
       next: (resp: UserInfo) => {
@@ -158,11 +164,5 @@ export class AccountComponent implements OnInit, OnDestroy {
       repeatPassword: {value: null, disabled: true}
     });
     this.passwordsForm.disable();
-  }
-
-  ngOnDestroy() {
-    this.updateInfoSubscription.unsubscribe();
-    this.updatePasswordSubscription.unsubscribe();
-    this.showUserSubscription.unsubscribe();
   }
 }

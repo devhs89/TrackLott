@@ -19,7 +19,8 @@ export class JwtInterceptor implements HttpInterceptor {
 
     this.accountService.appUser$.pipe(take(1)).subscribe({
       next: (user) => currentAppUser = user,
-      error: () => {}
+      error: () => {
+      }
     });
 
     if (currentAppUser !== null) {

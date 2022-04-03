@@ -48,18 +48,6 @@ export class AddComponent implements OnInit {
     this.maxDate = new Date(today.getFullYear(), today.getMonth() + 6, today.getDate());
   }
 
-  private initializeForm() {
-    this.lotteryNameControl = new FormControl(null, [Validators.maxLength(54)]);
-    this.purchaseDateControl = new FormControl(new Date(), Validators.required);
-
-    this.addCombosForm = new FormGroup({
-      lotteryNameControl: this.lotteryNameControl,
-      purchaseDateControl: this.purchaseDateControl
-    });
-
-    this.numButtons();
-  }
-
   public onLotterySelect(event: MatSelectChange) {
     this.clearCurrentPickedNumbers();
 
@@ -127,6 +115,18 @@ export class AddComponent implements OnInit {
         error: err => this.matSnackBar.open(parseError(err.error), "Dismiss")
       });
     }
+  }
+
+  private initializeForm() {
+    this.lotteryNameControl = new FormControl(null, [Validators.maxLength(54)]);
+    this.purchaseDateControl = new FormControl(new Date(), Validators.required);
+
+    this.addCombosForm = new FormGroup({
+      lotteryNameControl: this.lotteryNameControl,
+      purchaseDateControl: this.purchaseDateControl
+    });
+
+    this.numButtons();
   }
 
   private numButtons() {

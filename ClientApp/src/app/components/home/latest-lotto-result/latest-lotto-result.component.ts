@@ -13,8 +13,8 @@ import {ProgressIndicatorService} from "../../../services/progress-indicator.ser
 })
 export class LatestLottoResultComponent implements OnInit, OnDestroy {
   isLoading$ = this.loadingService.isLoading$;
-  private subscription = new Subscription();
   latestLottoResult: LottoResult;
+  private subscription = new Subscription();
 
   constructor(private loadingService: ProgressIndicatorService, private lottoResultService: LottoResultService, private matSnackBar: MatSnackBar) {
   }

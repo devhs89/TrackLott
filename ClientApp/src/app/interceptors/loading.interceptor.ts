@@ -1,7 +1,7 @@
 import {HttpEvent, HttpHandler, HttpInterceptor, HttpRequest} from "@angular/common/http";
 import {ProgressIndicatorService} from "../services/progress-indicator.service";
 import {delay, finalize, Observable} from "rxjs";
-import {Injectable, OnInit} from "@angular/core";
+import {Injectable} from "@angular/core";
 
 @Injectable({
   providedIn: "root"

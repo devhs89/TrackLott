@@ -1,22 +1,22 @@
 <mat-card class="row col-xl-8 mx-auto mb-3 mat-elevation-z6">
   <mat-card-title>Account</mat-card-title>
-  <mat-divider inset class="my-3"></mat-divider>
+  <mat-divider class="my-3" inset></mat-divider>
   <mat-card-content>
 
-    <form [formGroup]="infoForm" (ngSubmit)="onSubmitInfo()">
+    <form (ngSubmit)="onSubmitInfo()" [formGroup]="infoForm">
       <div class="row">
         <div class="col-12 col-md-6">
-          <mat-form-field class="w-100" appearance="fill">
+          <mat-form-field appearance="fill" class="w-100">
             <mat-label>Username</mat-label>
-            <input matInput formControlName="userName" type="text" readonly>
+            <input formControlName="userName" matInput readonly type="text">
             <mat-error>Invalid username</mat-error>
           </mat-form-field>
         </div>
 
         <div class="col-12 col-md-6">
-          <mat-form-field class="w-100" appearance="fill">
+          <mat-form-field appearance="fill" class="w-100">
             <mat-label>Email</mat-label>
-            <input matInput email formControlName="email" type="email">
+            <input email formControlName="email" matInput type="email">
             <mat-error>Invalid email</mat-error>
           </mat-form-field>
         </div>
@@ -24,17 +24,17 @@
 
       <div class="row">
         <div class="col-md-6">
-          <mat-form-field class="w-100" appearance="fill">
+          <mat-form-field appearance="fill" class="w-100">
             <mat-label>Given Name</mat-label>
-            <input matInput formControlName="givenName" type="text">
+            <input formControlName="givenName" matInput type="text">
             <mat-error>Invalid given name</mat-error>
           </mat-form-field>
         </div>
 
         <div class="col-md-6">
-          <mat-form-field class="w-100" appearance="fill">
+          <mat-form-field appearance="fill" class="w-100">
             <mat-label>Surname</mat-label>
-            <input matInput formControlName="surname" type="text">
+            <input formControlName="surname" matInput type="text">
             <mat-error>Invalid surname</mat-error>
           </mat-form-field>
         </div>
@@ -42,18 +42,18 @@
 
       <div class="row">
         <div class="col-md-6">
-          <mat-form-field class="w-100" appearance="fill">
+          <mat-form-field appearance="fill" class="w-100">
             <mat-label>Date of Birth</mat-label>
-            <input matInput formControlName="dob" type="text" readonly>
+            <input formControlName="dob" matInput readonly type="text">
             <mat-error>Invalid date</mat-error>
           </mat-form-field>
         </div>
 
         <div class="col-md-6">
-          <mat-form-field class="w-100" appearance="fill">
+          <mat-form-field appearance="fill" class="w-100">
             <mat-label>Country</mat-label>
             <mat-select formControlName="country">
-              <mat-option class="text-capitalize" *ngFor="let country of countries" value="{{country}}">{{country}}
+              <mat-option *ngFor="let country of countries" class="text-capitalize" value="{{country}}">{{country}}
               </mat-option>
             </mat-select>
           </mat-form-field>
@@ -62,47 +62,47 @@
 
       <div class="row">
         <div class="col-md-3 mx-auto">
-          <button mat-flat-button class="w-100" color="primary" type="submit">Update</button>
+          <button class="w-100" color="primary" mat-flat-button type="submit">Update</button>
         </div>
       </div>
     </form>
 
-    <mat-divider inset class="my-4"></mat-divider>
+    <mat-divider class="my-4" inset></mat-divider>
 
-    <form [formGroup]="passwordsForm" (ngSubmit)="onSubmitPasswords()">
+    <form (ngSubmit)="onSubmitPasswords()" [formGroup]="passwordsForm">
       <div class="row row-cols-1 row-cols-md-2 justify-content-center mb-4">
         <div class="col-8 col-md-4">
-          <button mat-flat-button type="button" class="w-100 mb-2 mb-md-0"
-            [color]="disablePasswordControls ? 'primary': 'warn'" (click)="showPasswordControls()">
+          <button (click)="showPasswordControls()" [color]="disablePasswordControls ? 'primary': 'warn'" class="w-100 mb-2 mb-md-0"
+                  mat-flat-button type="button">
             {{disablePasswordControls ? 'Change Password' : 'Cancel'}}
           </button>
         </div>
-        <div class="col-8 col-md-4" *ngIf="!disablePasswordControls">
-          <button mat-flat-button type="submit" class="w-100" color="primary">Update Password</button>
+        <div *ngIf="!disablePasswordControls" class="col-8 col-md-4">
+          <button class="w-100" color="primary" mat-flat-button type="submit">Update Password</button>
         </div>
       </div>
 
       <div class="row">
         <div class="col-md-4">
-          <mat-form-field class="w-100" appearance="fill">
+          <mat-form-field appearance="fill" class="w-100">
             <mat-label>Current Password</mat-label>
-            <input matInput required formControlName="currentPassword" type="password">
+            <input formControlName="currentPassword" matInput required type="password">
             <mat-error>Invalid current password</mat-error>
           </mat-form-field>
         </div>
 
         <div class="col-md-4">
-          <mat-form-field class="w-100" appearance="fill">
+          <mat-form-field appearance="fill" class="w-100">
             <mat-label>New Password</mat-label>
-            <input matInput required formControlName="newPassword" type="password">
+            <input formControlName="newPassword" matInput required type="password">
             <mat-error>Invalid new password</mat-error>
           </mat-form-field>
         </div>
 
         <div class="col-md-4">
-          <mat-form-field class="w-100" appearance="fill">
+          <mat-form-field appearance="fill" class="w-100">
             <mat-label>Confirm Password</mat-label>
-            <input matInput required formControlName="repeatPassword" type="password">
+            <input formControlName="repeatPassword" matInput required type="password">
             <mat-error>Invalid repeat password</mat-error>
           </mat-form-field>
         </div>
@@ -111,6 +111,6 @@
   </mat-card-content>
 </mat-card>
 
-<div class="spinner-overlay" *ngIf="isLoading$ | async">
-  <mat-spinner diameter="50" color="accent"></mat-spinner>
+<div *ngIf="isLoading$ | async" class="spinner-overlay">
+  <mat-spinner color="accent" diameter="50"></mat-spinner>
 </div>
