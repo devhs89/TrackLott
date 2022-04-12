@@ -4,7 +4,7 @@ import {LoginComponent} from './login/login.component';
 import {RegisterComponent} from './register/register.component';
 import {ForgotComponent} from './forgot/forgot.component';
 import {CommonModule} from "@angular/common";
-import {MaterialModule} from "../../modules/material.module";
+import {MaterialUiModule} from "../../modules/material-ui.module";
 import {FormsModule, ReactiveFormsModule} from "@angular/forms";
 import {AccountComponent} from "./account/account.component";
 import {AuthGuardService} from "../../services/auth-guard.service";
@@ -21,7 +21,7 @@ import {AuthGuardService} from "../../services/auth-guard.service";
     CommonModule,
     FormsModule,
     ReactiveFormsModule,
-    MaterialModule
+    MaterialUiModule
   ],
   declarations: [
     LoginComponent,

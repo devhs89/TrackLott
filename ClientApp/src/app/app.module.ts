@@ -13,7 +13,7 @@ import {TermsComponent} from './components/terms/terms.component';
 import {NavbarComponent} from "./components/navbar/navbar.component";
 import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
 import {MatchComboComponent} from './components/home/match-combo/match-combo.component';
-import {MaterialModule} from "./modules/material.module";
+import {MaterialUiModule} from "./modules/material-ui.module";
 import {JwtInterceptor} from "./interceptors/jwt.interceptor";
 import {LoadingInterceptor} from "./interceptors/loading.interceptor";
 import {NumberSvgComponent} from './components/common/number-svg/number-svg.component';
@@ -39,7 +39,7 @@ import {LicenseComponent} from './components/license/license.component';
     ReactiveFormsModule,
     AppRoutingModule,
     BrowserAnimationsModule,
-    MaterialModule
+    MaterialUiModule
   ],
   providers: [
     {provide: HTTP_INTERCEPTORS, useClass: JwtInterceptor, multi: true},
