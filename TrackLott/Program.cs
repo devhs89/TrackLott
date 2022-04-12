@@ -40,14 +40,21 @@ namespace TrackLott
           {
             webBuilder.ConfigureKestrel(options =>
             {
-              var pemCertEnv = Environment.GetEnvironmentVariable("HTTPS_CERT");
-              var pemKeyEnv = Environment.GetEnvironmentVariable("HTTPS_CERT_KEY");
+              options.Listen(IPAddress.Loopback, 5000);
 
-              if (pemCertEnv == null || pemKeyEnv == null) return;
+              var certEnv = Environment.GetEnvironmentVariable("TRACKLOTT_CERT");
+              var keyEnv = Environment.GetEnvironmentVariable("TRACKLOTT_CERT_KEY");
 
-              var httpsCert = X509Certificate2.CreateFromPemFile(pemCertEnv, pemKeyEnv);
-              options.Listen(IPAddress.Loopback, 5001,
-                listenOptions => listenOptions.UseHttps(httpsCert));
+              if (certEnv != null && keyEnv != null)
+              {
+                var httpsCert = X509Certificate2.CreateFromPemFile(certEnv, keyEnv);
+                options.Listen(IPAddress.Loopback, 5001,
+                  listenOptions => listenOptions.UseHttps(httpsCert));
+              }
+              else
+              {
+                options.Listen(IPAddress.Loopback, 5001);
+              }
             });
           }
 
