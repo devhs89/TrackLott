@@ -48,10 +48,6 @@
 
         <a [routerLink]="'/play'" class="text-uppercase" mat-button>Play</a>
 
-        <a [routerLink]="'/license'" class="text-uppercase" mat-button>License</a>
-
-        <a [routerLink]="'/terms'" class="text-uppercase" mat-button>Terms</a>
-
         <span class="space-div"></span>
 
         <ng-container *ngIf="!userLoggedIn; else linkNotShow">
@@ -65,6 +61,16 @@
 
           <a (click)="logout()" class="text-uppercase" mat-button>Logout</a>
         </ng-template>
+
+        <button [matMenuTriggerFor]="terms" mat-icon-button>
+          <mat-icon>expand_circle_down</mat-icon>
+        </button>
+
+        <mat-menu #terms="matMenu">
+          <a [routerLink]="'/license'" class="text-uppercase" mat-menu-item>License</a>
+
+          <a [routerLink]="'/terms'" class="text-uppercase" mat-menu-item>Terms</a>
+        </mat-menu>
       </ng-container>
     </mat-toolbar>
 
