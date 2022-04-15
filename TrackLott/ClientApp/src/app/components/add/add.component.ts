@@ -24,7 +24,7 @@ export class AddComponent implements OnInit {
     standard: 6,
     allowed: 20,
     mainNums: [],
-    jackpotNums: []
+    suppNums: []
   };
   isHandset$: Observable<boolean>;
   addCombosForm: FormGroup;
@@ -131,7 +131,7 @@ export class AddComponent implements OnInit {
 
   private numButtons() {
     this.lotteryNameSelected.mainNums = [];
-    this.lotteryNameSelected.jackpotNums = [];
+    this.lotteryNameSelected.suppNums = [];
 
     for (let i = 1; i <= this.lotteryNameSelected.biggest; i++) {
       this.lotteryNameSelected.mainNums.push(i);
@@ -139,7 +139,7 @@ export class AddComponent implements OnInit {
 
     if (this.lotteryNameSelected.name === "Powerball") {
       for (let i = 1; i <= 20; i++) {
-        this.lotteryNameSelected.jackpotNums.push(i);
+        this.lotteryNameSelected.suppNums.push(i);
       }
     }
   }

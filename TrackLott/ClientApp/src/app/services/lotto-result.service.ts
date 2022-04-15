@@ -4,7 +4,7 @@ import {BASE_URL} from '../constants/backend';
 import {LottoResult} from '../models/lotto-result';
 import {map} from 'rxjs/operators';
 import {of, ReplaySubject} from 'rxjs';
-import {getSavedLotResult, setLocalLotResult} from "../helpers/local-storage";
+import {getSavedLottoDraw, setLocalLotResult} from "../helpers/local-storage";
 import {splitDateTime} from "../helpers/split-date-time";
 
 @Injectable({
@@ -20,15 +20,19 @@ export class LottoResultService {
   private static mapRespToLottoResult(value: LottoResult): LottoResult {
     return {
       drawName: value.drawName,
-      drawNum: value.drawNum,
-      drawDate: value.drawDate,
-      winNums: value.winNums.map(Number),
-      suppNums: value.suppNums.map(Number),
+      drawNumber: value.drawNumber,
+      drawDateTime: value.drawDateTime,
+      winningNumbers: value.winningNumbers.map(Number),
+      suppNumbers: value.suppNumbers.map(Number),
     };
   }
 
-  latestResult() {
-    const savedLot = getSavedLotResult();
+  saveRecentDraw(lottoResults: LottoResult[]) {
+    return this.httpClient.post(`${BASE_URL}/saveRecentDraw`, lottoResults);
+  }
+
+  getRecentLottoDraw() {
+    const savedLot = getSavedLottoDraw();
 
     if (savedLot) {
       const dateTime = splitDateTime(new Date());
@@ -43,7 +47,7 @@ export class LottoResultService {
   }
 
   private fetchLotResults() {
-    return this.httpClient.get<LottoResult>(`${BASE_URL}/lottoresult`).pipe(
+    return this.httpClient.get<LottoResult>(`${BASE_URL}/getLottoResult`).pipe(
       map((value) => {
         const lotResult = LottoResultService.mapRespToLottoResult(value);
 

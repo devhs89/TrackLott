@@ -7,7 +7,8 @@ public enum ErrorCodes
   InvalidUser,
   ChangePasswordFail,
   PasswordsMismatch,
-  DefaultError,
   NoLatestLotto,
-  NoCombos
+  DuplicateRecentLotto,
+  NoCombos,
+  DefaultError,
 }

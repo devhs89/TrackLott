@@ -15,7 +15,7 @@ import {Router} from "@angular/router";
 export class NavbarComponent implements OnInit, OnDestroy {
   isHandset$: Observable<boolean>;
   appUserSubscription = new Subscription();
-  userLoggedIn = false;
+  userToken: UserToken = {userName: '', token: '', admin: false};
 
   constructor(private deviceBreakpoint: DeviceBreakpointService, private accountService: AccountService, private router: Router) {
   }
@@ -23,7 +23,7 @@ export class NavbarComponent implements OnInit, OnDestroy {
   ngOnInit(): void {
     this.appUserSubscription = this.accountService.appUser$.subscribe((ut: UserToken | null) => {
       if (ut !== null) {
-        this.userLoggedIn = true;
+        this.userToken = ut;
       }
     });
     this.isHandset$ = this.deviceBreakpoint.handsetBreakpoint(Breakpoints.XSmall);
@@ -33,7 +33,7 @@ export class NavbarComponent implements OnInit, OnDestroy {
     this.accountService.removeAppUser();
     removeLocalUserToken();
     removeSessionUserToken();
-    this.userLoggedIn = false;
+    this.userToken = {userName: '', token: '', admin: false};
     this.router.url === "/home" ? window.location.reload() : this.router.navigate(['/home']);
   }
 

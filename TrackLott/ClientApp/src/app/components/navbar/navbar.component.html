@@ -16,13 +16,16 @@
 
       <mat-divider></mat-divider>
 
-      <ng-container *ngIf="!userLoggedIn; else sideLinkNotShow">
+      <ng-container *ngIf="!userToken.token; else sideLinkNotShow">
         <a [routerLink]="'user/login'" class="text-uppercase" mat-list-item>Login</a>
 
         <a [routerLink]="'user/register'" class="text-uppercase" mat-list-item>Register</a>
       </ng-container>
 
       <ng-template #sideLinkNotShow>
+        <a *ngIf="userToken.admin" [routerLink]="'user/add-records'" class="text-uppercase" mat-list-item>Add
+          Records</a>
+
         <a [routerLink]="'user/account'" class="text-uppercase" mat-list-item>Account</a>
 
         <a (click)="logout()" class="text-uppercase" mat-list-item>Logout</a>
@@ -50,13 +53,16 @@
 
         <span class="space-div"></span>
 
-        <ng-container *ngIf="!userLoggedIn; else linkNotShow">
+        <ng-container *ngIf="!userToken.token; else linkNotShow">
           <a [routerLink]="'user/login'" class="text-uppercase" mat-button>Login</a>
 
           <a [routerLink]="'user/register'" class="text-uppercase" mat-button>Register</a>
         </ng-container>
 
         <ng-template #linkNotShow>
+          <a *ngIf="userToken.admin" [routerLink]="'user/add-records'" class="text-uppercase" mat-button>Add
+            Records</a>
+
           <a [routerLink]="'user/account'" class="text-uppercase" mat-button>Account</a>
 
           <a (click)="logout()" class="text-uppercase" mat-button>Logout</a>

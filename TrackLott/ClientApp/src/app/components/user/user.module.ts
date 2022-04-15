@@ -8,6 +8,7 @@ import {MaterialUiModule} from "../../modules/material-ui.module";
 import {FormsModule, ReactiveFormsModule} from "@angular/forms";
 import {AccountComponent} from "./account/account.component";
 import {AuthGuardService} from "../../services/auth-guard.service";
+import {AddRecordsComponent} from './add-records/add-records.component';
 
 @NgModule({
   imports: [
@@ -16,6 +17,7 @@ import {AuthGuardService} from "../../services/auth-guard.service";
       {path: 'register', component: RegisterComponent},
       {path: 'account', component: AccountComponent, canActivate: [AuthGuardService]},
       {path: 'forgot', component: ForgotComponent},
+      {path: 'add-records', component: AddRecordsComponent, canActivate: [AuthGuardService]},
       {path: '', redirectTo: 'login', pathMatch: 'full'}
     ]),
     CommonModule,
@@ -27,7 +29,8 @@ import {AuthGuardService} from "../../services/auth-guard.service";
     LoginComponent,
     RegisterComponent,
     AccountComponent,
-    ForgotComponent
+    ForgotComponent,
+    AddRecordsComponent
   ]
 })
 export class UserModule {

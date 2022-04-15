@@ -97,12 +97,12 @@ export class MatchComboComponent implements OnInit, OnDestroy {
       let numMatches: number = 0;
 
       pickedNumbers.mainNums.forEach(num => {
-        this.lotResult.winNums.includes(num) && numMatches++;
+        this.lotResult.winningNumbers.includes(num) && numMatches++;
       });
 
       if (pickedNumbers.jackpot) {
         if (this.lotResult.drawName === "Powerball") {
-          this.lotResult.suppNums.includes(pickedNumbers.jackpot) && numMatches++;
+          this.lotResult.suppNumbers.includes(pickedNumbers.jackpot) && numMatches++;
         }
       }
 
