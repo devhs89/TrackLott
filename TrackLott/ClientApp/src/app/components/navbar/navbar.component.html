@@ -10,9 +10,9 @@
 
       <mat-divider></mat-divider>
 
-      <a [routerLink]="'/license'" class="text-uppercase" mat-list-item>License</a>
+      <a [routerLink]="'/terms'" class="text-uppercase" mat-list-item>Terms of Use</a>
 
-      <a [routerLink]="'/terms'" class="text-uppercase" mat-list-item>Terms</a>
+      <a [routerLink]="'/license'" class="text-uppercase" mat-list-item>License</a>
 
       <mat-divider></mat-divider>
 
@@ -67,9 +67,9 @@
         </button>
 
         <mat-menu #terms="matMenu">
-          <a [routerLink]="'/license'" class="text-uppercase" mat-menu-item>License</a>
+          <a [routerLink]="'/terms'" class="text-uppercase" mat-menu-item>Terms of Use</a>
 
-          <a [routerLink]="'/terms'" class="text-uppercase" mat-menu-item>Terms</a>
+          <a [routerLink]="'/license'" class="text-uppercase" mat-menu-item>License</a>
         </mat-menu>
       </ng-container>
     </mat-toolbar>
