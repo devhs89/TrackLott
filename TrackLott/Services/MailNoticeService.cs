@@ -5,6 +5,13 @@ namespace TrackLott.Services;
 
 public class MailNoticeService : IMailNoticeService
 {
+  private readonly ILogger<MailNoticeService> _logger;
+
+  public MailNoticeService(ILogger<MailNoticeService> logger)
+  {
+    _logger = logger;
+  }
+
   public async Task<string> RegisterNotification(Member member)
   {
     var resp = await PerformCall(member, "New Registration",
@@ -19,20 +26,26 @@ public class MailNoticeService : IMailNoticeService
     return resp;
   }
 
-  private static async Task<string> PerformCall(Member member, string emailSubject, string emailMessage)
+  private async Task<string> PerformCall(Member member, string emailSubject, string emailMessage)
   {
-    var emailServer = Environment.GetEnvironmentVariable("WEBMAIL_URL");
+    try
+    {
+      var emailServer = Environment.GetEnvironmentVariable("WEBMAIL_URL");
 
-    if (emailServer == null) return "Something went wrong";
-
-    var resp = await new HttpClient().PostAsJsonAsync(emailServer,
-      new Dictionary<string, string>()
-      {
-        {"SenderName", $"{member.GivenName} {member.Surname}"},
-        {"SenderAddress", member.Email},
-        {"EmailSubject", emailSubject},
-        {"EmailMessage", emailMessage}
-      });
-    return resp.Content.ReadAsStringAsync().Result;
+      var resp = await new HttpClient().PostAsJsonAsync(emailServer,
+        new Dictionary<string, string>()
+        {
+          {"SenderName", $"{member.GivenName} {member.Surname}"},
+          {"SenderAddress", member.Email},
+          {"EmailSubject", emailSubject},
+          {"EmailMessage", emailMessage}
+        });
+      return resp.Content.ReadAsStringAsync().Result;
+    }
+    catch (Exception e)
+    {
+      _logger.LogCritical(e, "SENDGRID_MAIL_ERROR");
+      return "Something went wrong!";
+    }
   }
 }
