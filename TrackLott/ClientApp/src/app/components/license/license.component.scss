@@ -1,0 +1,7 @@
+ol > li::marker, span {
+  font-weight: 500;
+}
+
+li > ol {
+  list-style-type: lower-roman;
+}
