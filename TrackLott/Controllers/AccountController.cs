@@ -74,17 +74,20 @@ public class AccountController : BaseApiController
 
     var result = await _signInManager.CheckPasswordSignInAsync(user, loginDto.Password, false);
 
-    await _mailNotice.LoginNotification(user, result.Succeeded);
-
-    if (!result.Succeeded) return Unauthorized();
-
-    var isAdmin = await _userManager.IsInRoleAsync(user, "Admin");
+    switch (result.Succeeded)
+    {
+      case true:
+        await _mailNotice.LoginNotification(user, true);
+        break;
+      default:
+        await _mailNotice.LoginNotification(user, false);
+        return Unauthorized();
+    }
 
     return new UserTokenDto()
     {
       UserName = user.UserName,
-      Token = await _tokenService.CreateToken(user),
-      Admin = isAdmin
+      Token = await _tokenService.CreateToken(user)
     };
   }
 

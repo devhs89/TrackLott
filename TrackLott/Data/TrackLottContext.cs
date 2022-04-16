@@ -20,8 +20,6 @@ public class TrackLottContext : IdentityDbContext<Member, Ability, Guid, Identit
   {
     base.OnModelCreating(builder);
 
-    builder.Entity<LotteryResult>().HasIndex(lr => lr.DrawNumber).IsUnique();
-
     builder.Entity<LotteryResult>().HasMany(lr => lr.Combinations).WithOne(c => c.LotteryResult)
       .HasForeignKey(c => c.LotteryResultId);
   }

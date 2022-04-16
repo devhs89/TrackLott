@@ -185,9 +185,6 @@ namespace TrackLott.Data.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("DrawNumber")
-                        .IsUnique();
-
                     b.ToTable("LotteryResults");
                 });
 

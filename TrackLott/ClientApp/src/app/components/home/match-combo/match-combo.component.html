@@ -17,11 +17,11 @@
         <mat-card-title>{{combo.dateAdded}}</mat-card-title>
         <mat-card-content>
           <div class="d-inline-flex flex-wrap me-md-3">
-            <app-number-svg *ngFor="let num of combo.mainNums" [bgFill]="lotResult.winningNumbers.includes(num) ? '#673ab7' : '#ffd740'"
+            <app-number-svg *ngFor="let num of combo.mainNums" [bgFill]="lotResult.winNums.includes(num) ? '#673ab7' : '#ffd740'"
                             [svgNum]="num"></app-number-svg>
           </div>
           <div *ngIf="combo.jackpot" class="d-inline-flex">
-            <app-number-svg [bgFill]="lotResult.suppNumbers.includes(combo.jackpot) ? '#607d8b' : '#f44336'"
+            <app-number-svg [bgFill]="lotResult.suppNums.includes(combo.jackpot) ? '#607d8b' : '#f44336'"
                             [svgNum]="combo.jackpot"></app-number-svg>
           </div>
         </mat-card-content>
@@ -35,7 +35,7 @@
             <mat-header-cell *matHeaderCellDef>Main Numbers</mat-header-cell>
             <mat-cell *matCellDef="let combo">
               <div class="d-inline-flex flex-wrap">
-                <app-number-svg *ngFor="let num of combo.mainNums" [bgFill]="lotResult.winningNumbers.includes(num) ? '#673ab7' : '#ffd740'"
+                <app-number-svg *ngFor="let num of combo.mainNums" [bgFill]="lotResult.winNums.includes(num) ? '#673ab7' : '#ffd740'"
                                 [svgNum]="num"></app-number-svg>
               </div>
             </mat-cell>
@@ -44,7 +44,7 @@
           <ng-container *ngIf="lotResult && lotResult.drawName === 'powerball'" matColumnDef="jackpot">
             <mat-header-cell *matHeaderCellDef>Powerball</mat-header-cell>
             <mat-cell *matCellDef="let combo">
-              <app-number-svg [bgFill]="lotResult.suppNumbers.includes(combo.jackpot) ? '#607d8b' : '#f44336'"
+              <app-number-svg [bgFill]="lotResult.suppNums.includes(combo.jackpot) ? '#607d8b' : '#f44336'"
                               [svgNum]="combo.jackpot"></app-number-svg>
             </mat-cell>
           </ng-container>

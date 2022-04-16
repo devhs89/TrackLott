@@ -4,10 +4,10 @@
   <mat-divider class="my-3" inset></mat-divider>
   <mat-card-content>
     <div class="d-inline-flex me-md-3">
-      <app-number-svg *ngFor="let num of latestLottoResult.winningNumbers" [svgNum]="num"></app-number-svg>
+      <app-number-svg *ngFor="let num of latestLottoResult.winNums" [svgNum]="num"></app-number-svg>
     </div>
     <div class="d-inline-flex">
-      <app-number-svg *ngFor="let num of latestLottoResult.suppNumbers" [svgNum]="num"
+      <app-number-svg *ngFor="let num of latestLottoResult.suppNums" [svgNum]="num"
                       bgFill="#607D8B"></app-number-svg>
     </div>
   </mat-card-content>

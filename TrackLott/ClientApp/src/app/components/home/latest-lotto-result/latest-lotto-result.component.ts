@@ -20,7 +20,7 @@ export class LatestLottoResultComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit(): void {
-    this.subscription = this.lottoResultService.getRecentLottoDraw().subscribe({
+    this.subscription = this.lottoResultService.latestResult().subscribe({
       next: (resp) => this.latestLottoResult = {...resp},
       error: err => this.matSnackBar.open(parseError(err.error), "Dismiss")
     });

@@ -2,10 +2,10 @@ import {SplitDateTime} from "./basic-models";
 
 export interface LottoResult {
   drawName: string;
-  drawNumber: number;
-  drawDateTime: string;
-  winningNumbers: number[];
-  suppNumbers: number[];
+  drawNum: number;
+  drawDate: string;
+  winNums: number[];
+  suppNums: number[];
 }
 
 export interface SavedLottoResult {

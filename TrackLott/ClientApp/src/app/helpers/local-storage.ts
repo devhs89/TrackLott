@@ -26,7 +26,7 @@ export const removeSessionUserToken = () => {
   sessionStorage.removeItem("user");
 };
 
-export const getSavedLottoDraw = (): SavedLottoResult | null => {
+export const getSavedLotResult = (): SavedLottoResult | null => {
   const lotResultSaved = localStorage.getItem('lottoresult');
   return lotResultSaved ? JSON.parse(lotResultSaved) : null;
 };
