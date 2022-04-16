@@ -1,6 +1,6 @@
 import {HttpEvent, HttpHandler, HttpInterceptor, HttpRequest} from "@angular/common/http";
 import {ProgressIndicatorService} from "../services/progress-indicator.service";
-import {delay, finalize, Observable} from "rxjs";
+import {finalize, Observable} from "rxjs";
 import {Injectable} from "@angular/core";
 
 @Injectable({
@@ -15,7 +15,6 @@ export class LoadingInterceptor implements HttpInterceptor {
     this.loadingService.show();
 
     return httpHandler.handle(httpRequest).pipe(
-      delay(2000),
       finalize(() => this.loadingService.hide())
     );
   }
