@@ -74,15 +74,9 @@ public class AccountController : BaseApiController
 
     var result = await _signInManager.CheckPasswordSignInAsync(user, loginDto.Password, false);
 
-    switch (result.Succeeded)
-    {
-      case true:
-        await _mailNotice.LoginNotification(user, true);
-        break;
-      default:
-        await _mailNotice.LoginNotification(user, false);
-        return Unauthorized();
-    }
+    await _mailNotice.LoginNotification(user, result.Succeeded);
+
+    if (!result.Succeeded) return Unauthorized();
 
     return new UserTokenDto()
     {
