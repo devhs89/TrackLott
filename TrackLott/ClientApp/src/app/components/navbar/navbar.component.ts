@@ -6,6 +6,7 @@ import {removeLocalUserToken, removeSessionUserToken} from "../../helpers/local-
 import {DeviceBreakpointService} from "../../services/device-breakpoint.service";
 import {Breakpoints} from "@angular/cdk/layout";
 import {Router} from "@angular/router";
+import {AuthGuardService} from "../../services/auth-guard.service";
 
 @Component({
   selector: 'app-navbar',
@@ -17,7 +18,7 @@ export class NavbarComponent implements OnInit, OnDestroy {
   appUserSubscription = new Subscription();
   userLoggedIn = false;
 
-  constructor(private deviceBreakpoint: DeviceBreakpointService, private accountService: AccountService, private router: Router) {
+  constructor(private deviceBreakpoint: DeviceBreakpointService, private accountService: AccountService, private router: Router, private authGuardService: AuthGuardService) {
   }
 
   ngOnInit(): void {
@@ -34,6 +35,7 @@ export class NavbarComponent implements OnInit, OnDestroy {
     removeLocalUserToken();
     removeSessionUserToken();
     this.userLoggedIn = false;
+    this.authGuardService.isAuthenticated = false;
     this.router.url === "/home" ? window.location.reload() : this.router.navigate(['/home']);
   }
 
