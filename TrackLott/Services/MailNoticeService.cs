@@ -40,7 +40,7 @@ public class MailNoticeService : IMailNoticeService
           {"EmailSubject", emailSubject},
           {"EmailMessage", emailMessage}
         });
-      return resp.Content.ReadAsStringAsync().Result;
+      return await resp.Content.ReadAsStringAsync();
     }
     catch (Exception e)
     {
