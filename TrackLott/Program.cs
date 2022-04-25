@@ -2,7 +2,7 @@ using System.Net;
 using System.Security.Cryptography.X509Certificates;
 using Microsoft.AspNetCore.Identity;
 using TrackLott.Data;
-using TrackLott.Entities;
+using TrackLott.Models;
 
 namespace TrackLott
 {
@@ -17,7 +17,7 @@ namespace TrackLott
       try
       {
         var context = scope.ServiceProvider.GetRequiredService<TrackLottContext>();
-        var roleManager = scope.ServiceProvider.GetRequiredService<RoleManager<Ability>>();
+        var roleManager = scope.ServiceProvider.GetRequiredService<RoleManager<AppRole>>();
 
         await InitialSeed.SeedData(context, roleManager);
       }

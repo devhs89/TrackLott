@@ -103,7 +103,7 @@ namespace TrackLott.Data.Migrations
                     b.ToTable("AspNetUserTokens", (string)null);
                 });
 
-            modelBuilder.Entity("TrackLott.Entities.Ability", b =>
+            modelBuilder.Entity("TrackLott.Models.AppRole", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
@@ -130,65 +130,7 @@ namespace TrackLott.Data.Migrations
                     b.ToTable("AspNetRoles", (string)null);
                 });
 
-            modelBuilder.Entity("TrackLott.Entities.Combination", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("char(36)");
-
-                    b.Property<string>("DateAdded")
-                        .IsRequired()
-                        .HasColumnType("longtext");
-
-                    b.Property<Guid?>("LotteryResultId")
-                        .HasColumnType("char(36)");
-
-                    b.Property<Guid>("MemberId")
-                        .HasColumnType("char(36)");
-
-                    b.Property<string>("PickedNumbers")
-                        .IsRequired()
-                        .HasColumnType("longtext");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("LotteryResultId");
-
-                    b.HasIndex("MemberId");
-
-                    b.ToTable("Combinations");
-                });
-
-            modelBuilder.Entity("TrackLott.Entities.LotteryResult", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("char(36)");
-
-                    b.Property<DateTime>("DrawDateTime")
-                        .HasColumnType("datetime(6)");
-
-                    b.Property<string>("DrawName")
-                        .IsRequired()
-                        .HasColumnType("longtext");
-
-                    b.Property<int>("DrawNumber")
-                        .HasColumnType("int");
-
-                    b.Property<string>("SuppNumbers")
-                        .IsRequired()
-                        .HasColumnType("longtext");
-
-                    b.Property<string>("WinningNumbers")
-                        .IsRequired()
-                        .HasColumnType("longtext");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("LotteryResults");
-                });
-
-            modelBuilder.Entity("TrackLott.Entities.Member", b =>
+            modelBuilder.Entity("TrackLott.Models.AppUser", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
@@ -271,7 +213,7 @@ namespace TrackLott.Data.Migrations
                     b.ToTable("AspNetUsers", (string)null);
                 });
 
-            modelBuilder.Entity("TrackLott.Entities.MemberAbility", b =>
+            modelBuilder.Entity("TrackLott.Models.AppUserAppRole", b =>
                 {
                     b.Property<Guid>("UserId")
                         .HasColumnType("char(36)");
@@ -286,9 +228,67 @@ namespace TrackLott.Data.Migrations
                     b.ToTable("AspNetUserRoles", (string)null);
                 });
 
+            modelBuilder.Entity("TrackLott.Models.Combination", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("char(36)");
+
+                    b.Property<Guid>("AppUserId")
+                        .HasColumnType("char(36)");
+
+                    b.Property<string>("DateAdded")
+                        .IsRequired()
+                        .HasColumnType("longtext");
+
+                    b.Property<Guid?>("LotteryResultId")
+                        .HasColumnType("char(36)");
+
+                    b.Property<string>("PickedNumbers")
+                        .IsRequired()
+                        .HasColumnType("longtext");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("AppUserId");
+
+                    b.HasIndex("LotteryResultId");
+
+                    b.ToTable("Combinations");
+                });
+
+            modelBuilder.Entity("TrackLott.Models.LotteryResult", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("char(36)");
+
+                    b.Property<DateTime>("DrawDateTime")
+                        .HasColumnType("datetime(6)");
+
+                    b.Property<string>("DrawName")
+                        .IsRequired()
+                        .HasColumnType("longtext");
+
+                    b.Property<int>("DrawNumber")
+                        .HasColumnType("int");
+
+                    b.Property<string>("SuppNumbers")
+                        .IsRequired()
+                        .HasColumnType("longtext");
+
+                    b.Property<string>("WinningNumbers")
+                        .IsRequired()
+                        .HasColumnType("longtext");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("LotteryResults");
+                });
+
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<System.Guid>", b =>
                 {
-                    b.HasOne("TrackLott.Entities.Ability", null)
+                    b.HasOne("TrackLott.Models.AppRole", null)
                         .WithMany()
                         .HasForeignKey("RoleId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -297,7 +297,7 @@ namespace TrackLott.Data.Migrations
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserClaim<System.Guid>", b =>
                 {
-                    b.HasOne("TrackLott.Entities.Member", null)
+                    b.HasOne("TrackLott.Models.AppUser", null)
                         .WithMany()
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -306,7 +306,7 @@ namespace TrackLott.Data.Migrations
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserLogin<System.Guid>", b =>
                 {
-                    b.HasOne("TrackLott.Entities.Member", null)
+                    b.HasOne("TrackLott.Models.AppUser", null)
                         .WithMany()
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -315,51 +315,51 @@ namespace TrackLott.Data.Migrations
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserToken<System.Guid>", b =>
                 {
-                    b.HasOne("TrackLott.Entities.Member", null)
+                    b.HasOne("TrackLott.Models.AppUser", null)
                         .WithMany()
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("TrackLott.Entities.Combination", b =>
+            modelBuilder.Entity("TrackLott.Models.AppUserAppRole", b =>
                 {
-                    b.HasOne("TrackLott.Entities.LotteryResult", "LotteryResult")
-                        .WithMany("Combinations")
-                        .HasForeignKey("LotteryResultId");
-
-                    b.HasOne("TrackLott.Entities.Member", "Member")
-                        .WithMany("Combinations")
-                        .HasForeignKey("MemberId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("LotteryResult");
-
-                    b.Navigation("Member");
-                });
-
-            modelBuilder.Entity("TrackLott.Entities.MemberAbility", b =>
-                {
-                    b.HasOne("TrackLott.Entities.Ability", null)
+                    b.HasOne("TrackLott.Models.AppRole", null)
                         .WithMany()
                         .HasForeignKey("RoleId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("TrackLott.Entities.Member", null)
+                    b.HasOne("TrackLott.Models.AppUser", null)
                         .WithMany()
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("TrackLott.Entities.LotteryResult", b =>
+            modelBuilder.Entity("TrackLott.Models.Combination", b =>
+                {
+                    b.HasOne("TrackLott.Models.AppUser", "AppUser")
+                        .WithMany("Combinations")
+                        .HasForeignKey("AppUserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("TrackLott.Models.LotteryResult", "LotteryResult")
+                        .WithMany("Combinations")
+                        .HasForeignKey("LotteryResultId");
+
+                    b.Navigation("AppUser");
+
+                    b.Navigation("LotteryResult");
+                });
+
+            modelBuilder.Entity("TrackLott.Models.AppUser", b =>
                 {
                     b.Navigation("Combinations");
                 });
 
-            modelBuilder.Entity("TrackLott.Entities.Member", b =>
+            modelBuilder.Entity("TrackLott.Models.LotteryResult", b =>
                 {
                     b.Navigation("Combinations");
                 });

@@ -1,4 +1,4 @@
-namespace TrackLott.Entities;
+namespace TrackLott.Models;
 
 public class Combination
 {
@@ -8,8 +8,8 @@ public class Combination
 
   public string PickedNumbers { get; set; }
 
-  public Member Member { get; set; }
-  public Guid MemberId { get; set; }
+  public AppUser AppUser { get; set; }
+  public Guid AppUserId { get; set; }
 
   public LotteryResult? LotteryResult { get; set; }
   public Guid? LotteryResultId { get; set; }

@@ -1,5 +1,5 @@
-﻿using TrackLott.Entities;
-using TrackLott.Interfaces;
+﻿using TrackLott.Interfaces;
+using TrackLott.Models;
 
 namespace TrackLott.Services;
 
@@ -12,21 +12,21 @@ public class MailNoticeService : IMailNoticeService
     _logger = logger;
   }
 
-  public async Task<string> RegisterNotification(Member member)
+  public async Task<string> RegisterNotification(AppUser appUser)
   {
-    var resp = await PerformCall(member, "New Registration",
-      $"New User Registration\n\nSelected Country: {member.Country}\n\nTerms Accepted: {member.TermsCheck}");
+    var resp = await PerformCall(appUser, "New Registration",
+      $"New User Registration\n\nSelected Country: {appUser.Country}\n\nTerms Accepted: {appUser.TermsCheck}");
     return resp;
   }
 
-  public async Task<string> LoginNotification(Member member, bool attemptStatus)
+  public async Task<string> LoginNotification(AppUser appUser, bool attemptStatus)
   {
-    var resp = await PerformCall(member, "Login Attempt",
-      $"Login Attempt\n\nSelected Country: {member.Country}\n\nSuccessful: {attemptStatus}");
+    var resp = await PerformCall(appUser, "Login Attempt",
+      $"Login Attempt\n\nSelected Country: {appUser.Country}\n\nSuccessful: {attemptStatus}");
     return resp;
   }
 
-  private async Task<string> PerformCall(Member member, string emailSubject, string emailMessage)
+  private async Task<string> PerformCall(AppUser appUser, string emailSubject, string emailMessage)
   {
     try
     {
@@ -35,8 +35,8 @@ public class MailNoticeService : IMailNoticeService
       var resp = await new HttpClient().PostAsJsonAsync(emailServer,
         new Dictionary<string, string>()
         {
-          {"SenderName", $"{member.GivenName} {member.Surname}"},
-          {"SenderAddress", member.Email},
+          {"SenderName", $"{appUser.GivenName} {appUser.Surname}"},
+          {"SenderAddress", appUser.Email},
           {"EmailSubject", emailSubject},
           {"EmailMessage", emailMessage}
         });

@@ -5,8 +5,8 @@ using Microsoft.EntityFrameworkCore;
 using TrackLott.Constants;
 using TrackLott.Data;
 using TrackLott.DTOs;
-using TrackLott.Entities;
 using TrackLott.Extensions;
+using TrackLott.Models;
 
 namespace TrackLott.Controllers;
 
@@ -37,7 +37,7 @@ public class CombinationsController : BaseApiController
     {
       var combination = new Combination()
       {
-        MemberId = appUser.Id,
+        AppUserId = appUser.Id,
         DateAdded = combo.DateAdded,
         PickedNumbers = JsonSerializer.Serialize(combo.PickedNumbers,
           new JsonSerializerOptions() {PropertyNamingPolicy = JsonNamingPolicy.CamelCase}),
@@ -95,14 +95,14 @@ public class CombinationsController : BaseApiController
 
     var combinationsCount =
       await _context.Combinations.CountAsync(combo =>
-        combo.LotteryResultId == lotteryResult.Id && combo.MemberId == appUser.Id);
+        combo.LotteryResultId == lotteryResult.Id && combo.AppUserId == appUser.Id);
 
     if (combinationsCount < 1)
       return BadRequest(new ErrorResponseDto()
         {Code = ErrorCodes.NoCombos.ToString(), Description = "No matching combinations found"});
 
     var combinationsResult = _context.Combinations
-      .Where(combo => combo.LotteryResultId == lotteryResult.Id && combo.MemberId == appUser.Id)
+      .Where(combo => combo.LotteryResultId == lotteryResult.Id && combo.AppUserId == appUser.Id)
       .OrderByDescending(combo => combo.DateAdded).Skip(pageIndex * pageSize).Take(pageSize);
 
     var matchingCombos = new List<MatchingCombinationDto>();
@@ -119,14 +119,14 @@ public class CombinationsController : BaseApiController
     return new MatchComboResponseDto() {CombinationsList = matchingCombos, totalMatches = combinationsCount};
   }
 
-  private async Task<Member?> GetUser()
+  private async Task<AppUser?> GetUser()
   {
     var userName = User.GetUserName();
 
-    var member =
+    var appUser =
       await _context.Users.SingleOrDefaultAsync(member => userName != null && member.UserName.Equals(userName));
 
-    return member;
+    return appUser;
   }
 
   private async Task<LotteryResult?> CheckLottery(string lottoName)

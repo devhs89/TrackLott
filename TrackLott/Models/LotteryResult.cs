@@ -1,4 +1,4 @@
-namespace TrackLott.Entities;
+namespace TrackLott.Models;
 
 public class LotteryResult
 {

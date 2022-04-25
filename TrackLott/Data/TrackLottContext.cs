@@ -1,11 +1,11 @@
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
-using TrackLott.Entities;
+using TrackLott.Models;
 
 namespace TrackLott.Data;
 
-public class TrackLottContext : IdentityDbContext<Member, Ability, Guid, IdentityUserClaim<Guid>, MemberAbility,
+public class TrackLottContext : IdentityDbContext<AppUser, AppRole, Guid, IdentityUserClaim<Guid>, AppUserAppRole,
   IdentityUserLogin<Guid>, IdentityRoleClaim<Guid>, IdentityUserToken<Guid>>
 {
   public TrackLottContext(DbContextOptions options) : base(options)

@@ -1,18 +1,18 @@
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
-using TrackLott.Entities;
+using TrackLott.Models;
 
 namespace TrackLott.Data;
 
 public class InitialSeed
 {
-  public static async Task SeedData(TrackLottContext trackLottContext, RoleManager<Ability> roleManager)
+  public static async Task SeedData(TrackLottContext trackLottContext, RoleManager<AppRole> roleManager)
   {
     if (!(await trackLottContext.Roles.AnyAsync()))
     {
-      var roles = new List<Ability>()
+      var roles = new List<AppRole>()
       {
-        new() {Name = "Member"},
+        new() {Name = "User"},
         new() {Name = "Admin"}
       };
 

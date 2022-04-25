@@ -3,22 +3,22 @@ using System.Security.Claims;
 using System.Text;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.IdentityModel.Tokens;
-using TrackLott.Entities;
+using TrackLott.Models;
 
 namespace TrackLott.Services;
 
 public class TokenService
 {
-  private readonly UserManager<Member> _userManager;
+  private readonly UserManager<AppUser> _userManager;
   private readonly SymmetricSecurityKey _key;
 
-  public TokenService(IConfiguration config, UserManager<Member> userManager)
+  public TokenService(IConfiguration config, UserManager<AppUser> userManager)
   {
     _userManager = userManager;
     _key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(config["TOKEN_KEY"]));
   }
 
-  public async Task<string> CreateToken(Member user)
+  public async Task<string> CreateToken(AppUser user)
   {
     var claims = new List<Claim>()
     {
