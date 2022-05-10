@@ -14,31 +14,34 @@ public class MailNoticeService : IMailNoticeService
 
   public async Task<string> RegisterNotification(AppUser appUser)
   {
-    var resp = await PerformCall(appUser, "New Registration",
-      $"New User Registration\n\nSelected Country: {appUser.Country}\n\nTerms Accepted: {appUser.TermsCheck}");
+    var resp = await PerformCall("New Registration",
+      $"New User Registration\n\nUser: {appUser.GivenName} {appUser.Surname} <{appUser.Email}>\n\nSelected Country: {appUser.Country}\n\nTerms Accepted: {appUser.TermsCheck}");
     return resp;
   }
 
   public async Task<string> LoginNotification(AppUser appUser, bool attemptStatus)
   {
-    var resp = await PerformCall(appUser, "Login Attempt",
-      $"Login Attempt\n\nSelected Country: {appUser.Country}\n\nSuccessful: {attemptStatus}");
+    var resp = await PerformCall("Login Attempt",
+      $"Login Attempt\n\nUser: {appUser.GivenName} {appUser.Surname} <{appUser.Email}>\n\nSelected Country: {appUser.Country}\n\nSuccessful: {attemptStatus}");
     return resp;
   }
 
-  private async Task<string> PerformCall(AppUser appUser, string emailSubject, string emailMessage)
+  private async Task<string> PerformCall(string emailSubject, string emailMessage)
   {
     try
     {
       var emailServer = Environment.GetEnvironmentVariable("WEBMAIL_URL");
+      var defaultEmail = Environment.GetEnvironmentVariable("FROM_EMAIL");
+
+      if (emailServer == null || defaultEmail == null) throw new Exception("Null EmailServer or DefaultEmail");
 
       var resp = await new HttpClient().PostAsJsonAsync(emailServer,
         new Dictionary<string, string>()
         {
-          {"SenderName", $"{appUser.GivenName} {appUser.Surname}"},
-          {"SenderAddress", appUser.Email},
-          {"EmailSubject", emailSubject},
-          {"EmailMessage", emailMessage}
+          { "ToName", "TrackLott" },
+          { "ToAddress", defaultEmail },
+          { "EmailSubject", emailSubject },
+          { "EmailMessage", emailMessage }
         });
       return await resp.Content.ReadAsStringAsync();
     }
