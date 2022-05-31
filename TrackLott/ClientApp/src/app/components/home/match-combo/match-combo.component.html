@@ -17,7 +17,8 @@
         <mat-card-title>{{combo.dateAdded}}</mat-card-title>
         <mat-card-content>
           <div class="d-inline-flex flex-wrap me-md-3">
-            <app-number-svg *ngFor="let num of combo.mainNums" [bgFill]="lotResult.winNums.includes(num) ? '#673ab7' : '#ffd740'"
+            <app-number-svg *ngFor="let num of combo.mainNums"
+                            [bgFill]="lotResult.winNums.includes(num) ? '#673ab7' : '#ffd740'"
                             [svgNum]="num"></app-number-svg>
           </div>
           <div *ngIf="combo.jackpot" class="d-inline-flex">
@@ -35,7 +36,8 @@
             <mat-header-cell *matHeaderCellDef>Main Numbers</mat-header-cell>
             <mat-cell *matCellDef="let combo">
               <div class="d-inline-flex flex-wrap">
-                <app-number-svg *ngFor="let num of combo.mainNums" [bgFill]="lotResult.winNums.includes(num) ? '#673ab7' : '#ffd740'"
+                <app-number-svg *ngFor="let num of combo.mainNums"
+                                [bgFill]="lotResult.winNums.includes(num) ? '#673ab7' : '#ffd740'"
                                 [svgNum]="num"></app-number-svg>
               </div>
             </mat-cell>
