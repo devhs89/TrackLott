@@ -12,8 +12,8 @@ public class InitialSeed
     {
       var roles = new List<AppRole>()
       {
-        new() {Name = "User"},
-        new() {Name = "Admin"}
+        new() { Name = "User" },
+        new() { Name = "Admin" }
       };
 
       foreach (var role in roles)
@@ -24,45 +24,171 @@ public class InitialSeed
 
     if (!(await trackLottContext.LotteryResults.AnyAsync()))
     {
-      await trackLottContext.LotteryResults.AddRangeAsync(new LottoResult()
+      await trackLottContext.LotteryResults.AddRangeAsync(
+        new LottoResult()
         {
-          DrawDate = new DateTime(2022, 03, 07),
-          ProductId = "monday lotto",
-          DrawNumber = 4162,
-          PrimaryNumbers = string.Join(',', new List<int>() {34, 19, 30, 4, 33, 15}),
-          SecondaryNumbers = string.Join(',', new List<int>() {6, 16})
+          ProductId = "SetForLife744",
+          DrawNumber = 2494,
+          PrimaryNumbers = string.Join(',', new List<int>()
+          {
+            10,
+            7,
+            20,
+            11,
+            44,
+            36,
+            22
+          }),
+          DrawDate = DateTime.Parse("2022-06-04T00:00:00"),
+          TicketNumbers = "",
+          SecondaryNumbers = string.Join(',', new List<int>()
+          {
+            15,
+            6
+          }),
+          Dividends = string.Join(',', new List<int>()),
+          Region = "au",
+          Game = "SetForLife744"
         },
         new LottoResult()
         {
-          DrawDate = new DateTime(2022, 03, 08),
-          ProductId = "oz lotto",
-          DrawNumber = 1464,
-          PrimaryNumbers = string.Join(',', new List<int>() {35, 44, 7, 45, 24, 14, 26}),
-          SecondaryNumbers = string.Join(',', new List<int>() {12, 5})
+          ProductId = "TattsLotto",
+          DrawNumber = 4265,
+          PrimaryNumbers = string.Join(',', new List<int>()
+          {
+            23,
+            25,
+            7,
+            13,
+            8,
+            17
+          }),
+          DrawDate = DateTime.Parse("2022-06-04T00:00:00"),
+          TicketNumbers = "",
+          SecondaryNumbers = string.Join(',', new List<int>()
+          {
+            42,
+            31
+          }),
+          Dividends = string.Join(',', new List<int>()),
+          Region = "au",
+          Game = "TattsLotto"
         },
         new LottoResult()
         {
-          DrawDate = new DateTime(2022, 03, 09),
-          ProductId = "wednesday lotto",
-          DrawNumber = 4163,
-          PrimaryNumbers = string.Join(',', new List<int>() {4, 17, 14, 8, 44, 36}),
-          SecondaryNumbers = string.Join(',', new List<int>() {33, 35})
+          ProductId = "Super66",
+          DrawNumber = 4265,
+          PrimaryNumbers = string.Join(',', new List<int>()
+          {
+            1,
+            0,
+            4,
+            9,
+            9,
+            5
+          }),
+          DrawDate = DateTime.Parse("2022-06-04T00:00:00"),
+          TicketNumbers = "",
+          SecondaryNumbers = string.Join(',', new List<int>()),
+          Dividends = string.Join(',', new List<int>()),
+          Region = "au",
+          Game = "Super66"
         },
         new LottoResult()
         {
-          DrawDate = new DateTime(2022, 03, 03),
-          ProductId = "powerball",
-          DrawNumber = 1346,
-          PrimaryNumbers = string.Join(',', new List<int>() {4, 27, 24, 28, 2, 12, 18}),
-          SecondaryNumbers = string.Join(',', new List<int>() {4})
+          ProductId = "Powerball",
+          DrawNumber = 1359,
+          PrimaryNumbers = string.Join(',', new List<int>()
+          {
+            8,
+            15,
+            31,
+            21,
+            11,
+            6,
+            33
+          }),
+          DrawDate = DateTime.Parse("2022-06-02T00:00:00"),
+          TicketNumbers = "",
+          SecondaryNumbers = string.Join(',', new List<int>() { 7 }),
+          Dividends = string.Join(',', new List<int>()),
+          Region = "au",
+          Game = "Powerball"
         },
         new LottoResult()
         {
-          DrawDate = new DateTime(2022, 03, 05),
-          ProductId = "tatts lotto",
-          DrawNumber = 4239,
-          PrimaryNumbers = string.Join(',', new List<int>() {19, 40, 18, 30, 16, 2}),
-          SecondaryNumbers = string.Join(',', new List<int>() {9, 28})
+          ProductId = "MonWedLotto",
+          DrawNumber = 4187,
+          PrimaryNumbers = string.Join(',', new List<int>()
+          {
+            8,
+            15,
+            31,
+            5,
+            42,
+            10
+          }),
+          DrawDate = DateTime.Parse("2022-06-01T00:00:00"),
+          TicketNumbers = "",
+          SecondaryNumbers = string.Join(',', new List<int>()
+          {
+            7,
+            36
+          }),
+          Dividends = string.Join(',', new List<int>()),
+          Region = "au",
+          Game = "MonWedLotto"
+        },
+        new LottoResult()
+        {
+          ProductId = "OzLotto",
+          DrawNumber = 1476,
+          PrimaryNumbers = string.Join(',', new List<int>()
+          {
+            20,
+            32,
+            40,
+            27,
+            36,
+            30,
+            21
+          }),
+          DrawDate = DateTime.Parse("2022-05-31T00:00:00"),
+          TicketNumbers = "",
+          SecondaryNumbers = string.Join(',', new List<int>()
+          {
+            8,
+            28,
+            14
+          }),
+          Dividends = string.Join(',', new List<int>()),
+          Region = "au",
+          Game = "OzLotto"
+        },
+        new LottoResult()
+        {
+          ProductId = "MonWedLotto",
+          DrawNumber = 4186,
+          PrimaryNumbers = string.Join(',', new List<int>()
+          {
+            21,
+            36,
+            18,
+            26,
+            20,
+            1
+          }),
+          DrawDate = DateTime.Parse("2022-05-30T00:00:00"),
+          TicketNumbers = "",
+          SecondaryNumbers = string.Join(',', new List<int>()
+          {
+            8,
+            12,
+            10
+          }),
+          Dividends = string.Join(',', new List<int>()),
+          Region = "au",
+          Game = "MonWedLotto"
         }
       );
       await trackLottContext.SaveChangesAsync();
