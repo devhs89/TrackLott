@@ -129,8 +129,8 @@ public class CombinationsController : BaseApiController
     return appUser;
   }
 
-  private async Task<LotteryResult?> CheckLottery(string lottoName)
+  private async Task<LottoResult?> CheckLottery(string lottoName)
   {
-    return await _context.LotteryResults.FirstOrDefaultAsync(result => result.DrawName.Equals(lottoName.ToLower()));
+    return await _context.LotteryResults.FirstOrDefaultAsync(result => result.ProductId.Equals(lottoName.ToLower()));
   }
 }

@@ -24,45 +24,45 @@ public class InitialSeed
 
     if (!(await trackLottContext.LotteryResults.AnyAsync()))
     {
-      await trackLottContext.LotteryResults.AddRangeAsync(new LotteryResult()
+      await trackLottContext.LotteryResults.AddRangeAsync(new LottoResult()
         {
-          DrawDateTime = new DateTime(2022, 03, 07),
-          DrawName = "monday lotto",
+          DrawDate = new DateTime(2022, 03, 07),
+          ProductId = "monday lotto",
           DrawNumber = 4162,
-          WinningNumbers = string.Join(',', new List<int>() {34, 19, 30, 4, 33, 15}),
-          SuppNumbers = string.Join(',', new List<int>() {6, 16})
+          PrimaryNumbers = string.Join(',', new List<int>() {34, 19, 30, 4, 33, 15}),
+          SecondaryNumbers = string.Join(',', new List<int>() {6, 16})
         },
-        new LotteryResult()
+        new LottoResult()
         {
-          DrawDateTime = new DateTime(2022, 03, 08),
-          DrawName = "oz lotto",
+          DrawDate = new DateTime(2022, 03, 08),
+          ProductId = "oz lotto",
           DrawNumber = 1464,
-          WinningNumbers = string.Join(',', new List<int>() {35, 44, 7, 45, 24, 14, 26}),
-          SuppNumbers = string.Join(',', new List<int>() {12, 5})
+          PrimaryNumbers = string.Join(',', new List<int>() {35, 44, 7, 45, 24, 14, 26}),
+          SecondaryNumbers = string.Join(',', new List<int>() {12, 5})
         },
-        new LotteryResult()
+        new LottoResult()
         {
-          DrawDateTime = new DateTime(2022, 03, 09),
-          DrawName = "wednesday lotto",
+          DrawDate = new DateTime(2022, 03, 09),
+          ProductId = "wednesday lotto",
           DrawNumber = 4163,
-          WinningNumbers = string.Join(',', new List<int>() {4, 17, 14, 8, 44, 36}),
-          SuppNumbers = string.Join(',', new List<int>() {33, 35})
+          PrimaryNumbers = string.Join(',', new List<int>() {4, 17, 14, 8, 44, 36}),
+          SecondaryNumbers = string.Join(',', new List<int>() {33, 35})
         },
-        new LotteryResult()
+        new LottoResult()
         {
-          DrawDateTime = new DateTime(2022, 03, 03),
-          DrawName = "powerball",
+          DrawDate = new DateTime(2022, 03, 03),
+          ProductId = "powerball",
           DrawNumber = 1346,
-          WinningNumbers = string.Join(',', new List<int>() {4, 27, 24, 28, 2, 12, 18}),
-          SuppNumbers = string.Join(',', new List<int>() {4})
+          PrimaryNumbers = string.Join(',', new List<int>() {4, 27, 24, 28, 2, 12, 18}),
+          SecondaryNumbers = string.Join(',', new List<int>() {4})
         },
-        new LotteryResult()
+        new LottoResult()
         {
-          DrawDateTime = new DateTime(2022, 03, 05),
-          DrawName = "tatts lotto",
+          DrawDate = new DateTime(2022, 03, 05),
+          ProductId = "tatts lotto",
           DrawNumber = 4239,
-          WinningNumbers = string.Join(',', new List<int>() {19, 40, 18, 30, 16, 2}),
-          SuppNumbers = string.Join(',', new List<int>() {9, 28})
+          PrimaryNumbers = string.Join(',', new List<int>() {19, 40, 18, 30, 16, 2}),
+          SecondaryNumbers = string.Join(',', new List<int>() {9, 28})
         }
       );
       await trackLottContext.SaveChangesAsync();
