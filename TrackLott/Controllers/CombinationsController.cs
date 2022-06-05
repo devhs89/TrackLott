@@ -5,18 +5,18 @@ using Microsoft.EntityFrameworkCore;
 using TrackLott.Constants;
 using TrackLott.Data;
 using TrackLott.DTOs;
-using TrackLott.Entities;
 using TrackLott.Extensions;
+using TrackLott.Models;
 
 namespace TrackLott.Controllers;
 
 public class CombinationsController : BaseApiController
 {
-  private readonly TrackLottContext _context;
+  private readonly TrackLottDbContext _dbContext;
 
-  public CombinationsController(TrackLottContext context)
+  public CombinationsController(TrackLottDbContext dbContext)
   {
-    _context = context;
+    _dbContext = dbContext;
   }
 
   [HttpPost("add")]
@@ -37,7 +37,7 @@ public class CombinationsController : BaseApiController
     {
       var combination = new Combination()
       {
-        MemberId = appUser.Id,
+        AppUserId = appUser.Id,
         DateAdded = combo.DateAdded,
         PickedNumbers = JsonSerializer.Serialize(combo.PickedNumbers,
           new JsonSerializerOptions() {PropertyNamingPolicy = JsonNamingPolicy.CamelCase}),
@@ -69,10 +69,10 @@ public class CombinationsController : BaseApiController
 
     if (missingLottoNames > 0) saveResp = missingLottoNames + " combinations saved without lottery name";
 
-    await _context.Combinations.AddRangeAsync(allCombinations);
+    await _dbContext.Combinations.AddRangeAsync(allCombinations);
     allCombinations.Clear();
 
-    await _context.SaveChangesAsync();
+    await _dbContext.SaveChangesAsync();
     return saveResp;
   }
 
@@ -94,15 +94,15 @@ public class CombinationsController : BaseApiController
         {Code = ErrorCodes.NoLatestLotto.ToString(), Description = "No last draw to match combinations against"});
 
     var combinationsCount =
-      await _context.Combinations.CountAsync(combo =>
-        combo.LotteryResultId == lotteryResult.Id && combo.MemberId == appUser.Id);
+      await _dbContext.Combinations.CountAsync(combo =>
+        combo.LotteryResultId == lotteryResult.Id && combo.AppUserId == appUser.Id);
 
     if (combinationsCount < 1)
       return BadRequest(new ErrorResponseDto()
         {Code = ErrorCodes.NoCombos.ToString(), Description = "No matching combinations found"});
 
-    var combinationsResult = _context.Combinations
-      .Where(combo => combo.LotteryResultId == lotteryResult.Id && combo.MemberId == appUser.Id)
+    var combinationsResult = _dbContext.Combinations
+      .Where(combo => combo.LotteryResultId == lotteryResult.Id && combo.AppUserId == appUser.Id)
       .OrderByDescending(combo => combo.DateAdded).Skip(pageIndex * pageSize).Take(pageSize);
 
     var matchingCombos = new List<MatchingCombinationDto>();
@@ -119,18 +119,18 @@ public class CombinationsController : BaseApiController
     return new MatchComboResponseDto() {CombinationsList = matchingCombos, totalMatches = combinationsCount};
   }
 
-  private async Task<Member?> GetUser()
+  private async Task<AppUser?> GetUser()
   {
     var userName = User.GetUserName();
 
-    var member =
-      await _context.Users.SingleOrDefaultAsync(member => userName != null && member.UserName.Equals(userName));
+    var appUser =
+      await _dbContext.Users.SingleOrDefaultAsync(member => userName != null && member.UserName.Equals(userName));
 
-    return member;
+    return appUser;
   }
 
-  private async Task<LotteryResult?> CheckLottery(string lottoName)
+  private async Task<LottoResultModel?> CheckLottery(string lottoName)
   {
-    return await _context.LotteryResults.FirstOrDefaultAsync(result => result.DrawName.Equals(lottoName.ToLower()));
+    return await _dbContext.LottoResults.FirstOrDefaultAsync(result => result.ProductId.Equals(lottoName.ToLower()));
   }
 }

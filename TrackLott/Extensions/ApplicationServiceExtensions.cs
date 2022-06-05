@@ -10,11 +10,12 @@ public static class ApplicationServiceExtensions
   {
     services.AddScoped<TokenService>();
 
-    services.AddDbContext<TrackLottContext>(options =>
+    services.AddDbContext<TrackLottDbContext>(options =>
     {
       var env = Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT");
 
-      var connectionString = Environment.GetEnvironmentVariable(env is "Production" ? "SQL_URL" : "SQL_DEV_URL");
+      var connectionString =
+        Environment.GetEnvironmentVariable(env is "Production" ? "TRACKLOTT_SQL" : "TRACKLOTT_DEV_SQL");
 
       if (connectionString == null) throw new Exception("Database connection failed!");
 

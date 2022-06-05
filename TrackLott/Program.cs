@@ -2,7 +2,7 @@ using System.Net;
 using System.Security.Cryptography.X509Certificates;
 using Microsoft.AspNetCore.Identity;
 using TrackLott.Data;
-using TrackLott.Entities;
+using TrackLott.Models;
 
 namespace TrackLott
 {
@@ -16,8 +16,8 @@ namespace TrackLott
 
       try
       {
-        var context = scope.ServiceProvider.GetRequiredService<TrackLottContext>();
-        var roleManager = scope.ServiceProvider.GetRequiredService<RoleManager<Ability>>();
+        var context = scope.ServiceProvider.GetRequiredService<TrackLottDbContext>();
+        var roleManager = scope.ServiceProvider.GetRequiredService<RoleManager<AppRole>>();
 
         await InitialSeed.SeedData(context, roleManager);
       }
@@ -40,7 +40,7 @@ namespace TrackLott
           {
             webBuilder.ConfigureKestrel(options =>
             {
-              options.Listen(IPAddress.Loopback, 5000);
+              options.Listen(IPAddress.Loopback, 8000);
 
               var certEnv = Environment.GetEnvironmentVariable("TRACKLOTT_CERT");
               var keyEnv = Environment.GetEnvironmentVariable("TRACKLOTT_CERT_KEY");
@@ -48,12 +48,12 @@ namespace TrackLott
               if (certEnv != null && keyEnv != null)
               {
                 var httpsCert = X509Certificate2.CreateFromPemFile(certEnv, keyEnv);
-                options.Listen(IPAddress.Loopback, 5001,
+                options.Listen(IPAddress.Loopback, 8001,
                   listenOptions => listenOptions.UseHttps(httpsCert));
               }
               else
               {
-                options.Listen(IPAddress.Loopback, 5001);
+                options.Listen(IPAddress.Loopback, 8001);
               }
             });
           }

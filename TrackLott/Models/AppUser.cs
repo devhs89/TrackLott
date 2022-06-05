@@ -1,8 +1,8 @@
 using Microsoft.AspNetCore.Identity;
 
-namespace TrackLott.Entities;
+namespace TrackLott.Models;
 
-public class Member : IdentityUser<Guid>
+public class AppUser : IdentityUser<Guid>
 {
   public string GivenName { set; get; }
 

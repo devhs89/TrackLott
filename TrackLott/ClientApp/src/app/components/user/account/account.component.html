@@ -72,7 +72,8 @@
     <form (ngSubmit)="onSubmitPasswords()" [formGroup]="passwordsForm">
       <div class="row row-cols-1 row-cols-md-2 justify-content-center mb-4">
         <div class="col-8 col-md-4">
-          <button (click)="showPasswordControls()" [color]="disablePasswordControls ? 'primary': 'warn'" class="w-100 mb-2 mb-md-0"
+          <button (click)="showPasswordControls()" [color]="disablePasswordControls ? 'primary': 'warn'"
+                  class="w-100 mb-2 mb-md-0"
                   mat-flat-button type="button">
             {{disablePasswordControls ? 'Change Password' : 'Cancel'}}
           </button>

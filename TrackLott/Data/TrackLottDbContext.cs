@@ -1,26 +1,26 @@
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
-using TrackLott.Entities;
+using TrackLott.Models;
 
 namespace TrackLott.Data;
 
-public class TrackLottContext : IdentityDbContext<Member, Ability, Guid, IdentityUserClaim<Guid>, MemberAbility,
+public class TrackLottDbContext : IdentityDbContext<AppUser, AppRole, Guid, IdentityUserClaim<Guid>, AppUserAppRole,
   IdentityUserLogin<Guid>, IdentityRoleClaim<Guid>, IdentityUserToken<Guid>>
 {
-  public TrackLottContext(DbContextOptions options) : base(options)
+  public TrackLottDbContext(DbContextOptions<TrackLottDbContext> options) : base(options)
   {
   }
 
   public DbSet<Combination> Combinations { get; set; }
-
-  public DbSet<LotteryResult> LotteryResults { get; set; }
+  public DbSet<LottoResultModel> LottoResults { get; set; }
 
   protected override void OnModelCreating(ModelBuilder builder)
   {
     base.OnModelCreating(builder);
 
-    builder.Entity<LotteryResult>().HasMany(lr => lr.Combinations).WithOne(c => c.LotteryResult)
+    builder.Entity<LottoResultModel>().HasMany(lr => lr.Combinations)
+      .WithOne(c => c.LotteryResult)
       .HasForeignKey(c => c.LotteryResultId);
   }
 }

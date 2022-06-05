@@ -9,30 +9,31 @@ namespace TrackLott.Controllers;
 
 public class LottoResultController : BaseApiController
 {
-  private readonly TrackLottContext _context;
+  private readonly TrackLottDbContext _dbContext;
 
-  public LottoResultController(TrackLottContext context)
+  public LottoResultController(TrackLottDbContext dbContext)
   {
-    _context = context;
+    _dbContext = dbContext;
   }
 
-  [HttpGet]
+  [HttpGet("latest")]
   [AllowAnonymous]
   public async Task<ActionResult<LottoResultDto>> GetLottoResult()
   {
-    var result = await _context.LotteryResults.OrderByDescending(lottery => lottery.DrawDateTime)
+    var result = await _dbContext.LottoResults.OrderByDescending(lottery => lottery.DrawDate)
       .FirstOrDefaultAsync();
 
     if (result?.Id == null)
-      return NotFound(new ErrorResponseDto() {Code = ErrorCodes.NoLatestLotto.ToString(), Description = "No Result Found"});
+      return NotFound(new ErrorResponseDto()
+        { Code = ErrorCodes.NoLatestLotto.ToString(), Description = "No Result Found" });
 
     return new LottoResultDto()
     {
-      DrawName = result.DrawName,
+      DrawName = result.DisplayName,
       DrawNum = result.DrawNumber,
-      DrawDate = result.DrawDateTime,
-      WinNums = result.WinningNumbers.Split(','),
-      SuppNums = result.SuppNumbers.Split(',')
+      DrawDate = result.DrawDate,
+      WinNums = result.PrimaryNumbers.Split(',').Select(int.Parse).ToList(),
+      SuppNums = result.SecondaryNumbers.Split(',').Select(int.Parse).ToList()
     };
   }
 }

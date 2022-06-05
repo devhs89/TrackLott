@@ -43,7 +43,7 @@ export class LottoResultService {
   }
 
   private fetchLotResults() {
-    return this.httpClient.get<LottoResult>(`${BASE_URL}/lottoresult`).pipe(
+    return this.httpClient.get<LottoResult>(`${BASE_URL}/lottoresult/latest`).pipe(
       map((value) => {
         const lotResult = LottoResultService.mapRespToLottoResult(value);
 

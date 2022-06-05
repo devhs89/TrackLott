@@ -7,11 +7,8 @@
 **/appsettings.Production.json
 **/bin
 **/obj
-**/wwwroot
 /Release
 
 **/node_modules
 **/.angular
 **/bootstrap
-**/environment.prod.ts
-**/environment.dev.ts

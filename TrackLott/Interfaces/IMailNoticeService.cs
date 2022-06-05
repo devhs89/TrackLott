@@ -1,10 +1,10 @@
-﻿using TrackLott.Entities;
+﻿using TrackLott.Models;
 
 namespace TrackLott.Interfaces;
 
 public interface IMailNoticeService
 {
-  Task<string> RegisterNotification(Member member);
+  Task<string> RegisterNotification(AppUser appUser);
 
-  Task<string> LoginNotification(Member member, bool attemptStatus);
+  Task<string> LoginNotification(AppUser appUser, bool attemptStatus);
 }

@@ -4,21 +4,21 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using TrackLott.Constants;
 using TrackLott.DTOs;
-using TrackLott.Entities;
 using TrackLott.Extensions;
 using TrackLott.Interfaces;
+using TrackLott.Models;
 using TrackLott.Services;
 
 namespace TrackLott.Controllers;
 
 public class AccountController : BaseApiController
 {
-  private readonly UserManager<Member> _userManager;
-  private readonly SignInManager<Member> _signInManager;
+  private readonly UserManager<AppUser> _userManager;
+  private readonly SignInManager<AppUser> _signInManager;
   private readonly TokenService _tokenService;
   private readonly IMailNoticeService _mailNotice;
 
-  public AccountController(UserManager<Member> userManager, SignInManager<Member> signInManager,
+  public AccountController(UserManager<AppUser> userManager, SignInManager<AppUser> signInManager,
     TokenService tokenService, IMailNoticeService mailNotice)
   {
     _userManager = userManager;
@@ -34,7 +34,7 @@ public class AccountController : BaseApiController
       return BadRequest(new ErrorResponseDto()
         {Code = ErrorCodes.DuplicateEmail.ToString(), Description = "Email address is already taken"});
 
-    var user = new Member()
+    var user = new AppUser()
     {
       UserName = registerDto.UserName.ToLower(),
       Email = registerDto.Email.ToLower(),
@@ -49,7 +49,7 @@ public class AccountController : BaseApiController
 
     if (!result.Succeeded) return BadRequest(result.Errors);
 
-    var roleResult = await _userManager.AddToRoleAsync(user, "Member");
+    var roleResult = await _userManager.AddToRoleAsync(user, "User");
 
     if (!roleResult.Succeeded) return BadRequest(roleResult.Errors);
 
@@ -87,24 +87,24 @@ public class AccountController : BaseApiController
 
   [HttpPost("show")]
   [Authorize]
-  public async Task<ActionResult<AccountDto>> ShowMember()
+  public async Task<ActionResult<AccountDto>> ShowUser()
   {
     var userName = User.GetUserName();
 
-    var member = await _userManager.Users.SingleOrDefaultAsync(rec => rec.UserName.Equals(userName));
+    var appUser = await _userManager.Users.SingleOrDefaultAsync(rec => rec.UserName.Equals(userName));
 
-    if (member == null)
+    if (appUser == null)
       return BadRequest(new ErrorResponseDto()
         {Code = ErrorCodes.InvalidUser.ToString(), Description = "User not found"});
 
     return new AccountDto()
     {
-      UserName = member.UserName,
-      Email = member.Email,
-      GivenName = member.GivenName,
-      Surname = member.Surname,
-      Dob = member.Dob,
-      Country = member.Country
+      UserName = appUser.UserName,
+      Email = appUser.Email,
+      GivenName = appUser.GivenName,
+      Surname = appUser.Surname,
+      Dob = appUser.Dob,
+      Country = appUser.Country
     };
   }
 
@@ -118,14 +118,14 @@ public class AccountController : BaseApiController
 
     var username = User.GetUserName();
 
-    var member = await _userManager.Users.SingleOrDefaultAsync(rec => rec.UserName.Equals(username));
+    var appUser = await _userManager.Users.SingleOrDefaultAsync(rec => rec.UserName.Equals(username));
 
-    if (member == null)
+    if (appUser == null)
       return BadRequest(
         new ErrorResponseDto() {Code = ErrorCodes.InvalidUser.ToString(), Description = "No user found"});
 
     var result =
-      await _userManager.ChangePasswordAsync(member, passwordDto.currentPassword, passwordDto.newPassword);
+      await _userManager.ChangePasswordAsync(appUser, passwordDto.currentPassword, passwordDto.newPassword);
 
     return result.Succeeded
       ? "Password updated successfully"
@@ -139,18 +139,18 @@ public class AccountController : BaseApiController
   {
     var userName = User.GetUserName();
 
-    var member = await _userManager.Users.SingleOrDefaultAsync(rec => rec.UserName.Equals(userName));
+    var appUser = await _userManager.Users.SingleOrDefaultAsync(rec => rec.UserName.Equals(userName));
 
-    if (member == null)
+    if (appUser == null)
       return BadRequest(
         new ErrorResponseDto() {Code = ErrorCodes.InvalidUser.ToString(), Description = "No user found"});
 
-    if (accountUpdateDto.Email != null) member.Email = accountUpdateDto.Email;
-    if (accountUpdateDto.GivenName != null) member.GivenName = accountUpdateDto.GivenName;
-    if (accountUpdateDto.Surname != null) member.Surname = accountUpdateDto.Surname;
-    if (accountUpdateDto.Country != null) member.Country = accountUpdateDto.Country;
+    if (accountUpdateDto.Email != null) appUser.Email = accountUpdateDto.Email;
+    if (accountUpdateDto.GivenName != null) appUser.GivenName = accountUpdateDto.GivenName;
+    if (accountUpdateDto.Surname != null) appUser.Surname = accountUpdateDto.Surname;
+    if (accountUpdateDto.Country != null) appUser.Country = accountUpdateDto.Country;
 
-    var res = await _userManager.UpdateAsync(member);
+    var res = await _userManager.UpdateAsync(appUser);
 
     if (res == null)
       return BadRequest(new ErrorResponseDto()
