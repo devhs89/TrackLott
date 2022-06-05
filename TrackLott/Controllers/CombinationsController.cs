@@ -12,11 +12,11 @@ namespace TrackLott.Controllers;
 
 public class CombinationsController : BaseApiController
 {
-  private readonly TrackLottContext _context;
+  private readonly TrackLottDbContext _dbContext;
 
-  public CombinationsController(TrackLottContext context)
+  public CombinationsController(TrackLottDbContext dbContext)
   {
-    _context = context;
+    _dbContext = dbContext;
   }
 
   [HttpPost("add")]
@@ -69,10 +69,10 @@ public class CombinationsController : BaseApiController
 
     if (missingLottoNames > 0) saveResp = missingLottoNames + " combinations saved without lottery name";
 
-    await _context.Combinations.AddRangeAsync(allCombinations);
+    await _dbContext.Combinations.AddRangeAsync(allCombinations);
     allCombinations.Clear();
 
-    await _context.SaveChangesAsync();
+    await _dbContext.SaveChangesAsync();
     return saveResp;
   }
 
@@ -94,14 +94,14 @@ public class CombinationsController : BaseApiController
         {Code = ErrorCodes.NoLatestLotto.ToString(), Description = "No last draw to match combinations against"});
 
     var combinationsCount =
-      await _context.Combinations.CountAsync(combo =>
+      await _dbContext.Combinations.CountAsync(combo =>
         combo.LotteryResultId == lotteryResult.Id && combo.AppUserId == appUser.Id);
 
     if (combinationsCount < 1)
       return BadRequest(new ErrorResponseDto()
         {Code = ErrorCodes.NoCombos.ToString(), Description = "No matching combinations found"});
 
-    var combinationsResult = _context.Combinations
+    var combinationsResult = _dbContext.Combinations
       .Where(combo => combo.LotteryResultId == lotteryResult.Id && combo.AppUserId == appUser.Id)
       .OrderByDescending(combo => combo.DateAdded).Skip(pageIndex * pageSize).Take(pageSize);
 
@@ -124,13 +124,13 @@ public class CombinationsController : BaseApiController
     var userName = User.GetUserName();
 
     var appUser =
-      await _context.Users.SingleOrDefaultAsync(member => userName != null && member.UserName.Equals(userName));
+      await _dbContext.Users.SingleOrDefaultAsync(member => userName != null && member.UserName.Equals(userName));
 
     return appUser;
   }
 
-  private async Task<LottoResult?> CheckLottery(string lottoName)
+  private async Task<LottoResultModel?> CheckLottery(string lottoName)
   {
-    return await _context.LotteryResults.FirstOrDefaultAsync(result => result.ProductId.Equals(lottoName.ToLower()));
+    return await _dbContext.LottoResults.FirstOrDefaultAsync(result => result.ProductId.Equals(lottoName.ToLower()));
   }
 }

@@ -16,7 +16,7 @@ public static class IdentityServiceExtensions
       .AddRoleManager<RoleManager<AppRole>>()
       .AddSignInManager<SignInManager<AppUser>>()
       .AddRoleValidator<RoleValidator<AppRole>>()
-      .AddEntityFrameworkStores<TrackLottContext>();
+      .AddEntityFrameworkStores<TrackLottDbContext>();
 
     services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme).AddJwtBearer(options =>
       options.TokenValidationParameters = new TokenValidationParameters()

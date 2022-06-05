@@ -11,6 +11,6 @@ public class Combination
   public AppUser AppUser { get; set; }
   public Guid AppUserId { get; set; }
 
-  public LottoResult? LotteryResult { get; set; }
+  public LottoResultModel? LotteryResult { get; set; }
   public Guid? LotteryResultId { get; set; }
 }

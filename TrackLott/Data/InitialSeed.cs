@@ -6,9 +6,9 @@ namespace TrackLott.Data;
 
 public class InitialSeed
 {
-  public static async Task SeedData(TrackLottContext trackLottContext, RoleManager<AppRole> roleManager)
+  public static async Task SeedData(TrackLottDbContext trackLottDbContext, RoleManager<AppRole> roleManager)
   {
-    if (!(await trackLottContext.Roles.AnyAsync()))
+    if (!(await trackLottDbContext.Roles.AnyAsync()))
     {
       var roles = new List<AppRole>()
       {
@@ -22,10 +22,10 @@ public class InitialSeed
       }
     }
 
-    if (!(await trackLottContext.LotteryResults.AnyAsync()))
+    if (!(await trackLottDbContext.LottoResults.AnyAsync()))
     {
-      await trackLottContext.LotteryResults.AddRangeAsync(
-        new LottoResult()
+      await trackLottDbContext.LottoResults.AddRangeAsync(
+        new LottoResultModel()
         {
           ProductId = "SetForLife744",
           DrawNumber = 2494,
@@ -50,7 +50,7 @@ public class InitialSeed
           Region = "au",
           Game = "SetForLife744"
         },
-        new LottoResult()
+        new LottoResultModel()
         {
           ProductId = "TattsLotto",
           DrawNumber = 4265,
@@ -74,7 +74,7 @@ public class InitialSeed
           Region = "au",
           Game = "TattsLotto"
         },
-        new LottoResult()
+        new LottoResultModel()
         {
           ProductId = "Super66",
           DrawNumber = 4265,
@@ -94,7 +94,7 @@ public class InitialSeed
           Region = "au",
           Game = "Super66"
         },
-        new LottoResult()
+        new LottoResultModel()
         {
           ProductId = "Powerball",
           DrawNumber = 1359,
@@ -115,7 +115,7 @@ public class InitialSeed
           Region = "au",
           Game = "Powerball"
         },
-        new LottoResult()
+        new LottoResultModel()
         {
           ProductId = "MonWedLotto",
           DrawNumber = 4187,
@@ -139,7 +139,7 @@ public class InitialSeed
           Region = "au",
           Game = "MonWedLotto"
         },
-        new LottoResult()
+        new LottoResultModel()
         {
           ProductId = "OzLotto",
           DrawNumber = 1476,
@@ -165,7 +165,7 @@ public class InitialSeed
           Region = "au",
           Game = "OzLotto"
         },
-        new LottoResult()
+        new LottoResultModel()
         {
           ProductId = "MonWedLotto",
           DrawNumber = 4186,
@@ -191,7 +191,7 @@ public class InitialSeed
           Game = "MonWedLotto"
         }
       );
-      await trackLottContext.SaveChangesAsync();
+      await trackLottDbContext.SaveChangesAsync();
     }
   }
 }

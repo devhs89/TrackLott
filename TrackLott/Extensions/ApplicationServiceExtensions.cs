@@ -10,7 +10,7 @@ public static class ApplicationServiceExtensions
   {
     services.AddScoped<TokenService>();
 
-    services.AddDbContext<TrackLottContext>(options =>
+    services.AddDbContext<TrackLottDbContext>(options =>
     {
       var env = Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT");
 

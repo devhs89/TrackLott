@@ -16,7 +16,7 @@ namespace TrackLott
 
       try
       {
-        var context = scope.ServiceProvider.GetRequiredService<TrackLottContext>();
+        var context = scope.ServiceProvider.GetRequiredService<TrackLottDbContext>();
         var roleManager = scope.ServiceProvider.GetRequiredService<RoleManager<AppRole>>();
 
         await InitialSeed.SeedData(context, roleManager);

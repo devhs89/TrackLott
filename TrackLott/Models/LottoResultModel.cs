@@ -1,10 +1,13 @@
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace TrackLott.Models;
 
-public class LottoResult
+[Table("LottoResults")]
+public class LottoResultModel
 {
   public Guid Id { get; set; }
+  public string DisplayName { get; set; }
   public string SecondaryNumbers { get; set; }
   public string Dividends { get; set; }
   [Required] public string PrimaryNumbers { get; set; }

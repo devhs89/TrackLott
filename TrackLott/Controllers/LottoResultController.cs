@@ -9,18 +9,18 @@ namespace TrackLott.Controllers;
 
 public class LottoResultController : BaseApiController
 {
-  private readonly TrackLottContext _context;
+  private readonly TrackLottDbContext _dbContext;
 
-  public LottoResultController(TrackLottContext context)
+  public LottoResultController(TrackLottDbContext dbContext)
   {
-    _context = context;
+    _dbContext = dbContext;
   }
 
-  [HttpGet]
+  [HttpGet("latest")]
   [AllowAnonymous]
   public async Task<ActionResult<LottoResultDto>> GetLottoResult()
   {
-    var result = await _context.LotteryResults.OrderByDescending(lottery => lottery.DrawDate)
+    var result = await _dbContext.LottoResults.OrderByDescending(lottery => lottery.DrawDate)
       .FirstOrDefaultAsync();
 
     if (result?.Id == null)
@@ -29,11 +29,11 @@ public class LottoResultController : BaseApiController
 
     return new LottoResultDto()
     {
-      DrawName = result.ProductId,
+      DrawName = result.DisplayName,
       DrawNum = result.DrawNumber,
       DrawDate = result.DrawDate,
-      WinNums = result.PrimaryNumbers.Split(','),
-      SuppNums = result.SecondaryNumbers.Split(',')
+      WinNums = result.PrimaryNumbers.Split(',').Select(int.Parse).ToList(),
+      SuppNums = result.SecondaryNumbers.Split(',').Select(int.Parse).ToList()
     };
   }
 }
