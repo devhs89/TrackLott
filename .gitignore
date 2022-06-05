@@ -7,7 +7,6 @@
 **/appsettings.Production.json
 **/bin
 **/obj
-**/wwwroot
 /Release
 
 **/node_modules
