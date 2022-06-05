@@ -12,4 +12,3 @@
 **/node_modules
 **/.angular
 **/bootstrap
-**/environment.prod.ts
