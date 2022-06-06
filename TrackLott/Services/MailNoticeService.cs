@@ -31,15 +31,15 @@ public class MailNoticeService : IMailNoticeService
     try
     {
       var emailServer = Environment.GetEnvironmentVariable("WEBMAIL_URL");
-      var adminEmail = Environment.GetEnvironmentVariable("ADMIN_EMAIL");
+      var serverAdmin = Environment.GetEnvironmentVariable("SERVER_ADMIN_EMAIL");
 
-      if (emailServer == null || adminEmail == null) throw new Exception("Null EmailServer or AdminEmail");
+      if (emailServer == null || serverAdmin == null) throw new Exception("Null EmailServer or AdminEmail");
 
       var resp = await new HttpClient().PostAsJsonAsync(emailServer,
         new Dictionary<string, string>()
         {
           { "ToName", "TrackLott" },
-          { "ToAddress", adminEmail },
+          { "ToAddress", serverAdmin },
           { "EmailSubject", emailSubject },
           { "EmailMessage", emailMessage }
         });
