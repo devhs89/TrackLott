@@ -12,18 +12,20 @@ public class MailNoticeService : IMailNoticeService
     _logger = logger;
   }
 
-  public void RegisterNotification(AppUser appUser)
+  public async Task<string> RegisterNotification(AppUser appUser)
   {
-    var _ = PerformCall($"{appUser.GivenName} {appUser.Surname}", appUser.Email,
+    var res = await PerformCall($"{appUser.GivenName} {appUser.Surname}", appUser.Email,
       "TrackLott - New User Registration",
       $"Selected Country: {appUser.Country}<br /><br />Terms Accepted: {appUser.TermsCheck}");
+    return res;
   }
 
-  public void LoginNotification(AppUser appUser, bool attemptStatus)
+  public async Task<string> LoginNotification(AppUser appUser, bool attemptStatus)
   {
-    var _ = PerformCall($"{appUser.GivenName} {appUser.Surname}", appUser.Email,
+    var res = await PerformCall($"{appUser.GivenName} {appUser.Surname}", appUser.Email,
       "TrackLott - Login Attempt",
       $"Selected Country: {appUser.Country}<br /><br />Successful: {attemptStatus}");
+    return res;
   }
 
   private async Task<string> PerformCall(string senderName, string senderAddress, string emailSubject,
