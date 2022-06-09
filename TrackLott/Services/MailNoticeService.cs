@@ -12,34 +12,34 @@ public class MailNoticeService : IMailNoticeService
     _logger = logger;
   }
 
-  public async Task<string> RegisterNotification(AppUser appUser)
+  public void RegisterNotification(AppUser appUser)
   {
-    var resp = await PerformCall("New Registration",
-      $"New User Registration<br /><br />User: {appUser.GivenName} {appUser.Surname} <{appUser.Email}><br />Selected Country: {appUser.Country}<br /><br />Terms Accepted: {appUser.TermsCheck}");
-    return resp;
+    var _ = PerformCall($"{appUser.GivenName} {appUser.Surname}", appUser.Email,
+      "TrackLott - New User Registration",
+      $"Selected Country: {appUser.Country}<br /><br />Terms Accepted: {appUser.TermsCheck}");
   }
 
-  public async Task<string> LoginNotification(AppUser appUser, bool attemptStatus)
+  public void LoginNotification(AppUser appUser, bool attemptStatus)
   {
-    var resp = await PerformCall("Login Attempt",
-      $"Login Attempt<br /><br />User: {appUser.GivenName} {appUser.Surname} <{appUser.Email}><br />Selected Country: {appUser.Country}<br /><br />Successful: {attemptStatus}");
-    return resp;
+    var _ = PerformCall($"{appUser.GivenName} {appUser.Surname}", appUser.Email,
+      "TrackLott - Login Attempt",
+      $"Selected Country: {appUser.Country}<br /><br />Successful: {attemptStatus}");
   }
 
-  private async Task<string> PerformCall(string emailSubject, string emailMessage)
+  private async Task<string> PerformCall(string senderName, string senderAddress, string emailSubject,
+    string emailMessage)
   {
     try
     {
-      var emailServer = Environment.GetEnvironmentVariable("WEBMAIL_URL");
-      var serverAdmin = Environment.GetEnvironmentVariable("SERVER_ADMIN_EMAIL");
+      var emailServerUri = Environment.GetEnvironmentVariable("WEBMAIL_URL");
 
-      if (emailServer == null || serverAdmin == null) throw new Exception("Null EmailServer or AdminEmail");
+      if (emailServerUri == null) throw new Exception("Null EmailServer Url");
 
-      var resp = await new HttpClient().PostAsJsonAsync(emailServer,
+      var resp = await new HttpClient().PostAsJsonAsync(emailServerUri,
         new Dictionary<string, string>()
         {
-          { "ToName", "TrackLott" },
-          { "ToAddress", serverAdmin },
+          { "SenderName", senderName },
+          { "SenderAddress", senderAddress },
           { "EmailSubject", emailSubject },
           { "EmailMessage", emailMessage }
         });
