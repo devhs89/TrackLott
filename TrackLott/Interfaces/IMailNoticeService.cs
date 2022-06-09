@@ -4,7 +4,7 @@ namespace TrackLott.Interfaces;
 
 public interface IMailNoticeService
 {
-  void RegisterNotification(AppUser appUser);
+  Task<string> RegisterNotification(AppUser appUser);
 
-  void LoginNotification(AppUser appUser, bool attemptStatus);
+  Task<string> LoginNotification(AppUser appUser, bool attemptStatus);
 }

@@ -53,7 +53,7 @@ public class AccountController : BaseApiController
 
     if (!roleResult.Succeeded) return BadRequest(roleResult.Errors);
 
-    _mailNotice.RegisterNotification(user);
+    await _mailNotice.RegisterNotification(user);
 
     return new UserTokenDto()
     {
@@ -74,7 +74,7 @@ public class AccountController : BaseApiController
 
     var result = await _signInManager.CheckPasswordSignInAsync(user, loginDto.Password, false);
 
-    _mailNotice.LoginNotification(user, result.Succeeded);
+    await _mailNotice.LoginNotification(user, result.Succeeded);
 
     if (!result.Succeeded) return Unauthorized();
 
