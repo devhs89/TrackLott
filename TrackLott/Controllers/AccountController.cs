@@ -32,7 +32,7 @@ public class AccountController : BaseApiController
   {
     if (await CheckEmailTaken(registerDto.Email))
       return BadRequest(new ErrorResponseDto()
-        {Code = ErrorCodes.DuplicateEmail.ToString(), Description = "Email address is already taken"});
+        { Code = ErrorCodes.DuplicateEmail.ToString(), Description = "Email address is already taken" });
 
     var user = new AppUser()
     {
@@ -53,7 +53,7 @@ public class AccountController : BaseApiController
 
     if (!roleResult.Succeeded) return BadRequest(roleResult.Errors);
 
-    await _mailNotice.RegisterNotification(user);
+    _mailNotice.RegisterNotification(user);
 
     return new UserTokenDto()
     {
@@ -70,11 +70,11 @@ public class AccountController : BaseApiController
 
     if (user == null)
       return Unauthorized(new ErrorResponseDto()
-        {Code = ErrorCodes.LoginMismatch.ToString(), Description = "Invalid email or password"});
+        { Code = ErrorCodes.LoginMismatch.ToString(), Description = "Invalid email or password" });
 
     var result = await _signInManager.CheckPasswordSignInAsync(user, loginDto.Password, false);
 
-    await _mailNotice.LoginNotification(user, result.Succeeded);
+    _mailNotice.LoginNotification(user, result.Succeeded);
 
     if (!result.Succeeded) return Unauthorized();
 
@@ -95,7 +95,7 @@ public class AccountController : BaseApiController
 
     if (appUser == null)
       return BadRequest(new ErrorResponseDto()
-        {Code = ErrorCodes.InvalidUser.ToString(), Description = "User not found"});
+        { Code = ErrorCodes.InvalidUser.ToString(), Description = "User not found" });
 
     return new AccountDto()
     {
@@ -114,7 +114,7 @@ public class AccountController : BaseApiController
   {
     if (!passwordDto.newPassword.Equals(passwordDto.repeatPassword))
       return BadRequest(new ErrorResponseDto()
-        {Code = ErrorCodes.PasswordsMismatch.ToString(), Description = "New passwords do not match"});
+        { Code = ErrorCodes.PasswordsMismatch.ToString(), Description = "New passwords do not match" });
 
     var username = User.GetUserName();
 
@@ -122,7 +122,7 @@ public class AccountController : BaseApiController
 
     if (appUser == null)
       return BadRequest(
-        new ErrorResponseDto() {Code = ErrorCodes.InvalidUser.ToString(), Description = "No user found"});
+        new ErrorResponseDto() { Code = ErrorCodes.InvalidUser.ToString(), Description = "No user found" });
 
     var result =
       await _userManager.ChangePasswordAsync(appUser, passwordDto.currentPassword, passwordDto.newPassword);
@@ -130,7 +130,7 @@ public class AccountController : BaseApiController
     return result.Succeeded
       ? "Password updated successfully"
       : BadRequest(new ErrorResponseDto()
-        {Code = ErrorCodes.ChangePasswordFail.ToString(), Description = "Change password failed for user."});
+        { Code = ErrorCodes.ChangePasswordFail.ToString(), Description = "Change password failed for user." });
   }
 
   [HttpPut("updateInfo")]
@@ -143,7 +143,7 @@ public class AccountController : BaseApiController
 
     if (appUser == null)
       return BadRequest(
-        new ErrorResponseDto() {Code = ErrorCodes.InvalidUser.ToString(), Description = "No user found"});
+        new ErrorResponseDto() { Code = ErrorCodes.InvalidUser.ToString(), Description = "No user found" });
 
     if (accountUpdateDto.Email != null) appUser.Email = accountUpdateDto.Email;
     if (accountUpdateDto.GivenName != null) appUser.GivenName = accountUpdateDto.GivenName;
@@ -154,12 +154,12 @@ public class AccountController : BaseApiController
 
     if (res == null)
       return BadRequest(new ErrorResponseDto()
-        {Code = ErrorCodes.DefaultError.ToString(), Description = "Something went wrong"});
+        { Code = ErrorCodes.DefaultError.ToString(), Description = "Something went wrong" });
 
     if (res.ToString() == "Succeeded") return NoContent();
 
     return BadRequest(new ErrorResponseDto()
-      {Code = ErrorCodes.DefaultError.ToString(), Description = "Something went wrong"});
+      { Code = ErrorCodes.DefaultError.ToString(), Description = "Something went wrong" });
   }
 
   private async Task<bool> CheckEmailTaken(string email)
