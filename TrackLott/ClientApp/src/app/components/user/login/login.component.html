@@ -5,10 +5,9 @@
 
     <form (ngSubmit)="onSubmit()" [formGroup]="loginForm" class="row">
       <mat-form-field appearance="outline">
-        <mat-label>Username</mat-label>
-        <input class="mat-typography" formControlName="userName" matInput placeholder="Enter a username" required
-               type="text">
-        <mat-error>Invalid username</mat-error>
+        <mat-label>Email Address</mat-label>
+        <input class="mat-typography" formControlName="email" matInput required type="email">
+        <mat-error>Invalid email address</mat-error>
       </mat-form-field>
 
       <mat-form-field appearance="outline">

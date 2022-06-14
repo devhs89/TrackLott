@@ -5,7 +5,6 @@ using Microsoft.EntityFrameworkCore;
 using TrackLott.Constants;
 using TrackLott.DTOs;
 using TrackLott.Extensions;
-using TrackLott.Interfaces;
 using TrackLott.Models;
 using TrackLott.Services;
 
@@ -16,31 +15,46 @@ public class AccountController : BaseApiController
   private readonly UserManager<AppUser> _userManager;
   private readonly SignInManager<AppUser> _signInManager;
   private readonly TokenService _tokenService;
-  private readonly IMailNoticeService _mailNotice;
 
   public AccountController(UserManager<AppUser> userManager, SignInManager<AppUser> signInManager,
-    TokenService tokenService, IMailNoticeService mailNotice)
+    TokenService tokenService)
   {
     _userManager = userManager;
     _signInManager = signInManager;
     _tokenService = tokenService;
-    _mailNotice = mailNotice;
   }
 
   [HttpPost("register")]
   public async Task<ActionResult<UserTokenDto>> Register(RegisterDto registerDto)
   {
-    if (await CheckEmailTaken(registerDto.Email))
+    var appUser =
+      await _userManager.Users.SingleOrDefaultAsync(usr => usr.NormalizedEmail.Equals(registerDto.Email.Normalize()));
+
+    if (appUser != null)
+    {
       return BadRequest(new ErrorResponseDto()
-        { Code = ErrorCodes.DuplicateEmail.ToString(), Description = "Email address is already taken" });
+      {
+        Code = "500",
+        Description = "Email associated with an account already. Please enter a different email address."
+      });
+    }
+
+    if (!registerDto.Password.Equals(registerDto.RepeatPassword))
+    {
+      return BadRequest(new ErrorResponseDto()
+      {
+        Code = ErrorCodes.PasswordsMismatch.ToString(),
+        Description = "Password and Repeat Password fields do not match."
+      });
+    }
 
     var user = new AppUser()
     {
-      UserName = registerDto.UserName.ToLower(),
+      UserName = registerDto.Email.ToLower(),
       Email = registerDto.Email.ToLower(),
       GivenName = registerDto.GivenName.ToLower(),
       Surname = registerDto.Surname.ToLower(),
-      Dob = DateTime.Parse(registerDto.Dob),
+      Dob = DateOnly.FromDateTime(DateTime.Parse(registerDto.Dob)),
       TermsCheck = registerDto.TermsCheck,
       Country = registerDto.Country.ToLower()
     };
@@ -53,11 +67,9 @@ public class AccountController : BaseApiController
 
     if (!roleResult.Succeeded) return BadRequest(roleResult.Errors);
 
-    await _mailNotice.RegisterNotification(user);
-
     return new UserTokenDto()
     {
-      UserName = user.UserName,
+      Email = user.NormalizedEmail,
       Token = await _tokenService.CreateToken(user)
     };
   }
@@ -66,28 +78,26 @@ public class AccountController : BaseApiController
   public async Task<ActionResult<UserTokenDto>> Login(LoginDto loginDto)
   {
     var user = await _userManager.Users
-      .SingleOrDefaultAsync(rec => rec.UserName.Equals(loginDto.UserName.ToLower()));
+      .SingleOrDefaultAsync(rec => rec.NormalizedEmail.Equals(loginDto.Email.Normalize()));
 
     if (user == null)
       return Unauthorized(new ErrorResponseDto()
         { Code = ErrorCodes.LoginMismatch.ToString(), Description = "Invalid email or password" });
 
-    var result = await _signInManager.CheckPasswordSignInAsync(user, loginDto.Password, false);
-
-    await _mailNotice.LoginNotification(user, result.Succeeded);
+    var result = await _signInManager.CheckPasswordSignInAsync(user, loginDto.Password, true);
 
     if (!result.Succeeded) return Unauthorized();
 
     return new UserTokenDto()
     {
-      UserName = user.UserName,
+      Email = user.NormalizedEmail,
       Token = await _tokenService.CreateToken(user)
     };
   }
 
   [HttpPost("show")]
   [Authorize]
-  public async Task<ActionResult<AccountDto>> ShowUser()
+  public async Task<ActionResult<ProfileDto>> ShowUser()
   {
     var userName = User.GetUserName();
 
@@ -97,13 +107,13 @@ public class AccountController : BaseApiController
       return BadRequest(new ErrorResponseDto()
         { Code = ErrorCodes.InvalidUser.ToString(), Description = "User not found" });
 
-    return new AccountDto()
+    return new ProfileDto()
     {
       UserName = appUser.UserName,
       Email = appUser.Email,
       GivenName = appUser.GivenName,
       Surname = appUser.Surname,
-      Dob = appUser.Dob,
+      Dob = appUser.Dob.ToString(),
       Country = appUser.Country
     };
   }
@@ -156,14 +166,9 @@ public class AccountController : BaseApiController
       return BadRequest(new ErrorResponseDto()
         { Code = ErrorCodes.DefaultError.ToString(), Description = "Something went wrong" });
 
-    if (res.ToString() == "Succeeded") return NoContent();
+    if (res.Succeeded) return NoContent();
 
     return BadRequest(new ErrorResponseDto()
       { Code = ErrorCodes.DefaultError.ToString(), Description = "Something went wrong" });
-  }
-
-  private async Task<bool> CheckEmailTaken(string email)
-  {
-    return await _userManager.Users.AnyAsync(entry => entry.Email.Equals(email.ToLower()));
   }
 }

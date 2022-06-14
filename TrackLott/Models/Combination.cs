@@ -9,8 +9,10 @@ public class Combination
   public string PickedNumbers { get; set; }
 
   public AppUser AppUser { get; set; }
+
   public Guid AppUserId { get; set; }
 
   public LottoResultModel? LotteryResult { get; set; }
-  public Guid? LotteryResultId { get; set; }
+  public string? LottoResultProductId { get; set; }
+  public int? LottoResultDrawNumber { get; set; }
 }

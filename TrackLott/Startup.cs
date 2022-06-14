@@ -1,7 +1,5 @@
 using Microsoft.AspNetCore.HttpOverrides;
 using TrackLott.Extensions;
-using TrackLott.Interfaces;
-using TrackLott.Services;
 
 namespace TrackLott
 {
@@ -20,7 +18,6 @@ namespace TrackLott
       services.AddControllers();
       services.AddApplicationServices();
       services.AddIdentityServices(_config);
-      services.AddScoped<IMailNoticeService, MailNoticeService>();
     }
 
     // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

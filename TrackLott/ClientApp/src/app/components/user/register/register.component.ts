@@ -33,7 +33,7 @@ export class RegisterComponent implements OnInit, OnDestroy {
 
     this.registerSubscription = this.accountService.onRegister(userDetails).subscribe({
       next: resp => {
-        if (resp.userName && resp.token) {
+        if (resp.email && resp.token) {
           setSessionUserToken(resp);
           this.router.navigate(["/user/account"]);
         }

@@ -24,7 +24,7 @@ export class LoginComponent implements OnInit, OnDestroy {
 
   ngOnInit(): void {
     this.loginForm = new FormGroup({
-      "userName": new FormControl(null, Validators.required),
+      "email": new FormControl(null, Validators.required),
       "password": new FormControl(null, Validators.required)
     });
   }
@@ -34,11 +34,11 @@ export class LoginComponent implements OnInit, OnDestroy {
       let userCredentials: UserLogin = {...this.loginForm.value};
 
       this.subscription = this.accountService.onLogin({
-        userName: userCredentials.userName,
+        email: userCredentials.email,
         password: userCredentials.password
       }).subscribe({
         next: response => {
-          if (response.userName && response.token) {
+          if (response.email && response.token) {
             userCredentials.rememberMe ? setLocalUserToken(response) : setSessionUserToken(response);
             this.router.navigate(["/home"]);
           }

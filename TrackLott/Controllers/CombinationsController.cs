@@ -27,7 +27,7 @@ public class CombinationsController : BaseApiController
 
     if (appUser == null)
       return BadRequest(new ErrorResponseDto()
-        {Code = ErrorCodes.InvalidUser.ToString(), Description = "User not found"});
+        { Code = ErrorCodes.InvalidUser.ToString(), Description = "User not found" });
 
     var missingLottoNames = 0;
     var saveResp = "Combination Saved";
@@ -40,18 +40,18 @@ public class CombinationsController : BaseApiController
         AppUserId = appUser.Id,
         DateAdded = combo.DateAdded,
         PickedNumbers = JsonSerializer.Serialize(combo.PickedNumbers,
-          new JsonSerializerOptions() {PropertyNamingPolicy = JsonNamingPolicy.CamelCase}),
+          new JsonSerializerOptions() { PropertyNamingPolicy = JsonNamingPolicy.CamelCase }),
       };
 
       if (combo.LottoName != null)
       {
         var lottoName = combo.LottoName.ToLower();
 
-        if (lottoName.Equals("monday lotto") || lottoName.Equals("oz lotto") || lottoName.Equals("wednesday lotto") ||
-            lottoName.Equals("powerball") || lottoName.Equals("tatts lotto"))
+        if (lottoName.Equals("MonWedLotto") || lottoName.Equals("OzLotto") || lottoName.Equals("Powerball") ||
+            lottoName.Equals("TattsLotto") || lottoName.Equals("SetForLife744") || lottoName.Equals("Super66"))
         {
           var lottoResult = CheckLottery(lottoName).Result;
-          combination.LotteryResultId = lottoResult?.Id;
+          combination.LottoResultProductId = lottoResult?.ProductId;
         }
         else
         {
@@ -85,24 +85,24 @@ public class CombinationsController : BaseApiController
 
     if (appUser == null)
       return BadRequest(new ErrorResponseDto()
-        {Code = ErrorCodes.InvalidUser.ToString(), Description = "User not found"});
+        { Code = ErrorCodes.InvalidUser.ToString(), Description = "User not found" });
 
     var lotteryResult = await CheckLottery(lottoName);
 
     if (lotteryResult == null)
       return BadRequest(new ErrorResponseDto()
-        {Code = ErrorCodes.NoLatestLotto.ToString(), Description = "No last draw to match combinations against"});
+        { Code = ErrorCodes.NoLatestLotto.ToString(), Description = "No last draw to match combinations against" });
 
     var combinationsCount =
       await _dbContext.Combinations.CountAsync(combo =>
-        combo.LotteryResultId == lotteryResult.Id && combo.AppUserId == appUser.Id);
+        combo.LottoResultProductId == lotteryResult.ProductId && combo.AppUserId == appUser.Id);
 
     if (combinationsCount < 1)
       return BadRequest(new ErrorResponseDto()
-        {Code = ErrorCodes.NoCombos.ToString(), Description = "No matching combinations found"});
+        { Code = ErrorCodes.NoCombos.ToString(), Description = "No matching combinations found" });
 
     var combinationsResult = _dbContext.Combinations
-      .Where(combo => combo.LotteryResultId == lotteryResult.Id && combo.AppUserId == appUser.Id)
+      .Where(combo => combo.LottoResultProductId == lotteryResult.ProductId && combo.AppUserId == appUser.Id)
       .OrderByDescending(combo => combo.DateAdded).Skip(pageIndex * pageSize).Take(pageSize);
 
     var matchingCombos = new List<MatchingCombinationDto>();
@@ -116,7 +116,7 @@ public class CombinationsController : BaseApiController
       });
     }
 
-    return new MatchComboResponseDto() {CombinationsList = matchingCombos, totalMatches = combinationsCount};
+    return new MatchComboResponseDto() { CombinationsList = matchingCombos, totalMatches = combinationsCount };
   }
 
   private async Task<AppUser?> GetUser()

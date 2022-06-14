@@ -21,9 +21,9 @@ public class LottoResultController : BaseApiController
   public async Task<ActionResult<LottoResultDto>> GetLottoResult()
   {
     var result = await _dbContext.LottoResults.OrderByDescending(lottery => lottery.DrawDate)
-      .FirstOrDefaultAsync();
+      .FirstOrDefaultAsync(model => !model.ProductId.Equals("SetForLife744") && !model.ProductId.Equals("Super66"));
 
-    if (result?.Id == null)
+    if (result == null)
       return NotFound(new ErrorResponseDto()
         { Code = ErrorCodes.NoLatestLotto.ToString(), Description = "No Result Found" });
 
