@@ -4,18 +4,15 @@ using TrackLott.Services;
 
 namespace TrackLott.Extensions;
 
-public static class ApplicationServiceExtensions
+public static class DataStoreServicesExtension
 {
-  public static IServiceCollection AddApplicationServices(this IServiceCollection services)
+  public static IServiceCollection AddDataStoreServices(this IServiceCollection services, IWebHostEnvironment env)
   {
     services.AddScoped<TokenService>();
 
     services.AddDbContext<TrackLottDbContext>(options =>
     {
-      var env = Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT");
-
-      var connectionString =
-        Environment.GetEnvironmentVariable(env is "Production" ? "TRACKLOTT_SQL" : "TRACKLOTT_DEV_SQL");
+      var connectionString = Environment.GetEnvironmentVariable("TRACKLOTT_CONN_STR");
 
       if (connectionString == null) throw new Exception("Database connection failed!");
 
