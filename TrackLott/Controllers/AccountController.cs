@@ -3,9 +3,9 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using TrackLott.Constants;
-using TrackLott.DTOs;
 using TrackLott.Extensions;
-using TrackLott.Models;
+using TrackLott.Models.DataModels;
+using TrackLott.Models.DTOs;
 using TrackLott.Services;
 
 namespace TrackLott.Controllers;

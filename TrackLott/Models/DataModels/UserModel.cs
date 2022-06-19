@@ -1,7 +1,7 @@
 using System.ComponentModel.DataAnnotations;
 using Microsoft.AspNetCore.Identity;
 
-namespace TrackLott.Models;
+namespace TrackLott.Models.DataModels;
 
 public class UserModel : IdentityUser<Guid>
 {

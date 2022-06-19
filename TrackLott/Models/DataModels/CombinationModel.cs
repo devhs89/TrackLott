@@ -1,4 +1,4 @@
-namespace TrackLott.Models;
+namespace TrackLott.Models.DataModels;
 
 public class CombinationModel
 {

@@ -1,6 +1,6 @@
 using System.Text.Json.Nodes;
 
-namespace TrackLott.DTOs;
+namespace TrackLott.Models.DTOs;
 
 public class CombinationDto
 {

@@ -3,7 +3,7 @@ using System.Security.Claims;
 using System.Text;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.IdentityModel.Tokens;
-using TrackLott.Models;
+using TrackLott.Models.DataModels;
 
 namespace TrackLott.Services;
 
