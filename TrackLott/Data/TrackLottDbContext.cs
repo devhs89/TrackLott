@@ -4,14 +4,14 @@ using TrackLott.Models;
 
 namespace TrackLott.Data;
 
-public class TrackLottDbContext : IdentityDbContext<AppUser, AppRole, Guid>
+public class TrackLottDbContext : IdentityDbContext<UserModel, UserRoleModel, Guid>
 {
   public TrackLottDbContext(DbContextOptions<TrackLottDbContext> options) : base(options)
   {
   }
 
   public DbSet<LottoResultModel> LottoResults { get; set; }
-  public DbSet<Combination> Combinations { get; set; }
+  public DbSet<CombinationModel> Combinations { get; set; }
 
   protected override void OnModelCreating(ModelBuilder builder)
   {

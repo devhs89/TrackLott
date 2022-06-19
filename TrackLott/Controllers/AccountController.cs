@@ -12,11 +12,11 @@ namespace TrackLott.Controllers;
 
 public class AccountController : BaseApiController
 {
-  private readonly UserManager<AppUser> _userManager;
-  private readonly SignInManager<AppUser> _signInManager;
+  private readonly UserManager<UserModel> _userManager;
+  private readonly SignInManager<UserModel> _signInManager;
   private readonly TokenService _tokenService;
 
-  public AccountController(UserManager<AppUser> userManager, SignInManager<AppUser> signInManager,
+  public AccountController(UserManager<UserModel> userManager, SignInManager<UserModel> signInManager,
     TokenService tokenService)
   {
     _userManager = userManager;
@@ -48,7 +48,7 @@ public class AccountController : BaseApiController
       });
     }
 
-    var user = new AppUser()
+    var user = new UserModel()
     {
       UserName = registerDto.Email.ToLower(),
       Email = registerDto.Email.ToLower(),

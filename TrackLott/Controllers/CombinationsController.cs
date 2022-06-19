@@ -31,13 +31,13 @@ public class CombinationsController : BaseApiController
 
     var missingLottoNames = 0;
     var saveResp = "Combination Saved";
-    var allCombinations = new List<Combination>();
+    var allCombinations = new List<CombinationModel>();
 
     foreach (var combo in combinationDto)
     {
-      var combination = new Combination()
+      var combination = new CombinationModel()
       {
-        AppUserId = appUser.Id,
+        UserModelId = appUser.Id,
         DateAdded = combo.DateAdded,
         PickedNumbers = JsonSerializer.Serialize(combo.PickedNumbers,
           new JsonSerializerOptions() { PropertyNamingPolicy = JsonNamingPolicy.CamelCase }),
@@ -81,9 +81,9 @@ public class CombinationsController : BaseApiController
   public async Task<ActionResult<MatchComboResponseDto>> GetMatchingCombos(string lottoName, int pageIndex,
     int pageSize)
   {
-    var appUser = await GetUser();
+    var user = await GetUser();
 
-    if (appUser == null)
+    if (user == null)
       return BadRequest(new ErrorResponseDto()
         { Code = ErrorCodes.InvalidUser.ToString(), Description = "User not found" });
 
@@ -95,14 +95,14 @@ public class CombinationsController : BaseApiController
 
     var combinationsCount =
       await _dbContext.Combinations.CountAsync(combo =>
-        combo.LottoResultProductId == lotteryResult.ProductId && combo.AppUserId == appUser.Id);
+        combo.LottoResultProductId == lotteryResult.ProductId && combo.UserModelId == user.Id);
 
     if (combinationsCount < 1)
       return BadRequest(new ErrorResponseDto()
         { Code = ErrorCodes.NoCombos.ToString(), Description = "No matching combinations found" });
 
     var combinationsResult = _dbContext.Combinations
-      .Where(combo => combo.LottoResultProductId == lotteryResult.ProductId && combo.AppUserId == appUser.Id)
+      .Where(combo => combo.LottoResultProductId == lotteryResult.ProductId && combo.UserModelId == user.Id)
       .OrderByDescending(combo => combo.DateAdded).Skip(pageIndex * pageSize).Take(pageSize);
 
     var matchingCombos = new List<MatchingCombinationDto>();
@@ -119,14 +119,14 @@ public class CombinationsController : BaseApiController
     return new MatchComboResponseDto() { CombinationsList = matchingCombos, totalMatches = combinationsCount };
   }
 
-  private async Task<AppUser?> GetUser()
+  private async Task<UserModel?> GetUser()
   {
     var userName = User.GetUserName();
 
-    var appUser =
-      await _dbContext.Users.SingleOrDefaultAsync(member => userName != null && member.UserName.Equals(userName));
+    var user =
+      await _dbContext.Users.SingleOrDefaultAsync(model => userName != null && model.UserName.Equals(userName));
 
-    return appUser;
+    return user;
   }
 
   private async Task<LottoResultModel?> CheckLottery(string lottoName)

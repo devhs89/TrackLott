@@ -8,6 +8,6 @@ public class RegisterDto
   public string GivenName { get; set; }
   public string Surname { get; set; }
   public string Dob { get; set; }
-  public bool TermsCheck { get; set; }
   public string Country { get; set; }
+  public bool TermsCheck { get; set; }
 }

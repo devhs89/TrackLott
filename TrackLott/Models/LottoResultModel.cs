@@ -1,9 +1,7 @@
 using System.ComponentModel.DataAnnotations;
-using System.ComponentModel.DataAnnotations.Schema;
 
 namespace TrackLott.Models;
 
-[Table("LottoResults")]
 public class LottoResultModel
 {
   [Required] public string ProductId { get; set; }
@@ -14,5 +12,5 @@ public class LottoResultModel
   public string SecondaryNumbers { get; set; }
   public string Region { get; set; }
   public string Game { get; set; }
-  public ICollection<Combination> Combinations { get; set; }
+  public ICollection<CombinationModel> Combinations { get; set; }
 }

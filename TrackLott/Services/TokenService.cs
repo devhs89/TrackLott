@@ -9,23 +9,23 @@ namespace TrackLott.Services;
 
 public class TokenService
 {
-  private readonly UserManager<AppUser> _userManager;
+  private readonly UserManager<UserModel> _userManager;
   private readonly SymmetricSecurityKey _key;
 
-  public TokenService(IConfiguration config, UserManager<AppUser> userManager)
+  public TokenService(IConfiguration config, UserManager<UserModel> userManager)
   {
     _userManager = userManager;
     _key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(config["TOKEN_KEY"]));
   }
 
-  public async Task<string> CreateToken(AppUser user)
+  public async Task<string> CreateToken(UserModel userModel)
   {
     var claims = new List<Claim>()
     {
-      new(JwtRegisteredClaimNames.Email, user.NormalizedEmail)
+      new(JwtRegisteredClaimNames.Email, userModel.NormalizedEmail)
     };
 
-    var roles = await _userManager.GetRolesAsync(user);
+    var roles = await _userManager.GetRolesAsync(userModel);
 
     claims.AddRange(roles.Select(role => new Claim(ClaimTypes.Role, role)));
 
