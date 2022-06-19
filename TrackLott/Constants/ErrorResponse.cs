@@ -4,6 +4,7 @@ public static class ErrorResponse
 {
   public const string GenericError = "Something went wrong. Sorry for any inconvenience.";
   public const string TrackLottDbConnFail = "TrackLott Database connection failed.";
+  public const string MissingSecurityKeysDir = "Security keys directory path missing.";
   public const string AccountCreationFailed = "Something went wrong. Failed to create user account.";
 
   public const string AccountAlreadyExists =

@@ -11,11 +11,21 @@ public static class IdentityServiceExtensions
 {
   public static IServiceCollection AddIdentityServices(this IServiceCollection services, IConfiguration config)
   {
-    services.AddIdentityCore<UserModel>(options => options.Password.RequireNonAlphanumeric = false)
+    services.AddIdentityCore<UserModel>(options =>
+      {
+        options.Password.RequireNonAlphanumeric = true;
+        options.Password.RequireDigit = true;
+        options.Password.RequiredLength = 8;
+        options.Password.RequireLowercase = true;
+        options.Password.RequireUppercase = true;
+        options.Lockout = new LockoutOptions()
+        {
+          MaxFailedAccessAttempts = 3,
+          DefaultLockoutTimeSpan = new TimeSpan(8, 0, 0)
+        };
+      })
       .AddRoles<UserRoleModel>()
-      .AddRoleManager<RoleManager<UserRoleModel>>()
       .AddSignInManager<SignInManager<UserModel>>()
-      .AddRoleValidator<RoleValidator<UserRoleModel>>()
       .AddEntityFrameworkStores<TrackLottDbContext>();
 
     services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme).AddJwtBearer(options =>
