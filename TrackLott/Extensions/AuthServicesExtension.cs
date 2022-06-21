@@ -8,9 +8,9 @@ using TrackLott.Security;
 
 namespace TrackLott.Extensions;
 
-public static class IdentityServiceExtensions
+public static class AuthServicesExtension
 {
-  public static IServiceCollection AddIdentityServices(this IServiceCollection services, IWebHostEnvironment env)
+  public static IServiceCollection AddAuthServices(this IServiceCollection services, IWebHostEnvironment env)
   {
     services.AddIdentityCore<UserModel>(options =>
       {

@@ -16,16 +16,17 @@ public class LottoResultController : BaseApiController
     _dbContext = dbContext;
   }
 
-  [HttpGet("latest")]
+  [HttpGet(EndRoute.Latest)]
   [AllowAnonymous]
-  public async Task<ActionResult<LottoResultDto>> GetLottoResult()
+  public async Task<ActionResult<LottoResultDto>> GetLatestLottoResult()
   {
     var result = await _dbContext.LottoResults.OrderByDescending(lottery => lottery.DrawDate)
-      .FirstOrDefaultAsync(model => !model.ProductId.Equals("SetForLife744") && !model.ProductId.Equals("Super66"));
+      .FirstOrDefaultAsync(model =>
+        !model.ProductId.Equals(LottoName.SetForLife744Id) &&
+        !model.ProductId.Equals(LottoName.Super66Id));
 
     if (result == null)
-      return NotFound(new ErrorResponseDto()
-        { Code = ErrorCodes.NoLatestLotto.ToString(), Description = "No Result Found" });
+      return NotFound(ErrorResponse.NoLatestLottoResult);
 
     return new LottoResultDto()
     {

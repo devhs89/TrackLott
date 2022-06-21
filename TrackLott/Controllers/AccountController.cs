@@ -10,6 +10,7 @@ using TrackLott.Services;
 
 namespace TrackLott.Controllers;
 
+[Authorize(AuthPolicyName.RequireAuthenticatedUser)]
 public class AccountController : BaseApiController
 {
   private readonly UserManager<UserModel> _userManager;
@@ -24,29 +25,17 @@ public class AccountController : BaseApiController
     _tokenService = tokenService;
   }
 
-  [HttpPost("register")]
+  [HttpPost(EndRoute.Register)]
   public async Task<ActionResult<UserTokenDto>> Register(RegisterDto registerDto)
   {
     var appUser =
       await _userManager.Users.SingleOrDefaultAsync(usr => usr.NormalizedEmail.Equals(registerDto.Email.Normalize()));
 
     if (appUser != null)
-    {
-      return BadRequest(new ErrorResponseDto()
-      {
-        Code = "500",
-        Description = "Email associated with an account already. Please enter a different email address."
-      });
-    }
+      return BadRequest(ErrorResponse.AccountAlreadyExists);
 
     if (!registerDto.Password.Equals(registerDto.RepeatPassword))
-    {
-      return BadRequest(new ErrorResponseDto()
-      {
-        Code = ErrorCodes.PasswordsMismatch.ToString(),
-        Description = "Password and Repeat Password fields do not match."
-      });
-    }
+      return BadRequest(ErrorResponse.PasswordsMismatch);
 
     var user = new UserModel()
     {
@@ -63,7 +52,7 @@ public class AccountController : BaseApiController
 
     if (!result.Succeeded) return BadRequest(result.Errors);
 
-    var roleResult = await _userManager.AddToRoleAsync(user, "User");
+    var roleResult = await _userManager.AddToRoleAsync(user, AppRole.User);
 
     if (!roleResult.Succeeded) return BadRequest(roleResult.Errors);
 
@@ -74,19 +63,17 @@ public class AccountController : BaseApiController
     };
   }
 
-  [HttpPost("login")]
+  [HttpPost(EndRoute.Login)]
   public async Task<ActionResult<UserTokenDto>> Login(LoginDto loginDto)
   {
     var user = await _userManager.Users
       .SingleOrDefaultAsync(rec => rec.NormalizedEmail.Equals(loginDto.Email.Normalize()));
 
     if (user == null)
-      return Unauthorized(new ErrorResponseDto()
-        { Code = ErrorCodes.LoginMismatch.ToString(), Description = "Invalid email or password" });
+      return Unauthorized(ErrorResponse.InvalidLoginDetails);
 
     var result = await _signInManager.CheckPasswordSignInAsync(user, loginDto.Password, true);
-
-    if (!result.Succeeded) return Unauthorized();
+    if (!result.Succeeded) return Unauthorized(ErrorResponse.InvalidLoginDetails);
 
     return new UserTokenDto()
     {
@@ -95,17 +82,13 @@ public class AccountController : BaseApiController
     };
   }
 
-  [HttpPost("show")]
-  [Authorize]
+  [HttpPost(EndRoute.Show)]
   public async Task<ActionResult<ProfileDto>> ShowUser()
   {
     var userName = User.GetUserName();
-
     var appUser = await _userManager.Users.SingleOrDefaultAsync(rec => rec.UserName.Equals(userName));
-
     if (appUser == null)
-      return BadRequest(new ErrorResponseDto()
-        { Code = ErrorCodes.InvalidUser.ToString(), Description = "User not found" });
+      return BadRequest(ErrorResponse.UserNotExist);
 
     return new ProfileDto()
     {
@@ -118,42 +101,32 @@ public class AccountController : BaseApiController
     };
   }
 
-  [HttpPost("updatePassword")]
-  [Authorize]
+  [HttpPost(EndRoute.UpdatePassword)]
   public async Task<ActionResult<string>> UpdatePassword(PasswordDto passwordDto)
   {
-    if (!passwordDto.newPassword.Equals(passwordDto.repeatPassword))
-      return BadRequest(new ErrorResponseDto()
-        { Code = ErrorCodes.PasswordsMismatch.ToString(), Description = "New passwords do not match" });
+    if (!passwordDto.newPassword.Equals(passwordDto.repeatPassword, StringComparison.Ordinal))
+      return BadRequest(ErrorResponse.PasswordsMismatch);
 
     var username = User.GetUserName();
-
     var appUser = await _userManager.Users.SingleOrDefaultAsync(rec => rec.UserName.Equals(username));
-
     if (appUser == null)
-      return BadRequest(
-        new ErrorResponseDto() { Code = ErrorCodes.InvalidUser.ToString(), Description = "No user found" });
+      return BadRequest(ErrorResponse.UserNotExist);
 
     var result =
       await _userManager.ChangePasswordAsync(appUser, passwordDto.currentPassword, passwordDto.newPassword);
 
     return result.Succeeded
       ? "Password updated successfully"
-      : BadRequest(new ErrorResponseDto()
-        { Code = ErrorCodes.ChangePasswordFail.ToString(), Description = "Change password failed for user." });
+      : BadRequest(ErrorResponse.PasswordChangeFailed);
   }
 
-  [HttpPut("updateInfo")]
-  [Authorize]
+  [HttpPut(EndRoute.UpdateInfo)]
   public async Task<ActionResult<string>> UpdateInfo(AccountUpdateDto accountUpdateDto)
   {
     var userName = User.GetUserName();
-
     var appUser = await _userManager.Users.SingleOrDefaultAsync(rec => rec.UserName.Equals(userName));
-
     if (appUser == null)
-      return BadRequest(
-        new ErrorResponseDto() { Code = ErrorCodes.InvalidUser.ToString(), Description = "No user found" });
+      return BadRequest(ErrorResponse.UserNotExist);
 
     if (accountUpdateDto.Email != null) appUser.Email = accountUpdateDto.Email;
     if (accountUpdateDto.GivenName != null) appUser.GivenName = accountUpdateDto.GivenName;
@@ -161,14 +134,10 @@ public class AccountController : BaseApiController
     if (accountUpdateDto.Country != null) appUser.Country = accountUpdateDto.Country;
 
     var res = await _userManager.UpdateAsync(appUser);
-
     if (res == null)
-      return BadRequest(new ErrorResponseDto()
-        { Code = ErrorCodes.DefaultError.ToString(), Description = "Something went wrong" });
+      return BadRequest(ErrorResponse.GenericError);
 
-    if (res.Succeeded) return NoContent();
-
-    return BadRequest(new ErrorResponseDto()
-      { Code = ErrorCodes.DefaultError.ToString(), Description = "Something went wrong" });
+    if (!res.Succeeded) return BadRequest(ErrorResponse.GenericError);
+    return NoContent();
   }
 }

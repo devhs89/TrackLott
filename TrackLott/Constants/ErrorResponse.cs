@@ -17,4 +17,7 @@ public static class ErrorResponse
   public const string InvalidLoginDetails = "Invalid email or password";
   public const string UserLockedOut = "Account Locked. Please contact administrator.";
   public const string AddToRoleFailed = "Failed to assign a role to this user.";
+  public const string PasswordChangeFailed = "Failed to change password. Please contact administrator.";
+  public const string NoLatestLottoResult = "No Latest Lotto Result Found.";
+  public const string NoMatchingCombinations = "No matching combinations found.";
 }

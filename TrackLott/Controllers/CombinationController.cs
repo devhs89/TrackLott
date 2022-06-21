@@ -10,24 +10,22 @@ using TrackLott.Models.DTOs;
 
 namespace TrackLott.Controllers;
 
-public class CombinationsController : BaseApiController
+[Authorize(AuthPolicyName.RequireAuthenticatedUser)]
+public class CombinationController : BaseApiController
 {
   private readonly TrackLottDbContext _dbContext;
 
-  public CombinationsController(TrackLottDbContext dbContext)
+  public CombinationController(TrackLottDbContext dbContext)
   {
     _dbContext = dbContext;
   }
 
-  [HttpPost("add")]
-  [Authorize]
+  [HttpPost(EndRoute.Add)]
   public async Task<ActionResult<string>> AddCombo(CombinationDto[] combinationDto)
   {
     var appUser = await GetUser();
-
     if (appUser == null)
-      return BadRequest(new ErrorResponseDto()
-        { Code = ErrorCodes.InvalidUser.ToString(), Description = "User not found" });
+      return BadRequest(ErrorResponse.UserNotExist);
 
     var missingLottoNames = 0;
     var saveResp = "Combination Saved";
@@ -76,30 +74,24 @@ public class CombinationsController : BaseApiController
     return saveResp;
   }
 
-  [HttpPost("matchCombos")]
-  [Authorize]
+  [HttpPost(EndRoute.MatchCombos)]
   public async Task<ActionResult<MatchComboResponseDto>> GetMatchingCombos(string lottoName, int pageIndex,
     int pageSize)
   {
     var user = await GetUser();
-
     if (user == null)
-      return BadRequest(new ErrorResponseDto()
-        { Code = ErrorCodes.InvalidUser.ToString(), Description = "User not found" });
+      return BadRequest(ErrorResponse.UserNotExist);
 
     var lotteryResult = await CheckLottery(lottoName);
-
     if (lotteryResult == null)
-      return BadRequest(new ErrorResponseDto()
-        { Code = ErrorCodes.NoLatestLotto.ToString(), Description = "No last draw to match combinations against" });
+      return BadRequest(ErrorResponse.NoLatestLottoResult);
 
     var combinationsCount =
       await _dbContext.Combinations.CountAsync(combo =>
         combo.LottoResultProductId == lotteryResult.ProductId && combo.UserModelId == user.Id);
 
     if (combinationsCount < 1)
-      return BadRequest(new ErrorResponseDto()
-        { Code = ErrorCodes.NoCombos.ToString(), Description = "No matching combinations found" });
+      return BadRequest(ErrorResponse.NoMatchingCombinations);
 
     var combinationsResult = _dbContext.Combinations
       .Where(combo => combo.LottoResultProductId == lotteryResult.ProductId && combo.UserModelId == user.Id)
