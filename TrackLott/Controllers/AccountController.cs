@@ -26,16 +26,17 @@ public class AccountController : BaseApiController
   }
 
   [HttpPost(EndRoute.Register)]
+  [AllowAnonymous]
   public async Task<ActionResult<UserTokenDto>> Register(RegisterDto registerDto)
   {
-    var appUser =
-      await _userManager.Users.SingleOrDefaultAsync(usr => usr.NormalizedEmail.Equals(registerDto.Email.Normalize()));
+    if (!registerDto.Password.Equals(registerDto.RepeatPassword, StringComparison.Ordinal))
+      return BadRequest(ErrorResponse.PasswordsMismatch);
 
+    var appUser =
+      await _userManager.Users.SingleOrDefaultAsync(usr =>
+        usr.NormalizedEmail.Equals(registerDto.Email.Normalize().ToUpper()));
     if (appUser != null)
       return BadRequest(ErrorResponse.AccountAlreadyExists);
-
-    if (!registerDto.Password.Equals(registerDto.RepeatPassword))
-      return BadRequest(ErrorResponse.PasswordsMismatch);
 
     var user = new UserModel()
     {
@@ -48,17 +49,15 @@ public class AccountController : BaseApiController
       Country = registerDto.Country.ToLower()
     };
 
-    var result = await _userManager.CreateAsync(user, registerDto.Password);
-
-    if (!result.Succeeded) return BadRequest(result.Errors);
+    var createResult = await _userManager.CreateAsync(user, registerDto.Password);
+    if (!createResult.Succeeded) return BadRequest(createResult.Errors.FirstOrDefault());
 
     var roleResult = await _userManager.AddToRoleAsync(user, AppRole.User);
+    if (!roleResult.Succeeded) return BadRequest(roleResult.Errors.FirstOrDefault());
 
-    if (!roleResult.Succeeded) return BadRequest(roleResult.Errors);
-
-    return new UserTokenDto()
+    return new UserTokenDto
     {
-      Email = user.NormalizedEmail,
+      Email = user.Email,
       Token = await _tokenService.CreateToken(user)
     };
   }
