@@ -18,6 +18,9 @@ namespace TrackLott
     {
       services.AddControllers();
 
+      // Common services like helper services
+      services.AddHelperServices();
+
       // Database related services
       services.AddDataStoreServices(_env);
 
