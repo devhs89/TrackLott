@@ -19,7 +19,9 @@ namespace TrackLott
     {
       services.AddControllers();
       services.AddDataStoreServices(_env);
-      services.AddIdentityServices(_config);
+
+      // Authentication and Authorization related services
+      services.AddIdentityServices(_env);
     }
 
     // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

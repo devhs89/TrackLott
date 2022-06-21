@@ -28,7 +28,7 @@ public class TokenService
     var roles = await _userManager.GetRolesAsync(userModel);
     claims.AddRange(roles.Select(role => new Claim(ClaimTypes.Role, role)));
 
-    var rsa = await CryptoSystem.GetPrivateRsaKey();
+    var rsa = await CryptoSystem.GetRsaKey();
     var credentials = new SigningCredentials(new RsaSecurityKey(rsa), SecurityAlgorithms.RsaSha256);
 
     var jwtSecurityToken = new JwtSecurityToken(

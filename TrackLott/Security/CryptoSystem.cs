@@ -6,7 +6,7 @@ namespace TrackLott.Security;
 
 public static class CryptoSystem
 {
-  public static async Task<RSA> GetPrivateRsaKey()
+  public static async Task<RSA> GetRsaKey()
   {
     await CreateRsaKeys();
 

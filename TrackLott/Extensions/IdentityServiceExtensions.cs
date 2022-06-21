@@ -1,15 +1,16 @@
-using System.Text;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.IdentityModel.Tokens;
+using TrackLott.Constants;
 using TrackLott.Data;
 using TrackLott.Models.DataModels;
+using TrackLott.Security;
 
 namespace TrackLott.Extensions;
 
 public static class IdentityServiceExtensions
 {
-  public static IServiceCollection AddIdentityServices(this IServiceCollection services, IConfiguration config)
+  public static IServiceCollection AddIdentityServices(this IServiceCollection services, IWebHostEnvironment env)
   {
     services.AddIdentityCore<UserModel>(options =>
       {
@@ -31,16 +32,21 @@ public static class IdentityServiceExtensions
     services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme).AddJwtBearer(options =>
       options.TokenValidationParameters = new TokenValidationParameters()
       {
-        ValidateIssuerSigningKey = true,
-        IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(config["TOKEN_KEY"])),
-        ValidateIssuer = false,
-        ValidateAudience = false
+        ValidIssuers = env.IsProduction()
+          ? new[] { DomainName.TrackLottUsualAppsCom, DomainName.WwwTrackLottUsualAppsCom }
+          : new[] { DomainName.Localhost8001 },
+        ValidAudiences = env.IsProduction()
+          ? new[] { DomainName.TrackLottUsualAppsCom, DomainName.WwwTrackLottUsualAppsCom }
+          : new[] { DomainName.Localhost8001 },
+        IssuerSigningKey = new RsaSecurityKey(CryptoSystem.GetRsaKey().Result),
+        ValidateIssuer = true,
+        ValidateAudience = true,
+        ValidateIssuerSigningKey = true
       });
 
     services.AddAuthorization(options =>
     {
-      options.AddPolicy("RequireAdminRole", builder => builder.RequireRole("Admin"));
-      options.AddPolicy("RequireUserRole", builder => builder.RequireRole("User"));
+      options.AddPolicy(AuthPolicyName.RequireAuthenticatedUser, builder => builder.RequireAuthenticatedUser());
     });
 
     return services;
