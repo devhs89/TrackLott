@@ -10,6 +10,8 @@ public class AutoMapperProfiles : Profile
   {
     CreateMap<RegisterDto, UserModel>()
       .ForMember(model => model.UserName,
-        expression => expression.MapFrom(dto => dto.Email));
+        expression => expression.MapFrom(dto => dto.Email))
+      .ForMember(model => model.Dob,
+        expression => expression.MapFrom(dto => DateOnly.FromDateTime(DateTime.Parse(dto.Dob))));
   }
 }

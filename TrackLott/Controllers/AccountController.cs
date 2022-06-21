@@ -1,3 +1,4 @@
+using AutoMapper;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
@@ -16,13 +17,15 @@ public class AccountController : BaseApiController
   private readonly UserManager<UserModel> _userManager;
   private readonly SignInManager<UserModel> _signInManager;
   private readonly TokenService _tokenService;
+  private readonly IMapper _mapper;
 
   public AccountController(UserManager<UserModel> userManager, SignInManager<UserModel> signInManager,
-    TokenService tokenService)
+    TokenService tokenService, IMapper mapper)
   {
     _userManager = userManager;
     _signInManager = signInManager;
     _tokenService = tokenService;
+    _mapper = mapper;
   }
 
   [HttpPost(EndRoute.Register)]
@@ -32,33 +35,23 @@ public class AccountController : BaseApiController
     if (!registerDto.Password.Equals(registerDto.RepeatPassword, StringComparison.Ordinal))
       return BadRequest(ErrorResponse.PasswordsMismatch);
 
-    var appUser =
+    var userExists =
       await _userManager.Users.SingleOrDefaultAsync(usr =>
         usr.NormalizedEmail.Equals(registerDto.Email.Normalize().ToUpper()));
-    if (appUser != null)
+    if (userExists != null)
       return BadRequest(ErrorResponse.AccountAlreadyExists);
 
-    var user = new UserModel()
-    {
-      UserName = registerDto.Email.ToLower(),
-      Email = registerDto.Email.ToLower(),
-      GivenName = registerDto.GivenName.ToLower(),
-      Surname = registerDto.Surname.ToLower(),
-      Dob = DateOnly.FromDateTime(DateTime.Parse(registerDto.Dob)),
-      TermsCheck = registerDto.TermsCheck,
-      Country = registerDto.Country.ToLower()
-    };
-
-    var createResult = await _userManager.CreateAsync(user, registerDto.Password);
+    var appUser = _mapper.Map<UserModel>(registerDto);
+    var createResult = await _userManager.CreateAsync(appUser, registerDto.Password);
     if (!createResult.Succeeded) return BadRequest(createResult.Errors.FirstOrDefault());
 
-    var roleResult = await _userManager.AddToRoleAsync(user, AppRole.User);
+    var roleResult = await _userManager.AddToRoleAsync(appUser, AppRole.User);
     if (!roleResult.Succeeded) return BadRequest(roleResult.Errors.FirstOrDefault());
 
     return new UserTokenDto
     {
-      Email = user.Email,
-      Token = await _tokenService.CreateToken(user)
+      Email = appUser.Email,
+      Token = await _tokenService.CreateToken(appUser)
     };
   }
 
