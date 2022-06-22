@@ -15,8 +15,8 @@ const routes = [
   {path: pathConst.license, component: LicenseComponent},
   {path: pathConst.terms, component: TermsComponent},
   {
-    path: pathConst.user,
-    loadChildren: () => import('./components/user/user.module').then(mod => mod.UserModule)
+    path: pathConst.account,
+    loadChildren: () => import('./components/account/account.module').then(mod => mod.AccountModule)
   },
   {path: pathConst.root, redirectTo: pathConst.home, pathMatch: 'full'}
 ];

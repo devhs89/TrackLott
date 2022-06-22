@@ -15,7 +15,7 @@
           <a [routerLink]="appRoute.loginRel" mat-list-item>Login</a>
         </ng-container>
         <ng-template #sideLinkNotShow>
-          <a [routerLink]="appRoute.accountRel" mat-list-item>Profile</a>
+          <a [routerLink]="appRoute.profileRel" mat-list-item>Profile</a>
           <a (click)="logout()" mat-list-item>Logout</a>
         </ng-template>
       </mat-nav-list>
@@ -45,7 +45,7 @@
         </ng-container>
 
         <ng-template #linkNotShow>
-          <a [routerLink]="appRoute.accountRel" mat-flat-button color="primary" routerLinkActive="selectedLink"
+          <a [routerLink]="appRoute.profileRel" mat-flat-button color="primary" routerLinkActive="selectedLink"
              disableRipple>Account</a>
           <a (click)="logout()" mat-flat-button routerLinkActive="selectedLink" color="primary" disableRipple>Logout</a>
         </ng-template>

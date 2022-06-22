@@ -6,15 +6,15 @@ import {ForgotComponent} from './forgot/forgot.component';
 import {CommonModule} from "@angular/common";
 import {MaterialUiModule} from "../../modules/material-ui.module";
 import {FormsModule, ReactiveFormsModule} from "@angular/forms";
-import {AccountComponent} from "./account/account.component";
 import {AuthGuardService} from "../../services/auth-guard.service";
+import {ProfileComponent} from "./profile/profile.component";
 
 @NgModule({
   imports: [
     RouterModule.forChild([
       {path: 'login', component: LoginComponent},
       {path: 'register', component: RegisterComponent},
-      {path: 'account', component: AccountComponent, canActivate: [AuthGuardService]},
+      {path: 'account', component: ProfileComponent, canActivate: [AuthGuardService]},
       {path: 'forgot', component: ForgotComponent},
       {path: '', redirectTo: 'login', pathMatch: 'full'}
     ]),
@@ -26,9 +26,9 @@ import {AuthGuardService} from "../../services/auth-guard.service";
   declarations: [
     LoginComponent,
     RegisterComponent,
-    AccountComponent,
+    ProfileComponent,
     ForgotComponent
   ]
 })
-export class UserModule {
+export class AccountModule {
 }

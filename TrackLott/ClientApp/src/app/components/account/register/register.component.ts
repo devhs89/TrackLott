@@ -35,7 +35,7 @@ export class RegisterComponent implements OnDestroy {
       next: resp => {
         if (resp.email && resp.token) {
           setSessionUserToken(resp);
-          this.router.navigate([pathConst.accountRel]);
+          this.router.navigate([pathConst.profileRel]);
         }
       },
       error: resp => this.snackBar.showSnackBar(resp.error)
