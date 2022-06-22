@@ -1,0 +1,21 @@
+.sidenav-container {
+  min-height: 100vh !important;
+}
+
+mat-sidenav {
+  width: 12rem;
+}
+
+.matSpacer {
+  flex: 1 1 auto;
+}
+
+.main-mat-toolbar {
+  position: fixed;
+  top: 0;
+  z-index: 1999;
+}
+
+a {
+  text-transform: uppercase;
+}
