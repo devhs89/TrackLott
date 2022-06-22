@@ -13,5 +13,7 @@ public class AutoMapperProfiles : Profile
         expression => expression.MapFrom(dto => dto.Email))
       .ForMember(model => model.Dob,
         expression => expression.MapFrom(dto => DateOnly.FromDateTime(DateTime.Parse(dto.Dob))));
+
+    CreateMap<LottoResultModel, LottoResultDto>();
   }
 }

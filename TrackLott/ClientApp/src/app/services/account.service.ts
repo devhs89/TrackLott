@@ -1,6 +1,5 @@
 import {Injectable} from "@angular/core";
 import {HttpClient} from "@angular/common/http";
-import {BASE_URL} from "../constants/backend";
 import {UserRegister} from "../models/user-register";
 import {ReplaySubject} from "rxjs";
 import {UserLogin} from "../models/user-login";
@@ -9,6 +8,7 @@ import {UserInfo} from "../models/user-info";
 import {UserPassword} from "../models/user-password";
 import {UserUpdateInfo} from "../models/user-update-info";
 import {map} from "rxjs/operators";
+import {endRoute} from "../constants/end-route";
 
 @Injectable({
   providedIn: "root"
@@ -29,28 +29,28 @@ export class AccountService {
   }
 
   onRegister(userRegister: UserRegister) {
-    return this.httpClient.post<UserToken>(`${BASE_URL}/account/register`, userRegister).pipe(map(value => {
+    return this.httpClient.post<UserToken>(endRoute.accountRegister, userRegister).pipe(map(value => {
       this.emitAppUser(value);
       return value;
     }));
   }
 
   onLogin(userCredentials: UserLogin) {
-    return this.httpClient.post<UserToken>(`${BASE_URL}/account/login`, userCredentials).pipe(map(value => {
+    return this.httpClient.post<UserToken>(endRoute.accountLogin, userCredentials).pipe(map(value => {
       this.emitAppUser(value);
       return value;
     }));
   }
 
   showUser() {
-    return this.httpClient.post<UserInfo>(`${BASE_URL}/account/show`, {});
+    return this.httpClient.post<UserInfo>(endRoute.accountShow, {});
   }
 
   onUpdateInfo(newInfo: UserUpdateInfo) {
-    return this.httpClient.put<string>(`${BASE_URL}/account/updateInfo`, newInfo);
+    return this.httpClient.put<string>(endRoute.accountUpdate, newInfo);
   }
 
   onUpdatePassword(passwords: UserPassword) {
-    return this.httpClient.post(`${BASE_URL}/account/updatePassword`, passwords, {responseType: "text"});
+    return this.httpClient.post(endRoute.updatePassword, passwords, {responseType: "text"});
   }
 }

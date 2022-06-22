@@ -5,6 +5,7 @@ export const pathConst = {
   play: "play",
   terms: "terms",
   license: "license",
+  user: "user",
   register: "register",
   login: "login",
   account: "account",

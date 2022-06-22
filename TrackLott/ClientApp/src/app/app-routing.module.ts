@@ -6,18 +6,19 @@ import {PlayComponent} from "./components/play/play.component";
 import {AuthGuardService} from "./services/auth-guard.service";
 import {LicenseComponent} from "./license/license.component";
 import {TermsComponent} from "./components/terms/terms.component";
+import {pathConst} from "./constants/path-const";
 
 const routes = [
-  {path: 'home', component: HomeComponent},
-  {path: 'add', component: AddComponent, canActivate: [AuthGuardService]},
-  {path: 'play', component: PlayComponent},
-  {path: 'license', component: LicenseComponent},
-  {path: 'terms', component: TermsComponent},
+  {path: pathConst.home, component: HomeComponent},
+  {path: pathConst.add, component: AddComponent, canActivate: [AuthGuardService]},
+  {path: pathConst.play, component: PlayComponent},
+  {path: pathConst.license, component: LicenseComponent},
+  {path: pathConst.terms, component: TermsComponent},
   {
-    path: 'user',
+    path: pathConst.user,
     loadChildren: () => import('./components/user/user.module').then(mod => mod.UserModule)
   },
-  {path: '', redirectTo: 'home', pathMatch: 'full'}
+  {path: pathConst.root, redirectTo: pathConst.home, pathMatch: 'full'}
 ];
 
 @NgModule({

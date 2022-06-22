@@ -1,1 +1,105 @@
-<p>register works!</p>
+<mat-card class="mat-elevation-z6">
+  <mat-card-title>Register</mat-card-title>
+  <mat-divider class="my-3" inset></mat-divider>
+  <mat-card-content>
+    <form #ngFormObj="ngForm" (ngSubmit)="onSubmit(ngFormObj)">
+
+      <div class="row">
+        <div class="col-md-6">
+          <mat-form-field appearance="outline" class="w-100">
+            <mat-label>Email address</mat-label>
+            <input email matInput name="email" ngModel
+                   pattern="(?:^|\s)[\w!#$%&'*+/=?^`{|}~-](\.?[\w!#$%&'*+/=?^`{|}~-]+)*@\w+[.-]?\w*\.[a-zA-Z]{2,3}\b"
+                   placeholder="user@example.com" required type="email">
+            <mat-error>Invalid email</mat-error>
+          </mat-form-field>
+        </div>
+
+        <div class="col-md-6">
+          <mat-form-field appearance="outline" class="w-100">
+            <mat-label>Country</mat-label>
+            <mat-select aria-label="Select Country" name="country" ngModel required>
+              <mat-option *ngFor="let country of countries"
+                          value="{{country.value}}">{{country.label}}</mat-option>
+            </mat-select>
+            <mat-error>Invalid country</mat-error>
+          </mat-form-field>
+        </div>
+      </div>
+
+      <div class="row">
+        <div class="col-12 col-md-6">
+          <mat-form-field appearance="outline" class="w-100">
+            <mat-label>Password</mat-label>
+            <input matInput name="password" ngModel
+                   placeholder="Use 8 or more characters with a mix of letters, numbers & symbols"
+                   pattern="^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#$%^&*_=+-]).{8,}$" required type="password">
+            <mat-error>Invalid password</mat-error>
+          </mat-form-field>
+        </div>
+
+        <div class="col-12 col-md-6">
+          <mat-form-field appearance="outline" class="w-100">
+            <mat-label>Repeat Password</mat-label>
+            <input matInput name="repeatPassword" ngModel
+                   placeholder="Use 8 or more characters with a mix of letters, numbers & symbols"
+                   pattern="^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#$%^&*_=+-]).{8,}$" required type="password">
+            <mat-error>Must match password</mat-error>
+          </mat-form-field>
+        </div>
+      </div>
+
+      <div class="row">
+        <div class="col-md-4">
+          <mat-form-field appearance="outline" class="w-100">
+            <mat-label>Given Name</mat-label>
+            <input matInput name="givenName" ngModel placeholder="e.g. John" required type="text">
+            <mat-error>Invalid given name</mat-error>
+          </mat-form-field>
+        </div>
+
+        <div class="col-md-4">
+          <mat-form-field appearance="outline" class="w-100">
+            <mat-label>Surname</mat-label>
+            <input matInput name="surname" ngModel placeholder="e.g. Smith" required type="text">
+            <mat-error>Invalid surname</mat-error>
+          </mat-form-field>
+        </div>
+
+        <div class="col-md-4">
+          <mat-form-field appearance="outline" class="w-100">
+            <mat-label>Date of Birth</mat-label>
+            <input [matDatepicker]="dobPicker" matInput name="dob" ngModel placeholder="dd/mm/yyyy" required>
+            <mat-datepicker-toggle [for]="dobPicker" matSuffix></mat-datepicker-toggle>
+            <mat-datepicker #dobPicker></mat-datepicker>
+            <mat-error>Invalid date</mat-error>
+          </mat-form-field>
+        </div>
+      </div>
+
+      <div class="row mb-4">
+        <div class="col-12">
+          <mat-checkbox #termsCheck color="primary" name="termsCheck" ngModel required="true" pattern="true">
+            Agree to
+            <a
+              [ngClass]="{'primaryLink': (!ngFormObj.dirty && termsCheck.checked),'invalidLink': (ngFormObj.submitted && !termsCheck.checked)}"
+              [routerLink]="appRoute.termsAbs">
+              terms and conditions
+            </a>
+          </mat-checkbox>
+        </div>
+      </div>
+
+      <div class="row mb-3">
+        <div class="col-8 col-md-4 mx-auto">
+          <button class="w-100" color="primary" mat-flat-button type="submit">Register</button>
+        </div>
+      </div>
+
+    </form>
+  </mat-card-content>
+</mat-card>
+
+<div *ngIf="isLoading$ | async" class="spinner-overlay">
+  <mat-spinner color="accent" diameter="50"></mat-spinner>
+</div>

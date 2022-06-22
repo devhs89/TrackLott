@@ -24,48 +24,41 @@
 
   <mat-sidenav-content>
     <mat-toolbar class="mat-elevation-z6 main-mat-toolbar" color="primary">
-
       <button (click)="navDrawer.toggle()" *ngIf="(isHandset$ | async)" aria-label="Toggle Sidenav" mat-icon-button
               type="button">
         <mat-icon aria-label="Side nav toggle icon">menu</mat-icon>
       </button>
-
       <a [routerLink]="appRoute.homeAbs" class="navBrand" color="accent" mat-button>TrackLott</a>
-
       <ng-container *ngIf="!(isHandset$ | async)">
-        <a [routerLink]="appRoute.homeAbs" mat-button>Home</a>
-
-        <a [routerLink]="appRoute.addAbs" mat-button>Add</a>
-
-        <a [routerLink]="appRoute.playAbs" mat-button>Play</a>
-
+        <a [routerLink]="appRoute.homeAbs" color="primary" routerLinkActive="selectedLink" disableRipple
+           mat-flat-button>Home</a>
+        <a [routerLink]="appRoute.addAbs" mat-flat-button color="primary" routerLinkActive="selectedLink" disableRipple>Add</a>
+        <a [routerLink]="appRoute.playAbs" mat-flat-button color="primary" routerLinkActive="selectedLink"
+           disableRipple>Play</a>
         <span class="matSpacer"></span>
 
         <ng-container *ngIf="!userLoggedIn; else linkNotShow">
-          <a [routerLink]="appRoute.loginRel" mat-button>Login</a>
-
-          <a [routerLink]="appRoute.registerRel" mat-button>Register</a>
+          <a [routerLink]="appRoute.loginRel" mat-flat-button color="primary" routerLinkActive="selectedLink"
+             disableRipple>Login</a>
+          <a [routerLink]="appRoute.registerRel" mat-flat-button color="primary" routerLinkActive="selectedLink"
+             disableRipple>Register</a>
         </ng-container>
 
         <ng-template #linkNotShow>
-          <a [routerLink]="appRoute.accountRel" mat-button>Account</a>
-
-          <a (click)="logout()" mat-button>Logout</a>
+          <a [routerLink]="appRoute.accountRel" mat-flat-button color="primary" routerLinkActive="selectedLink"
+             disableRipple>Account</a>
+          <a (click)="logout()" mat-flat-button routerLinkActive="selectedLink" color="primary" disableRipple>Logout</a>
         </ng-template>
 
         <button [matMenuTriggerFor]="terms" mat-icon-button>
           <mat-icon>expand_circle_down</mat-icon>
         </button>
-
         <mat-menu #terms="matMenu">
-          <a [routerLink]="appRoute.termsAbs" mat-menu-item>Terms of Use</a>
-
+          <a [routerLink]="appRoute.termsAbs" mat-menu-item>Terms</a>
           <a [routerLink]="appRoute.licenseAbs" mat-menu-item>License</a>
         </mat-menu>
       </ng-container>
     </mat-toolbar>
-
     <ng-content></ng-content>
-
   </mat-sidenav-content>
 </mat-sidenav-container>

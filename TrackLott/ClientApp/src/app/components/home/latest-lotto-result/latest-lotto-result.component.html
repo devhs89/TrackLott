@@ -1,1 +1,18 @@
-<p>latest-lotto-result works!</p>
+<mat-card *ngIf="latestLottoResult && latestLottoResult.displayName.length > 0"
+          class="row col-xl-9 mx-auto mb-3 mat-elevation-z6">
+  <mat-card-title class="text-capitalize">{{latestLottoResult.displayName}}</mat-card-title>
+  <mat-divider class="my-3" inset></mat-divider>
+  <mat-card-content>
+    <div class="d-inline-flex me-md-3">
+      <app-number-svg *ngFor="let num of latestLottoResult.primaryNumbers" [svgNum]="num"></app-number-svg>
+    </div>
+    <div class="d-inline-flex">
+      <app-number-svg *ngFor="let num of latestLottoResult.secondaryNumbers" [svgNum]="num"
+                      bgFill="#607D8B"></app-number-svg>
+    </div>
+  </mat-card-content>
+</mat-card>
+
+<div *ngIf="isLoading$ | async" class="spinner-overlay">
+  <mat-spinner color="accent" diameter="50"></mat-spinner>
+</div>

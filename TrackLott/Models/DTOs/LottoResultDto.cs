@@ -2,9 +2,9 @@ namespace TrackLott.Models.DTOs;
 
 public class LottoResultDto
 {
-  public string DrawName { get; set; }
-  public int DrawNum { get; set; }
+  public string DisplayName { get; set; }
+  public int DrawNumber { get; set; }
   public DateTime DrawDate { get; set; }
-  public List<int> WinNums { get; set; }
-  public List<int> SuppNums { get; set; }
+  public string PrimaryNumbers { get; set; }
+  public string SecondaryNumbers { get; set; }
 }

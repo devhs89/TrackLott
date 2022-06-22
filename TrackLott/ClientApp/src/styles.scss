@@ -49,3 +49,15 @@ body {
   margin: 0;
   font-family: Roboto, "Helvetica Neue", sans-serif;
 }
+
+.primaryLink {
+  color: #3f51b5 !important;
+}
+
+.primaryLink:visited {
+  color: #3f51b5 !important;
+}
+
+.invalidLink {
+  color: #f44336 !important;
+}
