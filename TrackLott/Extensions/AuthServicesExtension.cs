@@ -25,7 +25,7 @@ public static class AuthServicesExtension
           DefaultLockoutTimeSpan = new TimeSpan(8, 0, 0)
         };
       })
-      .AddRoles<UserRoleModel>()
+      .AddRoles<AppRoleModel>()
       .AddSignInManager<SignInManager<UserModel>>()
       .AddEntityFrameworkStores<TrackLottDbContext>();
 

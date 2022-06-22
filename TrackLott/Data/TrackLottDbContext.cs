@@ -1,11 +1,10 @@
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
-using TrackLott.Models;
 using TrackLott.Models.DataModels;
 
 namespace TrackLott.Data;
 
-public class TrackLottDbContext : IdentityDbContext<UserModel, UserRoleModel, Guid>
+public class TrackLottDbContext : IdentityDbContext<UserModel, AppRoleModel, Guid>
 {
   public TrackLottDbContext(DbContextOptions<TrackLottDbContext> options) : base(options)
   {
