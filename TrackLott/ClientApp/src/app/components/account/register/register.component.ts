@@ -1,7 +1,6 @@
-import {Component, OnDestroy} from '@angular/core';
+import {Component} from '@angular/core';
 import {Countries} from "../../../constants/countries";
 import {NgForm} from "@angular/forms";
-import {Subscription} from "rxjs";
 import {AccountService} from "../../../services/account.service";
 import {Router} from "@angular/router";
 import {UserRegister} from "../../../models/user-register";
@@ -15,10 +14,8 @@ import {SnackBarService} from "../../../services/snack-bar.service";
   templateUrl: './register.component.html',
   styleUrls: ['./register.component.scss']
 })
-export class RegisterComponent implements OnDestroy {
+export class RegisterComponent {
   isLoading$ = this.loadingService.isLoading$;
-  registerSubscription = new Subscription();
-  loginSubscription = new Subscription();
   appRoute = pathConst;
   countries = Countries;
 
@@ -27,23 +24,17 @@ export class RegisterComponent implements OnDestroy {
 
   onSubmit(ngFormObj: NgForm) {
     console.log(ngFormObj);
-
     if (ngFormObj.invalid) return;
     let userDetails: UserRegister = {...ngFormObj.value};
 
-    this.registerSubscription = this.accountService.onRegister(userDetails).subscribe({
+    this.accountService.onRegister(userDetails).subscribe({
       next: resp => {
         if (resp.email && resp.token) {
           setSessionUserToken(resp);
-          this.router.navigate([pathConst.profileRel]);
+          const ignore = this.router.navigate([pathConst.profileRel]);
         }
       },
       error: resp => this.snackBar.showSnackBar(resp.error)
     });
-  }
-
-  ngOnDestroy() {
-    this.loginSubscription.unsubscribe();
-    this.registerSubscription.unsubscribe();
   }
 }
