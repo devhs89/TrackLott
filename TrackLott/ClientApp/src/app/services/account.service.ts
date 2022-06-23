@@ -9,6 +9,7 @@ import {UserPassword} from "../models/user-password";
 import {UserUpdateInfo} from "../models/user-update-info";
 import {map} from "rxjs/operators";
 import {endRoute} from "../constants/end-route";
+import {setLocalUserToken, setSessionUserToken} from "../helpers/local-storage";
 
 @Injectable({
   providedIn: "root"
@@ -30,14 +31,20 @@ export class AccountService {
 
   onRegister(userRegister: UserRegister) {
     return this.httpClient.post<UserToken>(endRoute.accountRegister, userRegister).pipe(map(value => {
-      this.emitAppUser(value);
+      if (value.email && value.token) {
+        this.emitAppUser(value);
+        setSessionUserToken(value);
+      }
       return value;
     }));
   }
 
   onLogin(userCredentials: UserLogin) {
     return this.httpClient.post<UserToken>(endRoute.accountLogin, userCredentials).pipe(map(value => {
-      this.emitAppUser(value);
+      if (value.email && value.token) {
+        this.emitAppUser(value);
+        userCredentials.rememberMe ? setLocalUserToken(value) : setSessionUserToken(value);
+      }
       return value;
     }));
   }

@@ -1,12 +1,14 @@
-<mat-card class="row col-md-6 mx-auto mb-3 mat-elevation-z6">
+<mat-card class="row col-md-6 mx-auto mat-elevation-z6">
   <mat-card-title>Login</mat-card-title>
   <mat-divider class="my-3" inset></mat-divider>
   <mat-card-content>
 
-    <form (ngSubmit)="onSubmit()" [formGroup]="loginForm" class="row">
+    <form (ngSubmit)="onLoginSubmit()" [formGroup]="loginForm" class="row">
       <mat-form-field appearance="outline">
         <mat-label>Email Address</mat-label>
-        <input class="mat-typography" formControlName="email" matInput required type="email">
+        <input email class="mat-typography" formControlName="email" matInput
+               pattern="(?:^|\s)[\w!#$%&'*+/=?^`{|}~-](\.?[\w!#$%&'*+/=?^`{|}~-]+)*@\w+[.-]?\w*\.[a-zA-Z]{2,3}\b"
+               required type="email">
         <mat-error>Invalid email address</mat-error>
       </mat-form-field>
 
@@ -15,6 +17,8 @@
         <input formControlName="password" matInput placeholder="Enter your password" required type="password">
         <mat-error>Invalid password</mat-error>
       </mat-form-field>
+
+      <mat-checkbox name="rememberMe">Remember Me</mat-checkbox>
 
       <button class="w-50 mb-3 mx-auto text-uppercase" color="primary" mat-flat-button type="submit">Login</button>
     </form>

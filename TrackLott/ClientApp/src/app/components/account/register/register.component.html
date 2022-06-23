@@ -2,8 +2,7 @@
   <mat-card-title>Register</mat-card-title>
   <mat-divider class="my-3" inset></mat-divider>
   <mat-card-content>
-    <form #ngFormObj="ngForm" (ngSubmit)="onSubmit(ngFormObj)">
-
+    <form #ngFormObj="ngForm" (ngSubmit)="onRegisterSubmit(ngFormObj)">
       <div class="row">
         <div class="col-md-6">
           <mat-form-field appearance="outline" class="w-100">
@@ -69,7 +68,8 @@
         <div class="col-md-4">
           <mat-form-field appearance="outline" class="w-100">
             <mat-label>Date of Birth</mat-label>
-            <input [matDatepicker]="dobPicker" matInput name="dob" ngModel placeholder="dd/mm/yyyy" required>
+            <input [matDatepicker]="dobPicker" matInput name="dob" readonly="true" aria-readonly="true" ngModel
+                   placeholder="dd/mm/yyyy" required>
             <mat-datepicker-toggle [for]="dobPicker" matSuffix></mat-datepicker-toggle>
             <mat-datepicker #dobPicker></mat-datepicker>
             <mat-error>Invalid date</mat-error>
@@ -79,14 +79,13 @@
 
       <div class="row mb-4">
         <div class="col-12">
-          <mat-checkbox #termsCheck color="primary" name="termsCheck" ngModel required="true" pattern="true">
-            Agree to
-            <a
-              [ngClass]="{'primaryLink': (!ngFormObj.dirty && termsCheck.checked),'invalidLink': (ngFormObj.submitted && !termsCheck.checked)}"
-              [routerLink]="appRoute.termsAbs">
-              terms and conditions
-            </a>
+          <mat-checkbox #termsCheck color="primary" name="termsCheck" ngModel required="true" pattern="true|false">
+            Agree to <a [routerLink]="appRoute.termsAbs" class="text-decoration-none primaryLink">
+            terms and conditions</a>
           </mat-checkbox>
+          <mat-error *ngIf="(ngFormObj.submitted && !termsCheck.checked)" [style]="{fontSize: 'x-small'}">
+            Please accept terms & conditions to register
+          </mat-error>
         </div>
       </div>
 
@@ -95,7 +94,6 @@
           <button class="w-100" color="primary" mat-flat-button type="submit">Register</button>
         </div>
       </div>
-
     </form>
   </mat-card-content>
 </mat-card>

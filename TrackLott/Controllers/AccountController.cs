@@ -1,3 +1,4 @@
+using System.Security.Claims;
 using AutoMapper;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
@@ -56,6 +57,7 @@ public class AccountController : BaseApiController
   }
 
   [HttpPost(EndRoute.Login)]
+  [AllowAnonymous]
   public async Task<ActionResult<UserTokenDto>> Login(LoginDto loginDto)
   {
     var user = await _userManager.Users
@@ -75,22 +77,23 @@ public class AccountController : BaseApiController
   }
 
   [HttpPost(EndRoute.Show)]
-  public async Task<ActionResult<ProfileDto>> ShowUser()
+  public async Task<ActionResult<Claim>> ShowUser()
   {
-    var userName = User.GetUserName();
-    var appUser = await _userManager.Users.SingleOrDefaultAsync(rec => rec.UserName.Equals(userName));
-    if (appUser == null)
-      return BadRequest(ErrorResponse.UserNotExist);
-
-    return new ProfileDto()
-    {
-      UserName = appUser.UserName,
-      Email = appUser.Email,
-      GivenName = appUser.GivenName,
-      Surname = appUser.Surname,
-      Dob = appUser.Dob.ToString(),
-      Country = appUser.Country
-    };
+    // var test = User.;
+    // var appUser = await _userManager.Users.SingleOrDefaultAsync(rec =>
+    //   rec.UserName.Equals(test);
+    // if (appUser == null)
+    //   return BadRequest(ErrorResponse.UserNotExist);
+    //
+    // return new ProfileDto()
+    // {
+    //   Email = appUser.Email,
+    //   GivenName = appUser.GivenName,
+    //   Surname = appUser.Surname,
+    //   Dob = appUser.Dob.ToString(),
+    //   Country = appUser.Country
+    // };
+    return test;
   }
 
   [HttpPost(EndRoute.UpdatePassword)]
