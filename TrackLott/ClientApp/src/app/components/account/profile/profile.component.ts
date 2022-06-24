@@ -1,6 +1,5 @@
 import {Component, OnInit} from '@angular/core';
 import {AccountService} from "../../../services/account.service";
-import {Subscription} from "rxjs";
 import {Countries} from "../../../constants/countries";
 import {FormBuilder, FormControl, FormGroup, Validators} from "@angular/forms";
 import {UserProfile} from "../../../models/user-profile";
@@ -17,9 +16,6 @@ import {UpdateField} from "../../../models/update-field";
 })
 export class ProfileComponent implements OnInit {
   isLoading$ = this.loadingService.isLoading$;
-  updateInfoSubscription = new Subscription();
-  updatePasswordSubscription = new Subscription();
-  showUserSubscription = new Subscription();
   countries = Countries;
   profileForm: FormGroup;
   passwordsForm: FormGroup;
@@ -75,8 +71,9 @@ export class ProfileComponent implements OnInit {
   }
 
   onUpdateSubmit() {
+    if (this.profileForm.invalid) return;
+
     const infoToUpdate: UpdateField = {
-      email: undefined,
       givenName: undefined,
       surname: undefined,
       country: undefined
@@ -96,42 +93,13 @@ export class ProfileComponent implements OnInit {
       }
     }
 
-    if (infoToUpdate.email !== undefined || infoToUpdate.givenName !== undefined || infoToUpdate.surname !== undefined || infoToUpdate.country !== undefined) {
-      this.updateInfoSubscription = this.accountService.onUpdateInfo(infoToUpdate)
-        .subscribe({
-          next: resp => this.snackBarService.showSnackBar(resp === null ? notificationMessage.profileUpdateSuccess : notificationMessage.generic),
-          error: err => this.snackBarService.showSnackBar(err.error),
-          complete: () => this.getUserProfile()
-        });
-    }
-  }
+    if (infoToUpdate.givenName === undefined && infoToUpdate.surname === undefined && infoToUpdate.country === undefined) return;
 
-  onPasswordsSubmit() {
-    if (this.passwordsForm.valid) {
-      this.userPwd.currentPassword = this.currentPassword.value;
-      this.userPwd.newPassword = this.newPassword.value;
-      this.userPwd.repeatPassword = this.repeatPassword.value;
-
-      if (this.userPwd.newPassword === this.userPwd.repeatPassword) {
-        this.updateInfoSubscription = this.accountService.onUpdatePassword(this.userPwd)
-          .subscribe({
-            next: resp => this.snackBarService.showSnackBar(resp),
-            error: err => this.snackBarService.showSnackBar(err.error),
-            complete: () => {
-              this.resetPasswordForm();
-              this.disablePasswordControls = true;
-            }
-          });
-      } else {
-        this.snackBarService.showSnackBar(notificationMessage.passwordMismatch);
-      }
-    }
-  }
-
-  ngOnDestroy() {
-    this.updateInfoSubscription.unsubscribe();
-    this.updatePasswordSubscription.unsubscribe();
-    this.showUserSubscription.unsubscribe();
+    this.accountService.onUpdateInfo(infoToUpdate).subscribe({
+      next: resp => this.snackBarService.showSnackBar(resp === null ? notificationMessage.profileUpdateSuccess : notificationMessage.generic),
+      error: err => this.snackBarService.showSnackBar(err.error),
+      complete: () => this.getUserProfile()
+    });
   }
 
   private getUserProfile() {
@@ -150,6 +118,28 @@ export class ProfileComponent implements OnInit {
       },
       error: err => this.snackBarService.showSnackBar(err.error)
     });
+  }
+
+  onPasswordsSubmit() {
+    if (this.passwordsForm.valid) {
+      this.userPwd.currentPassword = this.currentPassword.value;
+      this.userPwd.newPassword = this.newPassword.value;
+      this.userPwd.repeatPassword = this.repeatPassword.value;
+
+      if (this.userPwd.newPassword === this.userPwd.repeatPassword) {
+        this.accountService.onUpdatePassword(this.userPwd)
+          .subscribe({
+            next: resp => this.snackBarService.showSnackBar(resp),
+            error: err => this.snackBarService.showSnackBar(err.error),
+            complete: () => {
+              this.resetPasswordForm();
+              this.disablePasswordControls = true;
+            }
+          });
+      } else {
+        this.snackBarService.showSnackBar(notificationMessage.passwordMismatch);
+      }
+    }
   }
 
   private resetPasswordForm() {

@@ -113,16 +113,16 @@ public class AccountController : BaseApiController
     if (!passwordDto.newPassword.Equals(passwordDto.repeatPassword, StringComparison.Ordinal))
       return BadRequest(ResponseMsg.PasswordsMismatch);
 
-    var username = _userClaimsService.GetNormalisedEmail();
-    var appUser = await _userManager.Users.SingleOrDefaultAsync(rec => rec.UserName.Equals(username));
-    if (appUser == null)
-      return BadRequest(ResponseMsg.UserNotExist);
+    var userEmail = _userClaimsService.GetNormalisedEmail();
+    if (userEmail == null) return BadRequest(ResponseMsg.InvalidToken);
 
-    var result =
-      await _userManager.ChangePasswordAsync(appUser, passwordDto.currentPassword, passwordDto.newPassword);
+    var appUser = await _userManager.Users.SingleOrDefaultAsync(rec => rec.NormalizedEmail.Equals(userEmail));
+    if (appUser == null) return BadRequest(ResponseMsg.UserNotExist);
+
+    var result = await _userManager.ChangePasswordAsync(appUser, passwordDto.currentPassword, passwordDto.newPassword);
 
     return result.Succeeded
-      ? "Password updated successfully"
+      ? ResponseMsg.PasswordUpdated
       : BadRequest(ResponseMsg.PasswordChangeFailed);
   }
 }

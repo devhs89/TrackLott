@@ -21,4 +21,5 @@ public static class ResponseMsg
   public const string NoLatestLottoResult = "No Latest Lotto Result Found.";
   public const string NoMatchingCombinations = "No matching combinations found.";
   public const string InvalidToken = "Invalid user token. Please contact administrator.";
+  public const string PasswordUpdated = "Password updated successfully";
 }

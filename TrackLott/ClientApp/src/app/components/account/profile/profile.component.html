@@ -1,3 +1,7 @@
+<div *ngIf="isLoading$ | async" class="spinnerOverlay">
+  <mat-spinner color="accent" diameter="50"></mat-spinner>
+</div>
+
 <mat-card class="mat-elevation-z6">
   <mat-card-title>Account</mat-card-title>
   <mat-divider class="my-3" inset></mat-divider>
@@ -7,7 +11,7 @@
         <div class="col-lg-6">
           <mat-form-field appearance="fill" class="w-100">
             <mat-label>Email</mat-label>
-            <input email formControlName="email" readonly aria-readonly="true" matInput type="email">
+            <input email formControlName="email" required readonly aria-readonly="true" matInput type="email">
             <mat-error>Invalid email</mat-error>
           </mat-form-field>
         </div>
@@ -15,7 +19,7 @@
         <div class="col-lg-6">
           <mat-form-field appearance="fill" class="w-100">
             <mat-label>Country</mat-label>
-            <mat-select formControlName="country">
+            <mat-select formControlName="country" required>
               <mat-option *ngFor="let country of countries" class="text-capitalize"
                           value="{{country.value}}">{{country.label}}
               </mat-option>
@@ -28,7 +32,7 @@
         <div class="col-lg-5">
           <mat-form-field appearance="fill" class="w-100">
             <mat-label>Given Name</mat-label>
-            <input formControlName="givenName" matInput type="text">
+            <input formControlName="givenName" required matInput type="text">
             <mat-error>Invalid given name</mat-error>
           </mat-form-field>
         </div>
@@ -36,7 +40,7 @@
         <div class="col-lg-5">
           <mat-form-field appearance="fill" class="w-100">
             <mat-label>Surname</mat-label>
-            <input formControlName="surname" matInput type="text">
+            <input formControlName="surname" required matInput type="text">
             <mat-error>Invalid surname</mat-error>
           </mat-form-field>
         </div>
@@ -44,7 +48,8 @@
         <div class="col-lg-2">
           <mat-form-field appearance="fill" class="w-100">
             <mat-label>Date of Birth</mat-label>
-            <input formControlName="dob" matInput placeholder="dd/mm/yyyy" readonly aria-readonly="true" type="text">
+            <input formControlName="dob" matInput required placeholder="dd/mm/yyyy" readonly aria-readonly="true"
+                   type="text">
             <mat-error>Invalid date</mat-error>
           </mat-form-field>
         </div>
@@ -62,7 +67,8 @@
     <form (ngSubmit)="onPasswordsSubmit()" [formGroup]="passwordsForm">
       <div class="row row-cols-1 row-cols-md-2 justify-content-center mb-4">
         <div class="col-8 col-md-4">
-          <button (click)="showPasswordControls()" [color]="disablePasswordControls ? 'primary': 'warn'"
+          <button (click)="showPasswordControls()"
+                  [color]="disablePasswordControls ? 'primary': 'warn'"
                   class="w-100 mb-2 mb-md-0"
                   mat-flat-button type="button">
             {{disablePasswordControls ? 'Change Password' : 'Cancel'}}
@@ -77,7 +83,7 @@
         <div class="col-md-4">
           <mat-form-field appearance="fill" class="w-100">
             <mat-label>Current Password</mat-label>
-            <input formControlName="currentPassword" matInput required type="password">
+            <input formControlName="currentPassword" matInput required type="password" autocomplete="current-password">
             <mat-error>Invalid current password</mat-error>
           </mat-form-field>
         </div>
@@ -85,7 +91,7 @@
         <div class="col-md-4">
           <mat-form-field appearance="fill" class="w-100">
             <mat-label>New Password</mat-label>
-            <input formControlName="newPassword" matInput required type="password">
+            <input formControlName="newPassword" matInput required type="password" autocomplete="new-password">
             <mat-error>Invalid new password</mat-error>
           </mat-form-field>
         </div>
@@ -93,7 +99,7 @@
         <div class="col-md-4">
           <mat-form-field appearance="fill" class="w-100">
             <mat-label>Confirm Password</mat-label>
-            <input formControlName="repeatPassword" matInput required type="password">
+            <input formControlName="repeatPassword" matInput required type="password" autocomplete="new-password">
             <mat-error>Invalid repeat password</mat-error>
           </mat-form-field>
         </div>
@@ -101,7 +107,3 @@
     </form>
   </mat-card-content>
 </mat-card>
-
-<div *ngIf="isLoading$ | async" class="spinner-overlay">
-  <mat-spinner color="accent" diameter="50"></mat-spinner>
-</div>
