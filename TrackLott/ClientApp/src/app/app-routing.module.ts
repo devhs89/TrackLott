@@ -4,9 +4,9 @@ import {HomeComponent} from "./components/home/home.component";
 import {AddComponent} from "./components/add/add.component";
 import {PlayComponent} from "./components/play/play.component";
 import {AuthGuardService} from "./services/auth-guard.service";
-import {LicenseComponent} from "./license/license.component";
 import {TermsComponent} from "./components/terms/terms.component";
 import {pathConst} from "./constants/path-const";
+import {LicenseComponent} from "./components/license/license.component";
 
 const routes = [
   {path: pathConst.home, component: HomeComponent},

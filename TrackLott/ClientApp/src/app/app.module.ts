@@ -16,8 +16,8 @@ import {NavbarComponent} from "./components/navbar/navbar.component";
 import {LatestLottoResultComponent} from "./components/home/latest-lotto-result/latest-lotto-result.component";
 import {MatchComboComponent} from "./components/home/match-combo/match-combo.component";
 import {NumberSvgComponent} from "./components/common/number-svg/number-svg.component";
-import {LicenseComponent} from "./license/license.component";
 import {TermsComponent} from "./components/terms/terms.component";
+import {LicenseComponent} from "./components/license/license.component";
 
 @NgModule({
   declarations: [

@@ -1,1 +1,58 @@
-<p>play works!</p>
+<mat-card *ngIf="resultNums.length > 0" class="row col-xl-9 mx-auto mb-3 mat-elevation-z6">
+  <mat-card-title>Your Numbers</mat-card-title>
+  <mat-divider class="my-3" inset></mat-divider>
+  <mat-card-content>
+    <div class="d-inline-flex me-md-3">
+      <app-number-svg *ngFor="let num of resultNums" [svgNum]="num" bgFill="green"></app-number-svg>
+    </div>
+  </mat-card-content>
+</mat-card>
+
+<mat-card class="row col-xl-9 mx-auto mb-3 mat-elevation-z6">
+  <mat-card-title>Delta System</mat-card-title>
+  <mat-divider class="my-3" inset></mat-divider>
+  <mat-card-content>
+    <div class="mb-3">
+      <div class="mb-1">Pick a number</div>
+      <button (click)="onClickBtn($event, 0)" *ngFor="let num of deltaNums[0]"
+              [color]="rowOneNum === num ? 'accent' : 'primary'" [disabled]="rowOneNum > 0 && rowOneNum !== num"
+              class="m-1" mat-mini-fab
+              type="button">{{num}}</button>
+    </div>
+    <div class="mb-3">
+      <div class="mb-1">Pick two numbers</div>
+      <button (click)="onClickBtn($event, 1)" *ngFor="let num of deltaNums[1]"
+              [color]="rowTwoNums.length > 0 && rowTwoNums.includes(num) ? 'accent' : 'primary'"
+              [disabled]="rowTwoNums.length > 1 && !(rowTwoNums.includes(num))"
+              class="m-1" mat-mini-fab
+              type="button">{{num}}</button>
+    </div>
+    <div class="mb-3">
+      <div class="mb-1">Pick one number</div>
+      <button (click)="onClickBtn($event, 2)" *ngFor="let num of deltaNums[2]"
+              [color]="rowThreeNum === num ? 'accent' : 'primary'" [disabled]="rowThreeNum > 0 && (rowThreeNum !== num)"
+              class="m-1" mat-mini-fab
+              type="button">{{num}}</button>
+    </div>
+    <div class="mb-3">
+      <div class="mb-1">Pick two numbers</div>
+      <button (click)="onClickBtn($event, 3)" *ngFor="let num of deltaNums[3]"
+              [color]="rowFourNums.length > 0 && rowFourNums.includes(num) ? 'accent' : 'primary'"
+              [disabled]="rowFourNums.length > 1 && !(rowFourNums.includes(num))"
+              class="m-1" mat-mini-fab
+              type="button">{{num}}</button>
+    </div>
+
+    <mat-card-subtitle class="fw-light text-end">Total -
+      <span [class]="numTotal > 45 ? 'text-warning' : 'text-secondary'">{{numTotal}}</span>/45
+    </mat-card-subtitle>
+    <mat-divider class="mb-2" inset></mat-divider>
+    <div class="d-flex justify-content-center">
+      <button (click)="onSubmitDeltaNums()" [disabled]="!isDeltaGameValid" class="w-50 text-uppercase" color="primary"
+              mat-flat-button
+              type="button">
+        Submit
+      </button>
+    </div>
+  </mat-card-content>
+</mat-card>

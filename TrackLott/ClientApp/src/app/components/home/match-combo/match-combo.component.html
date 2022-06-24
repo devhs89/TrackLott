@@ -1,1 +1,76 @@
-<p>match-combo works!</p>
+<ng-container *ngIf="(appUser$ | async)">
+  <mat-card *ngIf="lotResult && errorMessage" class="row col-xl-9 mx-auto mb-3 mat-elevation-z6">
+    <mat-card-title>No Results Found</mat-card-title>
+    <mat-divider class="my-3" inset></mat-divider>
+    <mat-card-content>
+      <span>{{errorMessage}}.</span>
+    </mat-card-content>
+    <mat-card-actions align="end">
+      <button color="primary" mat-flat-button routerLink="/add" type="button">Add Combinations</button>
+    </mat-card-actions>
+  </mat-card>
+
+  <ng-container *ngIf="matchingCombos.length > 0">
+    <ng-container *ngIf="(isHandset$ | async); else notHandset">
+      <ng-container *ngTemplateOutlet="paginator"></ng-container>
+      <mat-card *ngFor="let combo of matchingCombos" class="row col-xl-9 mx-auto mb-3 mat-elevation-z6">
+        <mat-card-title>{{combo.dateAdded}}</mat-card-title>
+        <mat-card-content>
+          <div class="d-inline-flex flex-wrap me-md-3">
+            <app-number-svg *ngFor="let num of combo.mainNums"
+                            [bgFill]="lotResult.primaryNumbers.includes(num) ? '#673ab7' : '#ffd740'"
+                            [svgNum]="num"></app-number-svg>
+          </div>
+          <div *ngIf="combo.jackpot" class="d-inline-flex">
+            <app-number-svg [bgFill]="lotResult.secondaryNumbers.includes(combo.jackpot) ? '#607d8b' : '#f44336'"
+                            [svgNum]="combo.jackpot"></app-number-svg>
+          </div>
+        </mat-card-content>
+      </mat-card>
+    </ng-container>
+
+    <ng-template #notHandset>
+      <div class="row col-xl-9 mx-auto mb-3 mat-elevation-z6">
+        <mat-table #table [dataSource]="tableDataSource" class="w-100">
+          <ng-container matColumnDef="mainNums">
+            <mat-header-cell *matHeaderCellDef>Main Numbers</mat-header-cell>
+            <mat-cell *matCellDef="let combo">
+              <div class="d-inline-flex flex-wrap">
+                <app-number-svg *ngFor="let num of combo.mainNums"
+                                [bgFill]="lotResult.primaryNumbers.includes(num) ? '#673ab7' : '#ffd740'"
+                                [svgNum]="num"></app-number-svg>
+              </div>
+            </mat-cell>
+          </ng-container>
+
+          <ng-container *ngIf="lotResult && lotResult.displayName === 'powerball'" matColumnDef="jackpot">
+            <mat-header-cell *matHeaderCellDef>Powerball</mat-header-cell>
+            <mat-cell *matCellDef="let combo">
+              <app-number-svg [bgFill]="lotResult.secondaryNumbers.includes(combo.jackpot) ? '#607d8b' : '#f44336'"
+                              [svgNum]="combo.jackpot"></app-number-svg>
+            </mat-cell>
+          </ng-container>
+
+          <ng-container matColumnDef="drawDate">
+            <mat-header-cell *matHeaderCellDef>Draw Date</mat-header-cell>
+            <mat-cell *matCellDef="let combo">{{combo.dateAdded}}</mat-cell>
+          </ng-container>
+
+          <mat-header-row *matHeaderRowDef="tableColumns; sticky: true"></mat-header-row>
+          <mat-row *matRowDef="let row; columns: tableColumns;"></mat-row>
+        </mat-table>
+
+        <ng-container *ngTemplateOutlet="paginator"></ng-container>
+      </div>
+    </ng-template>
+
+    <ng-template #paginator>
+      <mat-paginator (page)="onPageEvent()" [length]="totalMatchingCombos" [pageSizeOptions]="[5, 10]"
+                     [pageSize]="5" aria-label="Matching Combinations"></mat-paginator>
+    </ng-template>
+  </ng-container>
+</ng-container>
+
+<div *ngIf="isLoading$ | async" class="spinner-overlay">
+  <mat-spinner color="accent" diameter="50"></mat-spinner>
+</div>
