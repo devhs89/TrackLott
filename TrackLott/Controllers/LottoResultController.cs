@@ -29,7 +29,7 @@ public class LottoResultController : BaseApiController
         !model.ProductId.Equals(LottoName.Super66Id));
 
     if (result == null)
-      return NotFound(ErrorResponse.NoLatestLottoResult);
+      return NotFound(ResponseMsg.NoLatestLottoResult);
 
     return new LottoResultDto()
     {

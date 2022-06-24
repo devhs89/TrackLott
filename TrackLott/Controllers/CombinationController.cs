@@ -27,7 +27,7 @@ public class CombinationController : BaseApiController
   {
     var appUser = await GetUser();
     if (appUser == null)
-      return BadRequest(ErrorResponse.UserNotExist);
+      return BadRequest(ResponseMsg.UserNotExist);
 
     var missingLottoNames = 0;
     var saveResp = "Combination Saved";
@@ -82,18 +82,18 @@ public class CombinationController : BaseApiController
   {
     var user = await GetUser();
     if (user == null)
-      return BadRequest(ErrorResponse.UserNotExist);
+      return BadRequest(ResponseMsg.UserNotExist);
 
     var lotteryResult = await CheckLottery(lottoName);
     if (lotteryResult == null)
-      return BadRequest(ErrorResponse.NoLatestLottoResult);
+      return BadRequest(ResponseMsg.NoLatestLottoResult);
 
     var combinationsCount =
       await _dbContext.Combinations.CountAsync(combo =>
         combo.LottoResultProductId == lotteryResult.ProductId && combo.UserModelId == user.Id);
 
     if (combinationsCount < 1)
-      return BadRequest(ErrorResponse.NoMatchingCombinations);
+      return BadRequest(ResponseMsg.NoMatchingCombinations);
 
     var combinationsResult = _dbContext.Combinations
       .Where(combo => combo.LottoResultProductId == lotteryResult.ProductId && combo.UserModelId == user.Id)

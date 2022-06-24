@@ -12,7 +12,7 @@ public static class DataStoreServicesExtension
     {
       var connectionString = Environment.GetEnvironmentVariable(EnvVarName.TrackLottConnStr);
 
-      if (connectionString == null) throw new Exception(ErrorResponse.TrackLottDbConnFail);
+      if (connectionString == null) throw new Exception(ResponseMsg.TrackLottDbConnFail);
 
       var serverVersion = new MySqlServerVersion(new Version(8, 0, 29));
       options.UseMySql(connectionString, serverVersion);

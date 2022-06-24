@@ -34,13 +34,13 @@ public class AccountController : BaseApiController
   public async Task<ActionResult<UserTokenDto>> Register(RegisterDto registerDto)
   {
     if (!registerDto.Password.Equals(registerDto.RepeatPassword, StringComparison.Ordinal))
-      return BadRequest(ErrorResponse.PasswordsMismatch);
+      return BadRequest(ResponseMsg.PasswordsMismatch);
 
     var userExists =
       await _userManager.Users.SingleOrDefaultAsync(usr =>
         usr.NormalizedEmail.Equals(registerDto.Email.Normalize().ToUpper()));
     if (userExists != null)
-      return BadRequest(ErrorResponse.AccountAlreadyExists);
+      return BadRequest(ResponseMsg.AccountAlreadyExists);
 
     var appUser = _mapper.Map<UserModel>(registerDto);
     var createResult = await _userManager.CreateAsync(appUser, registerDto.Password);
@@ -64,10 +64,10 @@ public class AccountController : BaseApiController
       .SingleOrDefaultAsync(rec => rec.NormalizedEmail.Equals(loginDto.Email.Normalize()));
 
     if (user == null)
-      return Unauthorized(ErrorResponse.InvalidLoginDetails);
+      return Unauthorized(ResponseMsg.InvalidLoginDetails);
 
     var result = await _signInManager.CheckPasswordSignInAsync(user, loginDto.Password, true);
-    if (!result.Succeeded) return Unauthorized(ErrorResponse.InvalidLoginDetails);
+    if (!result.Succeeded) return Unauthorized(ResponseMsg.InvalidLoginDetails);
 
     return new UserTokenDto()
     {
@@ -80,11 +80,11 @@ public class AccountController : BaseApiController
   public async Task<ActionResult<ProfileDto>> ShowUser()
   {
     var userEmail = _userClaimsService.GetNormalisedEmail();
-    if (userEmail == null) return BadRequest(userEmail + ErrorResponse.InvalidToken);
+    if (userEmail == null) return BadRequest(userEmail + ResponseMsg.InvalidToken);
 
     var appUser = await _userManager.Users.SingleOrDefaultAsync(rec => rec.NormalizedEmail.Equals(userEmail));
     if (appUser == null)
-      return BadRequest(ErrorResponse.UserNotExist);
+      return BadRequest(ResponseMsg.UserNotExist);
 
     var profile = _mapper.Map<ProfileDto>(appUser);
     return profile;
@@ -94,12 +94,12 @@ public class AccountController : BaseApiController
   public async Task<ActionResult<string>> UpdatePassword(PasswordDto passwordDto)
   {
     if (!passwordDto.newPassword.Equals(passwordDto.repeatPassword, StringComparison.Ordinal))
-      return BadRequest(ErrorResponse.PasswordsMismatch);
+      return BadRequest(ResponseMsg.PasswordsMismatch);
 
     var username = _userClaimsService.GetNormalisedEmail();
     var appUser = await _userManager.Users.SingleOrDefaultAsync(rec => rec.UserName.Equals(username));
     if (appUser == null)
-      return BadRequest(ErrorResponse.UserNotExist);
+      return BadRequest(ResponseMsg.UserNotExist);
 
     var result =
       await _userManager.ChangePasswordAsync(appUser, passwordDto.currentPassword, passwordDto.newPassword);
