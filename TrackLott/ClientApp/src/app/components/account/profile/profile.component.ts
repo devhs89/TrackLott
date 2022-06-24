@@ -7,7 +7,6 @@ import {UserProfile} from "../../../models/user-profile";
 import {UserPassword} from "../../../models/user-password";
 import {ProgressIndicatorService} from "../../../services/progress-indicator.service";
 import {SnackBarService} from "../../../services/snack-bar.service";
-import {capitalizeString} from "../../../helpers/capitalize-string";
 import {notificationMessage} from "../../../constants/notification-message";
 import {UpdateField} from "../../../models/update-field";
 
@@ -143,10 +142,10 @@ export class ProfileComponent implements OnInit {
 
         this.profileForm.setValue({
           email: resp.email,
-          givenName: resp.givenName ? capitalizeString(resp.givenName) : '',
-          surname: resp.surname ? capitalizeString(resp.surname) : '',
-          dob: new Date(dobReversed),
-          country: resp.country ? capitalizeString(resp.country) : ''
+          givenName: resp.givenName || '',
+          surname: resp.surname || '',
+          dob: new Date(dobReversed).toLocaleDateString(),
+          country: resp.country.toUpperCase() || ''
         });
       },
       error: err => this.snackBarService.showSnackBar(err.error)

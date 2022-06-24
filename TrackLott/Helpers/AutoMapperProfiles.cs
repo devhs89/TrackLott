@@ -18,6 +18,23 @@ public class AutoMapperProfiles : Profile
       .ForMember(dto => dto.Dob,
         expression => expression.MapFrom(model => model.Dob.ToString()));
 
+    CreateMap<ProfileUpdateDto, UserModel>()
+      .ForMember(model => model.GivenName, expression =>
+      {
+        expression.PreCondition(dto => dto.GivenName != null);
+        expression.MapFrom(dto => dto.GivenName);
+      })
+      .ForMember(model => model.Surname, expression =>
+      {
+        expression.PreCondition(dto => dto.Surname != null);
+        expression.MapFrom(dto => dto.Surname);
+      })
+      .ForMember(model => model.Country, expression =>
+      {
+        expression.PreCondition(dto => dto.Country != null);
+        expression.MapFrom(dto => dto.Country);
+      });
+
     CreateMap<LottoResultModel, LottoResultDto>();
   }
 }

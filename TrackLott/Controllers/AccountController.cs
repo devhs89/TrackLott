@@ -90,6 +90,23 @@ public class AccountController : BaseApiController
     return profile;
   }
 
+  [HttpPut(EndRoute.UpdateInfo)]
+  public async Task<ActionResult<UserModel>> UpdateInfo(ProfileUpdateDto profileUpdateDto)
+  {
+    var userEmail = _userClaimsService.GetNormalisedEmail();
+    if (userEmail == null) return BadRequest(ResponseMsg.InvalidToken);
+
+    var appUser = await _userManager.Users.SingleOrDefaultAsync(rec => rec.NormalizedEmail.Equals(userEmail));
+    if (appUser == null)
+      return BadRequest(ResponseMsg.UserNotExist);
+
+    _mapper.Map(profileUpdateDto, appUser);
+
+    var res = await _userManager.UpdateAsync(appUser);
+    if (!res.Succeeded) return BadRequest(ResponseMsg.GenericError);
+    return NoContent();
+  }
+
   [HttpPost(EndRoute.UpdatePassword)]
   public async Task<ActionResult<string>> UpdatePassword(PasswordDto passwordDto)
   {
@@ -106,27 +123,6 @@ public class AccountController : BaseApiController
 
     return result.Succeeded
       ? "Password updated successfully"
-      : BadRequest(ErrorResponse.PasswordChangeFailed);
-  }
-
-  [HttpPut(EndRoute.UpdateInfo)]
-  public async Task<ActionResult<string>> UpdateInfo(AccountUpdateDto accountUpdateDto)
-  {
-    var userName = _userClaimsService.GetNormalisedEmail();
-    var appUser = await _userManager.Users.SingleOrDefaultAsync(rec => rec.UserName.Equals(userName));
-    if (appUser == null)
-      return BadRequest(ErrorResponse.UserNotExist);
-
-    if (accountUpdateDto.Email != null) appUser.Email = accountUpdateDto.Email;
-    if (accountUpdateDto.GivenName != null) appUser.GivenName = accountUpdateDto.GivenName;
-    if (accountUpdateDto.Surname != null) appUser.Surname = accountUpdateDto.Surname;
-    if (accountUpdateDto.Country != null) appUser.Country = accountUpdateDto.Country;
-
-    var res = await _userManager.UpdateAsync(appUser);
-    if (res == null)
-      return BadRequest(ErrorResponse.GenericError);
-
-    if (!res.Succeeded) return BadRequest(ErrorResponse.GenericError);
-    return NoContent();
+      : BadRequest(ResponseMsg.PasswordChangeFailed);
   }
 }

@@ -2,12 +2,12 @@
   <mat-card-title>Account</mat-card-title>
   <mat-divider class="my-3" inset></mat-divider>
   <mat-card-content>
-    <form (ngSubmit)="onUpdateSubmit()" [formGroup]="profileForm">
+    <form (ngSubmit)="onUpdateSubmit()" [formGroup]="profileForm" autocomplete="off">
       <div class="row">
         <div class="col-lg-6">
           <mat-form-field appearance="fill" class="w-100">
             <mat-label>Email</mat-label>
-            <input email formControlName="email" matInput type="email">
+            <input email formControlName="email" readonly aria-readonly="true" matInput type="email">
             <mat-error>Invalid email</mat-error>
           </mat-form-field>
         </div>
@@ -44,10 +44,7 @@
         <div class="col-lg-2">
           <mat-form-field appearance="fill" class="w-100">
             <mat-label>Date of Birth</mat-label>
-            <input formControlName="dob" matInput [matDatepicker]="dobPicker" placeholder="dd/mm/yyyy" readonly
-                   type="text">
-            <mat-datepicker-toggle matSuffix [for]="dobPicker"></mat-datepicker-toggle>
-            <mat-datepicker #dobPicker></mat-datepicker>
+            <input formControlName="dob" matInput placeholder="dd/mm/yyyy" readonly aria-readonly="true" type="text">
             <mat-error>Invalid date</mat-error>
           </mat-form-field>
         </div>
