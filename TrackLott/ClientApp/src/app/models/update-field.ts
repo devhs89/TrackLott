@@ -1,4 +1,4 @@
-export interface UserUpdateInfo {
+export interface UpdateField {
   email?: string;
   givenName?: string;
   surname?: string;

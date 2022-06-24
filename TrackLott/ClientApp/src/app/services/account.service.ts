@@ -4,9 +4,9 @@ import {UserRegister} from "../models/user-register";
 import {ReplaySubject} from "rxjs";
 import {UserLogin} from "../models/user-login";
 import {UserToken} from "../models/user-token";
-import {UserInfo} from "../models/user-info";
+import {UserProfile} from "../models/user-profile";
 import {UserPassword} from "../models/user-password";
-import {UserUpdateInfo} from "../models/user-update-info";
+import {UpdateField} from "../models/update-field";
 import {map} from "rxjs/operators";
 import {endRoute} from "../constants/end-route";
 import {setLocalUserToken, setSessionUserToken} from "../helpers/local-storage";
@@ -50,10 +50,10 @@ export class AccountService {
   }
 
   showUser() {
-    return this.httpClient.post<UserInfo>(endRoute.accountShow, {});
+    return this.httpClient.post<UserProfile>(endRoute.accountShow, {});
   }
 
-  onUpdateInfo(newInfo: UserUpdateInfo) {
+  onUpdateInfo(newInfo: UpdateField) {
     return this.httpClient.put<string>(endRoute.accountUpdate, newInfo);
   }
 

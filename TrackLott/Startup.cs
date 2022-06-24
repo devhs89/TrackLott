@@ -8,7 +8,7 @@ namespace TrackLott
   {
     private readonly IWebHostEnvironment _env;
 
-    public Startup(IConfiguration config, IWebHostEnvironment env)
+    public Startup(IWebHostEnvironment env)
     {
       _env = env;
     }
@@ -26,6 +26,9 @@ namespace TrackLott
 
       // Authentication and Authorization related services
       services.AddAuthServices(_env);
+
+      // Jwt Token and User Claims related services
+      services.AddJwtTokenServices();
     }
 
     // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

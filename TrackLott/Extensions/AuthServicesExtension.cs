@@ -10,9 +10,9 @@ namespace TrackLott.Extensions;
 
 public static class AuthServicesExtension
 {
-  public static IServiceCollection AddAuthServices(this IServiceCollection services, IWebHostEnvironment env)
+  public static IServiceCollection AddAuthServices(this IServiceCollection serviceCollection, IWebHostEnvironment env)
   {
-    services.AddIdentityCore<UserModel>(options =>
+    serviceCollection.AddIdentityCore<UserModel>(options =>
       {
         options.Password.RequireNonAlphanumeric = true;
         options.Password.RequireDigit = true;
@@ -29,7 +29,7 @@ public static class AuthServicesExtension
       .AddSignInManager<SignInManager<UserModel>>()
       .AddEntityFrameworkStores<TrackLottDbContext>();
 
-    services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme).AddJwtBearer(options =>
+    serviceCollection.AddAuthentication(JwtBearerDefaults.AuthenticationScheme).AddJwtBearer(options =>
       options.TokenValidationParameters = new TokenValidationParameters()
       {
         ValidIssuers = env.IsProduction()
@@ -44,11 +44,11 @@ public static class AuthServicesExtension
         ValidateIssuerSigningKey = true
       });
 
-    services.AddAuthorization(options =>
+    serviceCollection.AddAuthorization(options =>
     {
       options.AddPolicy(AuthPolicyName.RequireAuthenticatedUser, builder => builder.RequireAuthenticatedUser());
     });
 
-    return services;
+    return serviceCollection;
   }
 }

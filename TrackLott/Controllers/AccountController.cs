@@ -1,14 +1,12 @@
-using System.Security.Claims;
 using AutoMapper;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using TrackLott.Constants;
-using TrackLott.Extensions;
+using TrackLott.Interfaces;
 using TrackLott.Models.DataModels;
 using TrackLott.Models.DTOs;
-using TrackLott.Services;
 
 namespace TrackLott.Controllers;
 
@@ -17,16 +15,18 @@ public class AccountController : BaseApiController
 {
   private readonly UserManager<UserModel> _userManager;
   private readonly SignInManager<UserModel> _signInManager;
-  private readonly TokenService _tokenService;
+  private readonly ITokenService _tokenService;
   private readonly IMapper _mapper;
+  private readonly IUserClaimsService _userClaimsService;
 
   public AccountController(UserManager<UserModel> userManager, SignInManager<UserModel> signInManager,
-    TokenService tokenService, IMapper mapper)
+    ITokenService tokenService, IMapper mapper, IUserClaimsService userClaimsService)
   {
     _userManager = userManager;
     _signInManager = signInManager;
     _tokenService = tokenService;
     _mapper = mapper;
+    _userClaimsService = userClaimsService;
   }
 
   [HttpPost(EndRoute.Register)]
@@ -77,23 +77,17 @@ public class AccountController : BaseApiController
   }
 
   [HttpPost(EndRoute.Show)]
-  public async Task<ActionResult<Claim>> ShowUser()
+  public async Task<ActionResult<ProfileDto>> ShowUser()
   {
-    // var test = User.;
-    // var appUser = await _userManager.Users.SingleOrDefaultAsync(rec =>
-    //   rec.UserName.Equals(test);
-    // if (appUser == null)
-    //   return BadRequest(ErrorResponse.UserNotExist);
-    //
-    // return new ProfileDto()
-    // {
-    //   Email = appUser.Email,
-    //   GivenName = appUser.GivenName,
-    //   Surname = appUser.Surname,
-    //   Dob = appUser.Dob.ToString(),
-    //   Country = appUser.Country
-    // };
-    return test;
+    var userEmail = _userClaimsService.GetNormalisedEmail();
+    if (userEmail == null) return BadRequest(userEmail + ErrorResponse.InvalidToken);
+
+    var appUser = await _userManager.Users.SingleOrDefaultAsync(rec => rec.NormalizedEmail.Equals(userEmail));
+    if (appUser == null)
+      return BadRequest(ErrorResponse.UserNotExist);
+
+    var profile = _mapper.Map<ProfileDto>(appUser);
+    return profile;
   }
 
   [HttpPost(EndRoute.UpdatePassword)]
@@ -102,7 +96,7 @@ public class AccountController : BaseApiController
     if (!passwordDto.newPassword.Equals(passwordDto.repeatPassword, StringComparison.Ordinal))
       return BadRequest(ErrorResponse.PasswordsMismatch);
 
-    var username = User.GetUserName();
+    var username = _userClaimsService.GetNormalisedEmail();
     var appUser = await _userManager.Users.SingleOrDefaultAsync(rec => rec.UserName.Equals(username));
     if (appUser == null)
       return BadRequest(ErrorResponse.UserNotExist);
@@ -118,7 +112,7 @@ public class AccountController : BaseApiController
   [HttpPut(EndRoute.UpdateInfo)]
   public async Task<ActionResult<string>> UpdateInfo(AccountUpdateDto accountUpdateDto)
   {
-    var userName = User.GetUserName();
+    var userName = _userClaimsService.GetNormalisedEmail();
     var appUser = await _userManager.Users.SingleOrDefaultAsync(rec => rec.UserName.Equals(userName));
     if (appUser == null)
       return BadRequest(ErrorResponse.UserNotExist);

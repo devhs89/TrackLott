@@ -3,12 +3,13 @@ using System.Security.Claims;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.IdentityModel.Tokens;
 using TrackLott.Constants;
+using TrackLott.Interfaces;
 using TrackLott.Models.DataModels;
 using TrackLott.Security;
 
 namespace TrackLott.Services;
 
-public class TokenService
+public class TokenService : ITokenService
 {
   private readonly UserManager<UserModel> _userManager;
   private readonly IWebHostEnvironment _env;
@@ -23,7 +24,7 @@ public class TokenService
   {
     var claims = new List<Claim>()
     {
-      new(JwtRegisteredClaimNames.Name, userModel.NormalizedEmail)
+      new(ClaimTypes.Email, userModel.NormalizedEmail)
     };
     var roles = await _userManager.GetRolesAsync(userModel);
     claims.AddRange(roles.Select(role => new Claim(ClaimTypes.Role, role)));

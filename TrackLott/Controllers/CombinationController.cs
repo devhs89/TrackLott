@@ -4,7 +4,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using TrackLott.Constants;
 using TrackLott.Data;
-using TrackLott.Extensions;
+using TrackLott.Interfaces;
 using TrackLott.Models.DataModels;
 using TrackLott.Models.DTOs;
 
@@ -14,10 +14,12 @@ namespace TrackLott.Controllers;
 public class CombinationController : BaseApiController
 {
   private readonly TrackLottDbContext _dbContext;
+  private readonly IUserClaimsService _userClaimsService;
 
-  public CombinationController(TrackLottDbContext dbContext)
+  public CombinationController(TrackLottDbContext dbContext, IUserClaimsService userClaimsService)
   {
     _dbContext = dbContext;
+    _userClaimsService = userClaimsService;
   }
 
   [HttpPost(EndRoute.Add)]
@@ -113,7 +115,8 @@ public class CombinationController : BaseApiController
 
   private async Task<UserModel?> GetUser()
   {
-    var userName = User.GetUserName();
+    var userName = _userClaimsService.GetNormalisedEmail();
+    ;
 
     var user =
       await _dbContext.Users.SingleOrDefaultAsync(model => userName != null && model.UserName.Equals(userName));
