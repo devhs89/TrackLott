@@ -145,7 +145,7 @@ export class ProfileComponent implements OnInit {
           email: resp.email,
           givenName: resp.givenName ? capitalizeString(resp.givenName) : '',
           surname: resp.surname ? capitalizeString(resp.surname) : '',
-          dob: new Date(dobReversed).toLocaleDateString(),
+          dob: new Date(dobReversed),
           country: resp.country ? capitalizeString(resp.country) : ''
         });
       },
