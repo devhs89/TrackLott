@@ -3,7 +3,7 @@ import {HttpClient} from "@angular/common/http";
 import {UserRegister} from "../models/user-register";
 import {ReplaySubject} from "rxjs";
 import {UserLogin} from "../models/user-login";
-import {UserToken} from "../models/user-token";
+import {UserClaim} from "../models/user-claim";
 import {UserProfile} from "../models/user-profile";
 import {UserPassword} from "../models/user-password";
 import {UpdateField} from "../models/update-field";
@@ -15,14 +15,14 @@ import {setLocalUserToken, setSessionUserToken} from "../helpers/local-storage";
   providedIn: "root"
 })
 export class AccountService {
-  private appUserBehaviorSubject = new ReplaySubject<UserToken | null>(1);
+  private appUserBehaviorSubject = new ReplaySubject<UserClaim | null>(1);
   appUser$ = this.appUserBehaviorSubject.asObservable();
 
   constructor(private httpClient: HttpClient) {
   }
 
-  emitAppUser(userToken: UserToken) {
-    this.appUserBehaviorSubject.next(userToken);
+  emitAppUser(userClaim: UserClaim) {
+    this.appUserBehaviorSubject.next(userClaim);
   }
 
   removeAppUser() {
@@ -30,7 +30,7 @@ export class AccountService {
   }
 
   onRegister(userRegister: UserRegister) {
-    return this.httpClient.post<UserToken>(endRoute.accountRegister, userRegister).pipe(map(value => {
+    return this.httpClient.post<UserClaim>(endRoute.accountRegister, userRegister).pipe(map(value => {
       if (value.email && value.token) {
         this.emitAppUser(value);
         setSessionUserToken(value);
@@ -40,7 +40,7 @@ export class AccountService {
   }
 
   onLogin(userCredentials: UserLogin) {
-    return this.httpClient.post<UserToken>(endRoute.accountLogin, userCredentials).pipe(map(value => {
+    return this.httpClient.post<UserClaim>(endRoute.accountLogin, userCredentials).pipe(map(value => {
       if (value.email && value.token) {
         this.emitAppUser(value);
         userCredentials.rememberMe ? setLocalUserToken(value) : setSessionUserToken(value);

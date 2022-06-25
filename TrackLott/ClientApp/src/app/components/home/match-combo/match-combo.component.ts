@@ -11,9 +11,10 @@ import {Breakpoints} from "@angular/cdk/layout";
 import {MatPaginator} from "@angular/material/paginator";
 import {MatTableDataSource} from "@angular/material/table";
 import {LottoResult} from "../../../models/lotto-result";
-import {UserToken} from "../../../models/user-token";
+import {UserClaim} from "../../../models/user-claim";
 import {ProgressIndicatorService} from "../../../services/progress-indicator.service";
 import {parseError} from "../../../helpers/parse-error";
+import {lottoName} from "../../../constants/lotto-select-option";
 
 @Component({
   selector: 'app-match-combo',
@@ -23,9 +24,9 @@ import {parseError} from "../../../helpers/parse-error";
 export class MatchComboComponent implements OnInit, OnDestroy {
   isHandset$: Observable<boolean>;
   isLoading$ = this.loadingService.isLoading$;
-  appUser$: Observable<UserToken | null>;
+  appUser$: Observable<UserClaim | null>;
   subscriptions: Subscription[] = [];
-  lotResult: LottoResult;
+  lottoResult: LottoResult;
   errorMessage: string | null = null;
   matchCombos: MatchCombo[] = [];
   tableColumns = ["mainNums", "drawDate"];
@@ -33,30 +34,35 @@ export class MatchComboComponent implements OnInit, OnDestroy {
   totalMatchingCombos: number = 0;
   @ViewChild(MatPaginator) paginator: MatPaginator;
 
-  constructor(private deviceBreakpointService: DeviceBreakpointService, private loadingService: ProgressIndicatorService, private lottoResultService: LottoResultService, private accountService: AccountService, private combinationsService: CombinationsService) {
+  constructor(private deviceBreakpointService: DeviceBreakpointService,
+              private loadingService: ProgressIndicatorService,
+              private lottoResultService: LottoResultService,
+              private accountService: AccountService,
+              private combinationsService: CombinationsService) {
   }
 
   ngOnInit(): void {
     this.isHandset$ = this.deviceBreakpointService.handsetBreakpoint(Breakpoints.XSmall);
-    this.appUser$ = this.accountService.appUser$.pipe(take(1));
-
-    this.accountService.appUser$.pipe(take(1)).subscribe(userToken => {
-      if (userToken?.token) {
-        this.lottoResultService.latestLottoResult$.pipe(take(1)).subscribe({
-          next: lottoResult => {
-            if (lottoResult?.displayName) {
-              this.lotResult = lottoResult;
-              if (lottoResult.displayName === "powerball") this.tableColumns.splice(1, 0, "jackpot");
-              this.getMatchingCombinations(lottoResult);
+    this.appUser$ = this.accountService.appUser$;
+    this.appUser$.pipe(take(1)).subscribe({
+      next: userClaim => {
+        if (userClaim?.token) {
+          this.lottoResultService.latestLottoResult$.pipe(take(1)).subscribe({
+            next: lottoResult => {
+              if (lottoResult?.displayName) {
+                this.lottoResult = lottoResult;
+                if (lottoResult.displayName === lottoName.powerballId) this.tableColumns.splice(1, 0, "jackpot");
+                this.getMatchingCombinations(lottoResult);
+              }
             }
-          }
-        });
+          });
+        }
       }
     });
   }
 
   onPageEvent() {
-    this.getMatchingCombinations(this.lotResult);
+    this.getMatchingCombinations(this.lottoResult);
   }
 
   ngOnDestroy() {
@@ -97,12 +103,12 @@ export class MatchComboComponent implements OnInit, OnDestroy {
       let numMatches: number = 0;
 
       pickedNumbers.primaryNumbers.forEach(num => {
-        this.lotResult.primaryNumbers.includes(num) && numMatches++;
+        this.lottoResult.primaryNumbers.includes(num) && numMatches++;
       });
 
-      if (pickedNumbers.secondaryNumbers && this.lotResult.displayName === "Powerball") {
+      if (pickedNumbers.secondaryNumbers && this.lottoResult.displayName === "Powerball") {
         for (const secondaryNumber of pickedNumbers.secondaryNumbers) {
-          this.lotResult.secondaryNumbers.includes(secondaryNumber) && numMatches++;
+          this.lottoResult.secondaryNumbers.includes(secondaryNumber) && numMatches++;
         }
       }
 

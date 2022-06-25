@@ -24,20 +24,9 @@ public class LottoResultController : BaseApiController
   public async Task<ActionResult<LottoResultDto>> GetLatestLottoResult()
   {
     var result = await _dbContext.LottoResults.OrderByDescending(lottery => lottery.DrawDate)
-      .FirstOrDefaultAsync(model =>
-        !model.ProductId.Equals(LottoName.SetForLife744Id) &&
-        !model.ProductId.Equals(LottoName.Super66Id));
+      .FirstOrDefaultAsync();
+    if (result == null) return NotFound(ResponseMsg.NoLatestLottoResult);
 
-    if (result == null)
-      return NotFound(ResponseMsg.NoLatestLottoResult);
-
-    return new LottoResultDto()
-    {
-      DisplayName = result.DisplayName,
-      DrawNumber = result.DrawNumber,
-      DrawDate = result.DrawDate,
-      PrimaryNumbers = result.PrimaryNumbers,
-      SecondaryNumbers = result.SecondaryNumbers
-    };
+    return _mapper.Map<LottoResultDto>(result);
   }
 }

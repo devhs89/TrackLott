@@ -1,4 +1,4 @@
-export interface UserToken {
+export interface UserClaim {
   email: string;
   token: string;
 }

@@ -1,5 +1,5 @@
 <ng-container *ngIf="(appUser$ | async)">
-  <mat-card *ngIf="lotResult && errorMessage" class="mat-elevation-z6">
+  <mat-card *ngIf="lottoResult && errorMessage" class="mat-elevation-z6">
     <mat-card-title>No Results Found</mat-card-title>
     <mat-divider class="my-3" inset></mat-divider>
     <mat-card-content>
@@ -18,12 +18,12 @@
         <mat-card-content>
           <div class="d-inline-flex flex-wrap me-md-3">
             <app-number-svg *ngFor="let num of combo.primaryNumbers"
-                            [bgFill]="lotResult.primaryNumbers.includes(num) ? '#673ab7' : '#ffd740'"
+                            [bgFill]="lottoResult.primaryNumbers.includes(num) ? '#673ab7' : '#ffd740'"
                             [svgNum]="num"></app-number-svg>
           </div>
           <div *ngIf="combo.secondaryNumbers" class="d-inline-flex">
             <app-number-svg *ngFor="let num of combo.secondaryNumbers"
-                            [bgFill]="lotResult.secondaryNumbers.includes(num) ? '#607d8b' : '#f44336'"
+                            [bgFill]="lottoResult.secondaryNumbers.includes(num) ? '#607d8b' : '#f44336'"
                             [svgNum]="num"></app-number-svg>
           </div>
         </mat-card-content>
@@ -38,16 +38,16 @@
             <mat-cell *matCellDef="let combo">
               <div class="d-inline-flex flex-wrap">
                 <app-number-svg *ngFor="let num of combo.mainNums"
-                                [bgFill]="lotResult.primaryNumbers.includes(num) ? '#673ab7' : '#ffd740'"
+                                [bgFill]="lottoResult.primaryNumbers.includes(num) ? '#673ab7' : '#ffd740'"
                                 [svgNum]="num"></app-number-svg>
               </div>
             </mat-cell>
           </ng-container>
 
-          <ng-container *ngIf="lotResult && lotResult.displayName === 'powerball'" matColumnDef="jackpot">
+          <ng-container *ngIf="lottoResult && lottoResult.displayName === 'powerball'" matColumnDef="jackpot">
             <mat-header-cell *matHeaderCellDef>Powerball</mat-header-cell>
             <mat-cell *matCellDef="let combo">
-              <app-number-svg [bgFill]="lotResult.secondaryNumbers.includes(combo.jackpot) ? '#607d8b' : '#f44336'"
+              <app-number-svg [bgFill]="lottoResult.secondaryNumbers.includes(combo.jackpot) ? '#607d8b' : '#f44336'"
                               [svgNum]="combo.jackpot"></app-number-svg>
             </mat-cell>
           </ng-container>
@@ -72,6 +72,6 @@
   </ng-container>
 </ng-container>
 
-<div *ngIf="isLoading$ | async" class="spinner-overlay">
-  <mat-spinner color="accent" diameter="50"></mat-spinner>
-</div>
+<!--<div *ngIf="isLoading$ | async" class="spinner-overlay">-->
+<!--  <mat-spinner color="accent" diameter="50"></mat-spinner>-->
+<!--</div>-->

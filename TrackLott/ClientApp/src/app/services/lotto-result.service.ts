@@ -1,6 +1,6 @@
 import {Injectable} from '@angular/core';
 import {HttpClient} from '@angular/common/http';
-import {LottoResult} from '../models/lotto-result';
+import {LottoResult, LottoResultResponse} from '../models/lotto-result';
 import {map} from 'rxjs/operators';
 import {of, ReplaySubject} from 'rxjs';
 import {getSavedLotResult, setLocalLotResult} from "../helpers/local-storage";
@@ -17,13 +17,19 @@ export class LottoResultService {
   constructor(private httpClient: HttpClient) {
   }
 
-  private static mapRespToLottoResult(value: LottoResult): LottoResult {
+  private static mapRespToLottoResult(value: LottoResultResponse | LottoResult): LottoResult {
+    const primary = (typeof value.primaryNumbers === "string")
+      ? value.primaryNumbers.split(',').map(Number)
+      : value.primaryNumbers.map(Number);
+    const secondary = (typeof value.secondaryNumbers === "string")
+      ? value.secondaryNumbers.split(',').map(Number)
+      : value.secondaryNumbers.map(Number);
     return {
       displayName: value.displayName,
       drawNumber: value.drawNumber,
       drawDate: value.drawDate,
-      primaryNumbers: value.primaryNumbers.map(Number),
-      secondaryNumbers: value.secondaryNumbers.map(Number),
+      primaryNumbers: primary,
+      secondaryNumbers: secondary,
     };
   }
 
@@ -32,7 +38,6 @@ export class LottoResultService {
 
     if (savedLot) {
       const dateTime = splitDateTime(new Date());
-
       if (savedLot.dateSaved.dateStr === dateTime.dateStr) {
         const lotResult = LottoResultService.mapRespToLottoResult(savedLot.result);
         this.latestLottoResult.next(lotResult);
@@ -43,10 +48,9 @@ export class LottoResultService {
   }
 
   private fetchLotResults() {
-    return this.httpClient.get<LottoResult>(endRoute.latestLotto).pipe(
+    return this.httpClient.get<LottoResultResponse>(endRoute.latestLotto).pipe(
       map((value) => {
         const lotResult = LottoResultService.mapRespToLottoResult(value);
-
         setLocalLotResult(lotResult);
         this.latestLottoResult.next(lotResult);
         return lotResult;

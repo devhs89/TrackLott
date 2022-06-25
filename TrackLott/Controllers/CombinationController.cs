@@ -71,7 +71,7 @@ public class CombinationController : BaseApiController
 
     var combinationsResult = _dbContext.Combinations.Where(model =>
         model.LottoProductId != null &&
-        model.LottoProductId.Equals(lottoResult.ProductId) &&
+        model.LottoProductId.ToLower().Equals(lottoResult.ProductId.ToLower()) &&
         model.UserModelId.Equals(user.Value.Id))
       .Skip(pageIndex * pageSize)
       .Take(pageSize);
@@ -80,7 +80,7 @@ public class CombinationController : BaseApiController
     var matchingCombos = new List<MatchingCombinationDto>();
     foreach (var combination in combinationsResult)
     {
-      matchingCombos.Add(new MatchingCombinationDto()
+      matchingCombos.Add(new MatchingCombinationDto
       {
         DateAdded = combination.DateAdded,
         PickedNumbers = combination.PickedNumbers

@@ -6,7 +6,7 @@ export const endRoute = {
   accountShow: `${e.baseUrl}/account/show`,
   accountUpdate: `${e.baseUrl}/account/updateInfo`,
   updatePassword: `${e.baseUrl}/account/updatePassword`,
-  latestLotto: `${e.baseUrl}/lottoresult/latest`,
+  latestLotto: `${e.baseUrl}/lottoResult/latest`,
   comboAdd: `${e.baseUrl}/combination/add`,
   matchCombos: `${e.baseUrl}/combinations/matchCombos`
 };

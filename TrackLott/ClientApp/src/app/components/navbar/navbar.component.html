@@ -1,3 +1,7 @@
+<div *ngIf="isLoading$ | async" class="spinnerOverlay">
+  <mat-spinner color="accent" diameter="50"></mat-spinner>
+</div>
+
 <mat-sidenav-container class="sidenav-container">
   <mat-sidenav #navDrawer [attr.role]="'dialog'" mode="over" opened="false" fixedInViewport="false">
 

@@ -1,5 +1,5 @@
 <mat-card *ngIf="latestLottoResult && latestLottoResult.displayName.length > 0"
-          class="mat-elevation-z6">
+          class="row col-lg-9 mx-auto mb-2 mat-elevation-z6">
   <mat-card-title class="text-capitalize">{{latestLottoResult.displayName}}</mat-card-title>
   <mat-divider class="my-3" inset></mat-divider>
   <mat-card-content>
@@ -13,6 +13,6 @@
   </mat-card-content>
 </mat-card>
 
-<div *ngIf="isLoading$ | async" class="spinnerOverlay">
-  <mat-spinner color="accent" diameter="50"></mat-spinner>
-</div>
+<!--<div *ngIf="isLoading$ | async" class="spinnerOverlay">-->
+<!--  <mat-spinner color="accent" diameter="50"></mat-spinner>-->
+<!--</div>-->
