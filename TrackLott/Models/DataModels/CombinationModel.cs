@@ -1,3 +1,5 @@
+using System.ComponentModel.DataAnnotations.Schema;
+
 namespace TrackLott.Models.DataModels;
 
 public class CombinationModel
@@ -6,8 +8,8 @@ public class CombinationModel
   public string DateAdded { get; set; }
   public string PickedNumbers { get; set; }
   public UserModel UserModel { get; set; }
-  public Guid UserModelId { get; set; }
+  [Column("UserId")] public Guid UserModelId { get; set; }
   public LottoResultModel? LotteryResult { get; set; }
-  public string? LottoResultProductId { get; set; }
-  public int? LottoResultDrawNumber { get; set; }
+  public string? LottoProductId { get; set; }
+  public int? LottoDrawNumber { get; set; }
 }

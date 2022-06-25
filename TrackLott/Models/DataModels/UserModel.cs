@@ -10,6 +10,5 @@ public class UserModel : IdentityUser<Guid>
   [Required] public DateOnly Dob { get; set; }
   [Required] public string Country { get; set; }
   [Required] public bool TermsCheck { get; set; }
-
   public ICollection<CombinationModel> Combinations { get; set; }
 }

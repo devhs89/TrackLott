@@ -4,7 +4,7 @@ import {Observable, Subscription} from "rxjs";
 import {LottoResultService} from "../../../services/lotto-result.service";
 import {AccountService} from "../../../services/account.service";
 import {take} from "rxjs/operators";
-import {CombinationsResponse, MatchingCombo, MatchingComboResponse} from "../../../models/matching-combo";
+import {CombinationResponse, MatchCombo, MatchComboApiResponse} from "../../../models/match-combo";
 import {PickedNumbers} from "../../../models/combination";
 import {DeviceBreakpointService} from "../../../services/device-breakpoint.service";
 import {Breakpoints} from "@angular/cdk/layout";
@@ -27,9 +27,9 @@ export class MatchComboComponent implements OnInit, OnDestroy {
   subscriptions: Subscription[] = [];
   lotResult: LottoResult;
   errorMessage: string | null = null;
-  matchingCombos: MatchingCombo[] = [];
+  matchCombos: MatchCombo[] = [];
   tableColumns = ["mainNums", "drawDate"];
-  tableDataSource: MatTableDataSource<MatchingCombo>;
+  tableDataSource: MatTableDataSource<MatchCombo>;
   totalMatchingCombos: number = 0;
   @ViewChild(MatPaginator) paginator: MatPaginator;
 
@@ -69,16 +69,16 @@ export class MatchComboComponent implements OnInit, OnDestroy {
         this.paginator ? this.paginator.pageIndex : 0,
         this.paginator ? this.paginator.pageSize : 5)
         .subscribe({
-          next: (value: MatchingComboResponse[]) => {
+          next: (value: MatchComboApiResponse[]) => {
             // @ts-ignore
             this.totalMatchingCombos = value.totalMatches;
             // @ts-ignore
-            this.matchingCombos = this.parseMatchingCombos(value.combinationsList);
+            this.matchCombos = this.parseMatchingCombos(value.combinationsList);
 
             this.subscriptions.push(
               this.isHandset$.subscribe(handset => {
                 if (!handset) {
-                  this.tableDataSource = new MatTableDataSource<MatchingCombo>(this.matchingCombos!);
+                  this.tableDataSource = new MatTableDataSource<MatchCombo>(this.matchCombos!);
                 }
               })
             );
@@ -88,28 +88,28 @@ export class MatchComboComponent implements OnInit, OnDestroy {
     );
   }
 
-  private parseMatchingCombos(value: CombinationsResponse[]): MatchingCombo[] {
-    let parsedMatchingCombos: MatchingCombo[] = [];
+  private parseMatchingCombos(value: CombinationResponse[]): MatchCombo[] {
+    let parsedMatchingCombos: MatchCombo[] = [];
 
     value.forEach(result => {
       const dateStr = new Date(result.dateAdded);
       const pickedNumbers: PickedNumbers = JSON.parse(result.pickedNumbers);
       let numMatches: number = 0;
 
-      pickedNumbers.mainNums.forEach(num => {
+      pickedNumbers.primaryNumbers.forEach(num => {
         this.lotResult.primaryNumbers.includes(num) && numMatches++;
       });
 
-      if (pickedNumbers.jackpot) {
-        if (this.lotResult.displayName === "Powerball") {
-          this.lotResult.secondaryNumbers.includes(pickedNumbers.jackpot) && numMatches++;
+      if (pickedNumbers.secondaryNumbers && this.lotResult.displayName === "Powerball") {
+        for (const secondaryNumber of pickedNumbers.secondaryNumbers) {
+          this.lotResult.secondaryNumbers.includes(secondaryNumber) && numMatches++;
         }
       }
 
       parsedMatchingCombos.push({
         dateAdded: dateStr.toDateString(),
-        mainNums: pickedNumbers.mainNums,
-        jackpot: pickedNumbers.jackpot,
+        primaryNumbers: pickedNumbers.primaryNumbers,
+        secondaryNumbers: pickedNumbers.secondaryNumbers,
         matchesPerCombo: numMatches
       });
     });

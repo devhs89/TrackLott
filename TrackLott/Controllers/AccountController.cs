@@ -10,7 +10,6 @@ using TrackLott.Models.DTOs;
 
 namespace TrackLott.Controllers;
 
-[Authorize(AuthPolicyName.RequireAuthenticatedUser)]
 public class AccountController : BaseApiController
 {
   private readonly UserManager<UserModel> _userManager;

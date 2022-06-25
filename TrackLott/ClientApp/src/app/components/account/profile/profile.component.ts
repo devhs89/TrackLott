@@ -83,8 +83,8 @@ export class ProfileComponent implements OnInit {
     for (let ctrl in this.profileForm.controls) {
       if (infoToUpdateKeys.includes(ctrl)) {
         // @ts-ignore
-        const fetchedInfo = this.userProfile[ctrl].toLowerCase();
-        const formField = this.profileForm.controls[ctrl].value.toLowerCase();
+        const fetchedInfo = this.userProfile[ctrl];
+        const formField = this.profileForm.controls[ctrl].value;
 
         if (fetchedInfo !== formField) {
           // @ts-ignore

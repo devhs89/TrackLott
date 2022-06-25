@@ -1,5 +1,5 @@
 <ng-container *ngIf="(appUser$ | async)">
-  <mat-card *ngIf="lotResult && errorMessage" class="row col-xl-9 mx-auto mb-3 mat-elevation-z6">
+  <mat-card *ngIf="lotResult && errorMessage" class="mat-elevation-z6">
     <mat-card-title>No Results Found</mat-card-title>
     <mat-divider class="my-3" inset></mat-divider>
     <mat-card-content>
@@ -10,27 +10,28 @@
     </mat-card-actions>
   </mat-card>
 
-  <ng-container *ngIf="matchingCombos.length > 0">
+  <ng-container *ngIf="matchCombos.length > 0">
     <ng-container *ngIf="(isHandset$ | async); else notHandset">
       <ng-container *ngTemplateOutlet="paginator"></ng-container>
-      <mat-card *ngFor="let combo of matchingCombos" class="row col-xl-9 mx-auto mb-3 mat-elevation-z6">
+      <mat-card *ngFor="let combo of matchCombos" class="row col-xl-9 mx-auto mb-3 mat-elevation-z6">
         <mat-card-title>{{combo.dateAdded}}</mat-card-title>
         <mat-card-content>
           <div class="d-inline-flex flex-wrap me-md-3">
-            <app-number-svg *ngFor="let num of combo.mainNums"
+            <app-number-svg *ngFor="let num of combo.primaryNumbers"
                             [bgFill]="lotResult.primaryNumbers.includes(num) ? '#673ab7' : '#ffd740'"
                             [svgNum]="num"></app-number-svg>
           </div>
-          <div *ngIf="combo.jackpot" class="d-inline-flex">
-            <app-number-svg [bgFill]="lotResult.secondaryNumbers.includes(combo.jackpot) ? '#607d8b' : '#f44336'"
-                            [svgNum]="combo.jackpot"></app-number-svg>
+          <div *ngIf="combo.secondaryNumbers" class="d-inline-flex">
+            <app-number-svg *ngFor="let num of combo.secondaryNumbers"
+                            [bgFill]="lotResult.secondaryNumbers.includes(num) ? '#607d8b' : '#f44336'"
+                            [svgNum]="num"></app-number-svg>
           </div>
         </mat-card-content>
       </mat-card>
     </ng-container>
 
     <ng-template #notHandset>
-      <div class="row col-xl-9 mx-auto mb-3 mat-elevation-z6">
+      <div class="mat-elevation-z6">
         <mat-table #table [dataSource]="tableDataSource" class="w-100">
           <ng-container matColumnDef="mainNums">
             <mat-header-cell *matHeaderCellDef>Main Numbers</mat-header-cell>

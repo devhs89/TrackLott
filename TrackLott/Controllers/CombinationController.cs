@@ -1,5 +1,3 @@
-using System.Text.Json;
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using TrackLott.Constants;
@@ -10,70 +8,55 @@ using TrackLott.Models.DTOs;
 
 namespace TrackLott.Controllers;
 
-[Authorize(AuthPolicyName.RequireAuthenticatedUser)]
 public class CombinationController : BaseApiController
 {
   private readonly TrackLottDbContext _dbContext;
   private readonly IUserClaimsService _userClaimsService;
+  private readonly ILogger<CombinationController> _logger;
 
-  public CombinationController(TrackLottDbContext dbContext, IUserClaimsService userClaimsService)
+  public CombinationController(TrackLottDbContext dbContext, IUserClaimsService userClaimsService,
+    ILogger<CombinationController> logger)
   {
     _dbContext = dbContext;
     _userClaimsService = userClaimsService;
+    _logger = logger;
   }
 
   [HttpPost(EndRoute.Add)]
-  public async Task<ActionResult<string>> AddCombo(CombinationDto[] combinationDto)
+  public async Task<ActionResult<string>> AddCombo(CombinationDto[] combinations)
   {
-    var appUser = await GetUser();
-    if (appUser == null)
-      return BadRequest(ResponseMsg.UserNotExist);
+    var user = await GetUser();
+    if (user.Value == null) return Unauthorized(ResponseMsg.UserNotExist);
 
-    var missingLottoNames = 0;
-    var saveResp = "Combination Saved";
     var allCombinations = new List<CombinationModel>();
-
-    foreach (var combo in combinationDto)
+    foreach (var combo in combinations)
     {
       var combination = new CombinationModel()
       {
-        UserModelId = appUser.Id,
+        UserModelId = user.Value.Id,
         DateAdded = combo.DateAdded,
-        PickedNumbers = JsonSerializer.Serialize(combo.PickedNumbers,
-          new JsonSerializerOptions() { PropertyNamingPolicy = JsonNamingPolicy.CamelCase }),
+        PickedNumbers = combo.PickedNumbers
       };
 
-      if (combo.LottoName != null)
-      {
-        var lottoName = combo.LottoName.ToLower();
+      LottoResultModel? lottoResult = null;
+      if (combo.LottoName != null) lottoResult = await GetFirstMatchingLotto(combo.LottoName);
 
-        if (lottoName.Equals("MonWedLotto") || lottoName.Equals("OzLotto") || lottoName.Equals("Powerball") ||
-            lottoName.Equals("TattsLotto") || lottoName.Equals("SetForLife744") || lottoName.Equals("Super66"))
-        {
-          var lottoResult = CheckLottery(lottoName).Result;
-          combination.LottoResultProductId = lottoResult?.ProductId;
-        }
-        else
-        {
-          missingLottoNames++;
-        }
-      }
-      else
+      _logger.LogCritical(combo.LottoName);
+      _logger.LogCritical(lottoResult?.DisplayName);
+
+      if (lottoResult != null)
       {
-        missingLottoNames++;
+        combination.LottoProductId = lottoResult.ProductId;
+        combination.LottoDrawNumber = lottoResult.DrawNumber;
       }
 
       allCombinations.Add(combination);
     }
 
-
-    if (missingLottoNames > 0) saveResp = missingLottoNames + " combinations saved without lottery name";
-
     await _dbContext.Combinations.AddRangeAsync(allCombinations);
     allCombinations.Clear();
-
     await _dbContext.SaveChangesAsync();
-    return saveResp;
+    return ResponseMsg.ComboSaved;
   }
 
   [HttpPost(EndRoute.MatchCombos)]
@@ -81,26 +64,20 @@ public class CombinationController : BaseApiController
     int pageSize)
   {
     var user = await GetUser();
-    if (user == null)
-      return BadRequest(ResponseMsg.UserNotExist);
+    if (user.Value == null) return Unauthorized(ResponseMsg.UserNotExist);
 
-    var lotteryResult = await CheckLottery(lottoName);
-    if (lotteryResult == null)
-      return BadRequest(ResponseMsg.NoLatestLottoResult);
+    var lottoResult = await GetFirstMatchingLotto(lottoName);
+    if (lottoResult == null) return NotFound(ResponseMsg.NoLatestLottoResult);
 
-    var combinationsCount =
-      await _dbContext.Combinations.CountAsync(combo =>
-        combo.LottoResultProductId == lotteryResult.ProductId && combo.UserModelId == user.Id);
-
-    if (combinationsCount < 1)
-      return BadRequest(ResponseMsg.NoMatchingCombinations);
-
-    var combinationsResult = _dbContext.Combinations
-      .Where(combo => combo.LottoResultProductId == lotteryResult.ProductId && combo.UserModelId == user.Id)
-      .OrderByDescending(combo => combo.DateAdded).Skip(pageIndex * pageSize).Take(pageSize);
+    var combinationsResult = _dbContext.Combinations.Where(model =>
+        model.LottoProductId != null &&
+        model.LottoProductId.Equals(lottoResult.ProductId) &&
+        model.UserModelId.Equals(user.Value.Id))
+      .Skip(pageIndex * pageSize)
+      .Take(pageSize);
+    if (!combinationsResult.Any()) return NotFound(ResponseMsg.NoMatchingCombinations);
 
     var matchingCombos = new List<MatchingCombinationDto>();
-
     foreach (var combination in combinationsResult)
     {
       matchingCombos.Add(new MatchingCombinationDto()
@@ -110,22 +87,19 @@ public class CombinationController : BaseApiController
       });
     }
 
-    return new MatchComboResponseDto() { CombinationsList = matchingCombos, totalMatches = combinationsCount };
+    return new MatchComboResponseDto { CombinationsList = matchingCombos, totalMatches = matchingCombos.Count };
   }
 
-  private async Task<UserModel?> GetUser()
+  private async Task<ActionResult<UserModel?>> GetUser()
   {
-    var userName = _userClaimsService.GetNormalisedEmail();
-    ;
-
-    var user =
-      await _dbContext.Users.SingleOrDefaultAsync(model => userName != null && model.UserName.Equals(userName));
-
-    return user;
+    var userEmail = _userClaimsService.GetNormalisedEmail();
+    if (userEmail == null) return Unauthorized(ResponseMsg.InvalidToken);
+    return await _dbContext.Users.SingleOrDefaultAsync(model => model.NormalizedEmail.Equals(userEmail));
   }
 
-  private async Task<LottoResultModel?> CheckLottery(string lottoName)
+  private async Task<LottoResultModel?> GetFirstMatchingLotto(string lottoName)
   {
-    return await _dbContext.LottoResults.FirstOrDefaultAsync(result => result.ProductId.Equals(lottoName.ToLower()));
+    return await _dbContext.LottoResults.FirstOrDefaultAsync(result =>
+      result.ProductId.ToLower().Equals(lottoName.ToLower()));
   }
 }

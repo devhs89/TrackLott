@@ -22,4 +22,6 @@ public static class ResponseMsg
   public const string NoMatchingCombinations = "No matching combinations found.";
   public const string InvalidToken = "Invalid user token. Please contact administrator.";
   public const string PasswordUpdated = "Password updated successfully";
+  public const string ComboSaved = "Combination Saved.";
+  public const string ComboSavedWithNoName = "Combinations saved without lottery name.";
 }

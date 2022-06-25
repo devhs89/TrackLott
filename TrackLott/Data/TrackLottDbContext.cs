@@ -21,6 +21,6 @@ public class TrackLottDbContext : IdentityDbContext<UserModel, AppRoleModel, Gui
 
     builder.Entity<LottoResultModel>().HasMany(lr => lr.Combinations)
       .WithOne(c => c.LotteryResult)
-      .HasForeignKey(c => new { c.LottoResultProductId, c.LottoResultDrawNumber });
+      .HasForeignKey(c => new { LottoResultProductId = c.LottoProductId, LottoResultDrawNumber = c.LottoDrawNumber });
   }
 }

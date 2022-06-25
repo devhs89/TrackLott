@@ -22,7 +22,6 @@ export class RegisterComponent {
   }
 
   onRegisterSubmit(ngFormObj: NgForm) {
-    console.log(ngFormObj);
     if (ngFormObj.invalid) return;
     let userDetails: UserRegister = {...ngFormObj.value};
 
