@@ -8,5 +8,5 @@ export const endRoute = {
   updatePassword: `${e.baseUrl}/account/updatePassword`,
   latestLotto: `${e.baseUrl}/lottoResult/latest`,
   comboAdd: `${e.baseUrl}/combination/add`,
-  matchCombos: `${e.baseUrl}/combinations/matchCombos`
+  matchCombos: `${e.baseUrl}/combination/matchCombos`
 };

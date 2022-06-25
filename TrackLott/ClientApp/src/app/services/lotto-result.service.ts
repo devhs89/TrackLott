@@ -25,6 +25,7 @@ export class LottoResultService {
       ? value.secondaryNumbers.split(',').map(Number)
       : value.secondaryNumbers.map(Number);
     return {
+      productId: value.productId,
       displayName: value.displayName,
       drawNumber: value.drawNumber,
       drawDate: value.drawDate,

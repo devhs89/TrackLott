@@ -4,7 +4,7 @@ import {Observable, Subscription} from "rxjs";
 import {LottoResultService} from "../../../services/lotto-result.service";
 import {AccountService} from "../../../services/account.service";
 import {take} from "rxjs/operators";
-import {CombinationResponse, MatchCombo, MatchComboApiResponse} from "../../../models/match-combo";
+import {MatchComboResponse, MatchedCombo, TableComboModel} from "../../../models/matched-combo";
 import {PickedNumbers} from "../../../models/combination";
 import {DeviceBreakpointService} from "../../../services/device-breakpoint.service";
 import {Breakpoints} from "@angular/cdk/layout";
@@ -13,8 +13,10 @@ import {MatTableDataSource} from "@angular/material/table";
 import {LottoResult} from "../../../models/lotto-result";
 import {UserClaim} from "../../../models/user-claim";
 import {ProgressIndicatorService} from "../../../services/progress-indicator.service";
-import {parseError} from "../../../helpers/parse-error";
 import {lottoName} from "../../../constants/lotto-select-option";
+import {SnackBarService} from "../../../services/snack-bar.service";
+import {appRouteConst} from "../../../constants/app-route-const";
+import {genericConst} from "../../../constants/generic-const";
 
 @Component({
   selector: 'app-match-combo',
@@ -23,22 +25,25 @@ import {lottoName} from "../../../constants/lotto-select-option";
 })
 export class MatchComboComponent implements OnInit, OnDestroy {
   isHandset$: Observable<boolean>;
+  lottoName = lottoName;
+  genericConst = genericConst;
   isLoading$ = this.loadingService.isLoading$;
   appUser$: Observable<UserClaim | null>;
   subscriptions: Subscription[] = [];
+  pathRoute = appRouteConst;
   lottoResult: LottoResult;
-  errorMessage: string | null = null;
-  matchCombos: MatchCombo[] = [];
-  tableColumns = ["mainNums", "drawDate"];
-  tableDataSource: MatTableDataSource<MatchCombo>;
-  totalMatchingCombos: number = 0;
+  matchedCombosList: TableComboModel[] = [];
+  tableColumns = [genericConst.tablePrimaryNumsCol, genericConst.tableDrawDateCol];
+  tableDataSource: MatTableDataSource<TableComboModel>;
+  MatchedCombosTotal: number = 0;
   @ViewChild(MatPaginator) paginator: MatPaginator;
 
   constructor(private deviceBreakpointService: DeviceBreakpointService,
               private loadingService: ProgressIndicatorService,
               private lottoResultService: LottoResultService,
               private accountService: AccountService,
-              private combinationsService: CombinationsService) {
+              private combinationsService: CombinationsService,
+              private snackBarService: SnackBarService) {
   }
 
   ngOnInit(): void {
@@ -49,9 +54,9 @@ export class MatchComboComponent implements OnInit, OnDestroy {
         if (userClaim?.token) {
           this.lottoResultService.latestLottoResult$.pipe(take(1)).subscribe({
             next: lottoResult => {
-              if (lottoResult?.displayName) {
+              if (lottoResult?.productId) {
                 this.lottoResult = lottoResult;
-                if (lottoResult.displayName === lottoName.powerballId) this.tableColumns.splice(1, 0, "jackpot");
+                if (lottoResult.productId.toLowerCase() === lottoName.powerballId) this.tableColumns.splice(1, 0, genericConst.tablePowerballCol);
                 this.getMatchingCombinations(lottoResult);
               }
             }
@@ -70,33 +75,29 @@ export class MatchComboComponent implements OnInit, OnDestroy {
   }
 
   private getMatchingCombinations(lottoResult: LottoResult) {
-    this.subscriptions.push(
-      this.combinationsService.matchCombinations(lottoResult.displayName,
-        this.paginator ? this.paginator.pageIndex : 0,
-        this.paginator ? this.paginator.pageSize : 5)
-        .subscribe({
-          next: (value: MatchComboApiResponse[]) => {
-            // @ts-ignore
-            this.totalMatchingCombos = value.totalMatches;
-            // @ts-ignore
-            this.matchCombos = this.parseMatchingCombos(value.combinationsList);
-
-            this.subscriptions.push(
-              this.isHandset$.subscribe(handset => {
-                if (!handset) {
-                  this.tableDataSource = new MatTableDataSource<MatchCombo>(this.matchCombos!);
-                }
-              })
-            );
-          },
-          error: err => this.errorMessage = parseError(err.error)
-        })
-    );
+    this.combinationsService.matchCombinations(lottoResult.productId,
+      this.paginator ? this.paginator.pageIndex : 0,
+      this.paginator ? this.paginator.pageSize : 5)
+      .subscribe({
+        next: (value: MatchComboResponse) => {
+          // @ts-ignore
+          this.MatchedCombosTotal = value.totalMatches;
+          // @ts-ignore
+          this.matchedCombosList = this.parseMatchedCombos(value.combinationsList);
+          this.subscriptions.push(
+            this.isHandset$.subscribe(handset => {
+              if (!handset) {
+                this.tableDataSource = new MatTableDataSource<TableComboModel>(this.matchedCombosList);
+              }
+            })
+          );
+        },
+        error: err => this.snackBarService.showSnackBar(err.error)
+      });
   }
 
-  private parseMatchingCombos(value: CombinationResponse[]): MatchCombo[] {
-    let parsedMatchingCombos: MatchCombo[] = [];
-
+  private parseMatchedCombos(value: MatchedCombo[]): TableComboModel[] {
+    let tableCombosList: TableComboModel[] = [];
     value.forEach(result => {
       const dateStr = new Date(result.dateAdded);
       const pickedNumbers: PickedNumbers = JSON.parse(result.pickedNumbers);
@@ -106,20 +107,20 @@ export class MatchComboComponent implements OnInit, OnDestroy {
         this.lottoResult.primaryNumbers.includes(num) && numMatches++;
       });
 
-      if (pickedNumbers.secondaryNumbers && this.lottoResult.displayName === "Powerball") {
-        for (const secondaryNumber of pickedNumbers.secondaryNumbers) {
-          this.lottoResult.secondaryNumbers.includes(secondaryNumber) && numMatches++;
+      if (pickedNumbers.secondaryNumbers && this.lottoResult.productId === lottoName.powerballId) {
+        for (const num of pickedNumbers.secondaryNumbers) {
+          this.lottoResult.secondaryNumbers.includes(num) && numMatches++;
         }
       }
 
-      parsedMatchingCombos.push({
+      tableCombosList.push({
         dateAdded: dateStr.toDateString(),
         primaryNumbers: pickedNumbers.primaryNumbers,
         secondaryNumbers: pickedNumbers.secondaryNumbers,
         matchesPerCombo: numMatches
       });
     });
-    parsedMatchingCombos.sort((a, b) => b.matchesPerCombo - a.matchesPerCombo);
-    return parsedMatchingCombos;
+    tableCombosList.sort((a, b) => b.matchesPerCombo - a.matchesPerCombo);
+    return tableCombosList;
   }
 }

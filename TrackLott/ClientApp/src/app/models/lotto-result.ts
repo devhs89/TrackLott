@@ -10,6 +10,7 @@ export interface LottoResultResponse {
 }
 
 export interface LottoResult {
+  productId: string;
   displayName: string;
   drawNumber: number;
   drawDate: string;

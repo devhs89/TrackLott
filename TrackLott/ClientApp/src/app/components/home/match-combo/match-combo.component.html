@@ -1,27 +1,27 @@
 <ng-container *ngIf="(appUser$ | async)">
-  <mat-card *ngIf="lottoResult && errorMessage" class="mat-elevation-z6">
-    <mat-card-title>No Results Found</mat-card-title>
+  <mat-card *ngIf="matchedCombosList.length < 1 && lottoResult" class="row col-lg-9 mx-auto mat-elevation-z6">
+    <mat-card-title>No Matching Combinations Found</mat-card-title>
     <mat-divider class="my-3" inset></mat-divider>
     <mat-card-content>
-      <span>{{errorMessage}}.</span>
+      <span>No Combinations match this lotto draw. To add more combinations, please click on the button below.</span>
     </mat-card-content>
     <mat-card-actions align="end">
-      <button color="primary" mat-flat-button routerLink="/add" type="button">Add Combinations</button>
+      <button color="primary" mat-flat-button [routerLink]="pathRoute.addAbs" type="button">Add Combinations</button>
     </mat-card-actions>
   </mat-card>
 
-  <ng-container *ngIf="matchCombos.length > 0">
+  <ng-container *ngIf="matchedCombosList.length > 0">
     <ng-container *ngIf="(isHandset$ | async); else notHandset">
       <ng-container *ngTemplateOutlet="paginator"></ng-container>
-      <mat-card *ngFor="let combo of matchCombos" class="row col-xl-9 mx-auto mb-3 mat-elevation-z6">
+      <mat-card *ngFor="let combo of matchedCombosList" class="mb-2 mat-elevation-z6">
         <mat-card-title>{{combo.dateAdded}}</mat-card-title>
         <mat-card-content>
-          <div class="d-inline-flex flex-wrap me-md-3">
+          <div class="d-inline-flex flex-wrap">
             <app-number-svg *ngFor="let num of combo.primaryNumbers"
                             [bgFill]="lottoResult.primaryNumbers.includes(num) ? '#673ab7' : '#ffd740'"
                             [svgNum]="num"></app-number-svg>
           </div>
-          <div *ngIf="combo.secondaryNumbers" class="d-inline-flex">
+          <div *ngIf="combo.secondaryNumbers && combo.secondaryNumbers.length > 0" class="d-inline-flex">
             <app-number-svg *ngFor="let num of combo.secondaryNumbers"
                             [bgFill]="lottoResult.secondaryNumbers.includes(num) ? '#607d8b' : '#f44336'"
                             [svgNum]="num"></app-number-svg>
@@ -31,28 +31,30 @@
     </ng-container>
 
     <ng-template #notHandset>
-      <div class="mat-elevation-z6">
+      <div class="row col-lg-9 mx-auto mat-elevation-z6">
         <mat-table #table [dataSource]="tableDataSource" class="w-100">
-          <ng-container matColumnDef="mainNums">
+          <ng-container [matColumnDef]="genericConst.tablePrimaryNumsCol">
             <mat-header-cell *matHeaderCellDef>Main Numbers</mat-header-cell>
             <mat-cell *matCellDef="let combo">
               <div class="d-inline-flex flex-wrap">
-                <app-number-svg *ngFor="let num of combo.mainNums"
+                <app-number-svg *ngFor="let num of combo.primaryNumbers"
                                 [bgFill]="lottoResult.primaryNumbers.includes(num) ? '#673ab7' : '#ffd740'"
                                 [svgNum]="num"></app-number-svg>
               </div>
             </mat-cell>
           </ng-container>
 
-          <ng-container *ngIf="lottoResult && lottoResult.displayName === 'powerball'" matColumnDef="jackpot">
+          <ng-container *ngIf="lottoResult && lottoResult.productId.toLowerCase() === lottoName.powerballId"
+                        [matColumnDef]="genericConst.tablePowerballCol">
             <mat-header-cell *matHeaderCellDef>Powerball</mat-header-cell>
             <mat-cell *matCellDef="let combo">
-              <app-number-svg [bgFill]="lottoResult.secondaryNumbers.includes(combo.jackpot) ? '#607d8b' : '#f44336'"
-                              [svgNum]="combo.jackpot"></app-number-svg>
+              <app-number-svg *ngFor="let num of combo.secondaryNumbers"
+                              [bgFill]="lottoResult.secondaryNumbers.includes(num) ? '#607d8b' : '#f44336'"
+                              [svgNum]="num"></app-number-svg>
             </mat-cell>
           </ng-container>
 
-          <ng-container matColumnDef="drawDate">
+          <ng-container [matColumnDef]="genericConst.tableDrawDateCol">
             <mat-header-cell *matHeaderCellDef>Draw Date</mat-header-cell>
             <mat-cell *matCellDef="let combo">{{combo.dateAdded}}</mat-cell>
           </ng-container>
@@ -66,7 +68,7 @@
     </ng-template>
 
     <ng-template #paginator>
-      <mat-paginator (page)="onPageEvent()" [length]="totalMatchingCombos" [pageSizeOptions]="[5, 10]"
+      <mat-paginator (page)="onPageEvent()" [length]="MatchedCombosTotal" [pageSizeOptions]="[5, 10, 20]"
                      [pageSize]="5" aria-label="Matching Combinations"></mat-paginator>
     </ng-template>
   </ng-container>

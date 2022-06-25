@@ -1,17 +1,17 @@
-.mat-column-mainNums {
+.mat-column-primaryNumbersColumn {
   flex: 5;
 }
 
-.mat-column-jackpot, .mat-column-drawDate {
+.mat-column-powerballColumn, .mat-column-drawDateColumn {
   flex: 1;
 }
 
-mat-cell.mat-column-mainNums, mat-cell.mat-column-jackpot, mat-cell.mat-column-drawDate {
+mat-cell.mat-column-primaryNumbersColumn, mat-cell.mat-column-powerballColumn, mat-cell.mat-column-drawDateColumn {
   align-self: start;
   padding-top: 0.2rem;
   padding-bottom: 0.2rem;
 }
 
-mat-cell.mat-column-drawDate {
+mat-cell.mat-column-drawDateColumn {
   padding-top: 0.5rem;
 }

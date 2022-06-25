@@ -5,7 +5,7 @@ import {AccountService} from "../../../services/account.service";
 import {UserLogin} from "../../../models/user-login";
 import {Router} from "@angular/router";
 import {SnackBarService} from "../../../services/snack-bar.service";
-import {pathConst} from "../../../constants/path-const";
+import {appRouteConst} from "../../../constants/app-route-const";
 
 @Component({
   selector: 'app-login',
@@ -32,7 +32,7 @@ export class LoginComponent implements OnInit {
       let userCredentials: UserLogin = {...this.loginForm.value};
       this.accountService.onLogin(userCredentials).subscribe({
         next: () => {
-          const ignore = this.router.navigate([pathConst.homeAbs]);
+          const ignore = this.router.navigate([appRouteConst.homeAbs]);
         },
         error: err => this.snackBarService.showSnackBar(err.error)
       });

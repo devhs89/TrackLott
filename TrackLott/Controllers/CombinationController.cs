@@ -60,34 +60,33 @@ public class CombinationController : BaseApiController
   }
 
   [HttpPost(EndRoute.MatchCombos)]
-  public async Task<ActionResult<MatchComboResponseDto>> GetMatchingCombos(string lottoName, int pageIndex,
+  public async Task<ActionResult<MatchComboResponseDto>> GetMatchingCombos(string productId, int pageIndex,
     int pageSize)
   {
     var user = await GetUser();
     if (user.Value == null) return Unauthorized(ResponseMsg.UserNotExist);
 
-    var lottoResult = await GetFirstMatchingLotto(lottoName);
+    var lottoResult = await GetFirstMatchingLotto(productId);
     if (lottoResult == null) return NotFound(ResponseMsg.NoLatestLottoResult);
 
-    var combinationsResult = _dbContext.Combinations.Where(model =>
+    var totalResults = await _dbContext.Combinations.Where(model =>
+      model.LottoProductId != null &&
+      model.LottoProductId.ToLower().Equals(lottoResult.ProductId.ToLower()) &&
+      model.UserModelId.Equals(user.Value.Id)).CountAsync();
+
+    var combinationsResult = await _dbContext.Combinations.Where(model =>
         model.LottoProductId != null &&
         model.LottoProductId.ToLower().Equals(lottoResult.ProductId.ToLower()) &&
         model.UserModelId.Equals(user.Value.Id))
       .Skip(pageIndex * pageSize)
-      .Take(pageSize);
+      .Take(pageSize)
+      .ToListAsync();
     if (!combinationsResult.Any()) return NotFound(ResponseMsg.NoMatchingCombinations);
 
-    var matchingCombos = new List<MatchingCombinationDto>();
-    foreach (var combination in combinationsResult)
-    {
-      matchingCombos.Add(new MatchingCombinationDto
-      {
-        DateAdded = combination.DateAdded,
-        PickedNumbers = combination.PickedNumbers
-      });
-    }
-
-    return new MatchComboResponseDto { CombinationsList = matchingCombos, totalMatches = matchingCombos.Count };
+    var matchingCombos = combinationsResult.Select(combination =>
+        new MatchingCombinationDto { DateAdded = combination.DateAdded, PickedNumbers = combination.PickedNumbers })
+      .ToList();
+    return new MatchComboResponseDto { CombinationsList = matchingCombos, totalMatches = totalResults };
   }
 
   private async Task<ActionResult<UserModel?>> GetUser()
