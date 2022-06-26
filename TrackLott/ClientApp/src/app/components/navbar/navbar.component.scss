@@ -16,8 +16,13 @@ mat-sidenav {
   z-index: 1999;
 }
 
-a {
-  text-transform: uppercase;
+.main-mat-toolbar a:not(.projectBrand) {
+  font-size: 1rem;
+}
+
+.projectBrand {
+  font-size: 1.5rem;
+  text-transform: capitalize !important;
 }
 
 .selectedLink {

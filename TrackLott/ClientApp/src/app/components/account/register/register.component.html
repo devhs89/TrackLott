@@ -80,7 +80,7 @@
       <div class="row mb-4">
         <div class="col-12">
           <mat-checkbox #termsCheck color="primary" name="termsCheck" ngModel required="true" pattern="true|false">
-            Agree to <a [routerLink]="appRoute.termsAbs" class="text-decoration-none primaryLink">
+            Agree to <a [routerLink]="appRoute.termsAbs" class="text-decoration-none">
             terms and conditions</a>
           </mat-checkbox>
           <mat-error *ngIf="(ngFormObj.submitted && !termsCheck.checked)" [style]="{fontSize: 'x-small'}">
