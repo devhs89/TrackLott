@@ -4,5 +4,6 @@ export const notificationMessage = {
   passwordMismatch: "Password and Repeat Password fields must match.",
   registerSuccess: "Registration Successful.",
   invalidConfirmationLink: "Invalid confirmation link. Please contact site administrator.",
-  profileUpdateSuccess: "Profile updated Successfully"
+  profileUpdateSuccess: "Profile updated successfully.",
+  loginFirst: "Please login to access this page."
 };
