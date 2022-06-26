@@ -135,10 +135,20 @@ mat-spinner {
 
 .gameNumSecondary {
   color: var(--bs-dark) !important;
-  background-color: var(--bs-gray-300) !important;
+  background-color: var(--bs-secondary) !important;
 }
 
 .gameNumSecondaryOutline {
+  color: var(--bs-dark) !important;
+  border: 0.06rem solid var(--bs-secondary) !important;
+}
+
+.gameNumGrey {
+  color: var(--bs-dark) !important;
+  background-color: var(--bs-gray-300) !important;
+}
+
+.gameNumGreyOutline {
   color: var(--bs-gray-500) !important;
   border: 0.06rem solid var(--bs-gray-500) !important;
 }
@@ -148,7 +158,7 @@ mat-spinner {
   background-color: var(--bs-primary) !important;
 }
 
-.gameNumMatchSecondary {
+.gameNumMatchGrey {
   color: var(--bs-dark) !important;
   background-color: var(--bs-gray-300) !important;
 }

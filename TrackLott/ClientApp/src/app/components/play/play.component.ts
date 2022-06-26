@@ -1,5 +1,6 @@
 import {Component} from '@angular/core';
 import {MatSnackBar} from "@angular/material/snack-bar";
+import {genericConst} from "../../constants/generic-const";
 
 @Component({
   selector: 'app-play',
@@ -21,6 +22,7 @@ export class PlayComponent {
   allPickedNumbers: number[] = [];
   resultNums: number[] = [];
   isDeltaGameValid: boolean = false;
+  gc = genericConst;
 
   constructor(private matSnackBar: MatSnackBar) {
   }
@@ -109,5 +111,6 @@ export class PlayComponent {
     this.rowFourNums = [];
     this.numTotal = 0;
     this.isDeltaGameValid = false;
+    window.scroll({top: 0, left: 0, behavior: "smooth"});
   }
 }

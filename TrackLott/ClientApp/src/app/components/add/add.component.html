@@ -46,7 +46,7 @@
                 </div>
                 <!--Print current selected secondary numbers sequence-->
                 <ng-container *ngIf="currPickedNums.secondaryNumbers && currPickedNums.secondaryNumbers.length > 0">
-                  <div *ngFor="let num of currPickedNums.secondaryNumbers" class="gameNum gameNumSecondary">
+                  <div *ngFor="let num of currPickedNums.secondaryNumbers" class="gameNum gameNumGrey">
                     <span>{{num}}</span>
                   </div>
                 </ng-container>
@@ -121,7 +121,7 @@
           <span>{{num}}</span>
         </div>
         <ng-container *ngIf="row.pickedNumbers.secondaryNumbers && row.pickedNumbers.secondaryNumbers.length > 0">
-          <div *ngFor="let num of row.pickedNumbers.secondaryNumbers" class="gameNum gameNumSecondary">
+          <div *ngFor="let num of row.pickedNumbers.secondaryNumbers" class="gameNum gameNumGrey">
             <span>{{num}}</span>
           </div>
         </ng-container>
