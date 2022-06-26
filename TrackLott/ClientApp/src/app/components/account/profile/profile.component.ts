@@ -8,6 +8,7 @@ import {ProgressIndicatorService} from "../../../services/progress-indicator.ser
 import {SnackBarService} from "../../../services/snack-bar.service";
 import {notificationMessage} from "../../../constants/notification-message";
 import {UpdateField} from "../../../models/update-field";
+import {genericConst} from "../../../constants/generic-const";
 
 @Component({
   selector: 'app-account',
@@ -30,6 +31,7 @@ export class ProfileComponent implements OnInit {
   private repeatPassword: FormControl;
   private userProfile: UserProfile;
   private userPwd: UserPassword = {currentPassword: "", newPassword: "", repeatPassword: ""};
+  gc = genericConst;
 
   constructor(private loadingService: ProgressIndicatorService, private formBuilder: FormBuilder, private accountService: AccountService, private snackBarService: SnackBarService) {
   }

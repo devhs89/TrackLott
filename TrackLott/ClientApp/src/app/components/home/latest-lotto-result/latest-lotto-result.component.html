@@ -1,12 +1,12 @@
 <mat-card *ngIf="latestLottoResult && latestLottoResult.displayName.length > 0"
-          class="row col-lg-9 mx-auto mb-2 mat-elevation-z6">
+          [class]="gc.cardClasses">
   <mat-card-title class="text-capitalize">{{latestLottoResult.displayName}}</mat-card-title>
   <mat-divider class="my-3" inset></mat-divider>
   <mat-card-content>
-    <div *ngFor="let num of latestLottoResult.primaryNumbers" class="gameNumber gameNumberPrimary">
+    <div *ngFor="let num of latestLottoResult.primaryNumbers" class="gameNum gameNumPrimary">
       <span>{{num}}</span>
     </div>
-    <div *ngFor="let num of latestLottoResult.secondaryNumbers" class="gameNumber gameNumberHollow">
+    <div *ngFor="let num of latestLottoResult.secondaryNumbers" class="gameNum gameNumSecondary">
       <span>{{num}}</span>
     </div>
   </mat-card-content>

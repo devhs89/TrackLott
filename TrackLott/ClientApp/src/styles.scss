@@ -15,7 +15,7 @@
 // (imported above). For each palette, you can optionally specify a default, lighter, and darker
 // hue. Available color palettes: https://material.io/design/color/
 $TrackLott-primary: mat.define-palette(mat.$teal-palette);
-$TrackLott-accent: mat.define-palette(mat.$orange-palette, A200, A100, A400);
+$TrackLott-accent: mat.define-palette(mat.$amber-palette, A200, A100, A400);
 
 // Create the theme object. A theme consists of configurations for individual
 // theming systems such as "color" or "typography".
@@ -45,6 +45,7 @@ $TrackLott-theme: mat.define-dark-theme((
 @include mat.select-theme($TrackLott-theme);
 @include mat.sidenav-theme($TrackLott-theme);
 @include mat.toolbar-theme($TrackLott-theme);
+@include mat.tooltip-theme($TrackLott-theme);
 @include mat.snack-bar-theme($TrackLott-theme);
 
 //Override Bootstrap theme colors in accordance with Angular Material theme
@@ -101,7 +102,7 @@ mat-spinner {
 }
 
 //Lotto number styles
-.gameNumber {
+.gameNum {
   width: 2.8rem !important;
   height: 2.8rem !important;
   display: inline-block !important;
@@ -114,22 +115,46 @@ mat-spinner {
   border-radius: 1.5rem !important;
   text-align: center !important;
   font-weight: 600 !important;
-  margin-top: 0.5rem !important;
-  margin-right: 0.5rem !important;
+  margin: 0.2rem !important;
   position: relative !important;
-  padding: 0.55rem !important;
+  padding: 0.7rem 0.55rem !important;
   border: 0 !important;
-  font: 1.5rem "Anonymous Pro", monospace !important;
+  font: 1.4rem "Anonymous Pro", monospace !important;
+  overflow: hidden !important;
 }
 
-.gameNumberPrimary {
+.gameNumPrimary {
   color: var(--bs-light) !important;
   background-color: var(--bs-primary) !important;
 }
 
-.gameNumberHollow {
+.gameNumPrimaryOutline {
+  color: var(--bs-light) !important;
+  border: 0.06rem solid var(--bs-primary) !important;
+}
+
+.gameNumSecondary {
   color: var(--bs-dark) !important;
   background-color: var(--bs-gray-300) !important;
+}
+
+.gameNumSecondaryOutline {
+  color: var(--bs-gray-500) !important;
+  border: 0.06rem solid var(--bs-gray-500) !important;
+}
+
+.gameNumMatchPrimary {
+  color: var(--bs-light) !important;
+  background-color: var(--bs-primary) !important;
+}
+
+.gameNumMatchSecondary {
+  color: var(--bs-dark) !important;
+  background-color: var(--bs-gray-300) !important;
+}
+
+.gameNumNotMatch {
+  background-color: transparent !important;
 }
 
 //Custom styles in bootstrap format
