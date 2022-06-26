@@ -1,46 +1,48 @@
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
-using System.Text;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.IdentityModel.Tokens;
-using TrackLott.Models;
+using TrackLott.Constants;
+using TrackLott.Interfaces;
+using TrackLott.Models.DataModels;
+using TrackLott.Security;
 
 namespace TrackLott.Services;
 
-public class TokenService
+public class TokenService : ITokenService
 {
-  private readonly UserManager<AppUser> _userManager;
-  private readonly SymmetricSecurityKey _key;
+  private readonly UserManager<UserModel> _userManager;
+  private readonly IWebHostEnvironment _env;
 
-  public TokenService(IConfiguration config, UserManager<AppUser> userManager)
+  public TokenService(UserManager<UserModel> userManager, IWebHostEnvironment env)
   {
     _userManager = userManager;
-    _key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(config["TOKEN_KEY"]));
+    _env = env;
   }
 
-  public async Task<string> CreateToken(AppUser user)
+  public async Task<string> CreateToken(UserModel userModel)
   {
     var claims = new List<Claim>()
     {
-      new(JwtRegisteredClaimNames.NameId, user.UserName)
+      new(ClaimTypes.Email, userModel.NormalizedEmail)
     };
-
-    var roles = await _userManager.GetRolesAsync(user);
-
+    var roles = await _userManager.GetRolesAsync(userModel);
     claims.AddRange(roles.Select(role => new Claim(ClaimTypes.Role, role)));
 
-    var credentials = new SigningCredentials(_key, SecurityAlgorithms.HmacSha512Signature);
+    var rsa = await CryptoSystem.GetRsaKey();
+    var credentials = new SigningCredentials(new RsaSecurityKey(rsa), SecurityAlgorithms.RsaSha256);
 
-    var descriptor = new SecurityTokenDescriptor()
-    {
-      Subject = new ClaimsIdentity(claims),
-      Expires = DateTime.Today.AddDays(7),
-      SigningCredentials = credentials
-    };
+    var jwtSecurityToken = new JwtSecurityToken(
+      new JwtHeader(credentials),
+      new JwtPayload(
+        _env.IsProduction() ? DomainName.TrackLottUsualAppsCom : DomainName.Localhost8001,
+        _env.IsProduction() ? DomainName.TrackLottUsualAppsCom : DomainName.Localhost8001,
+        claims,
+        DateTime.Now,
+        DateTime.Now.AddDays(7)));
 
-    var tokenHandler = new JwtSecurityTokenHandler();
-    var token = tokenHandler.CreateToken(descriptor);
-
-    return tokenHandler.WriteToken(token);
+    var writtenToken = new JwtSecurityTokenHandler().WriteToken(jwtSecurityToken);
+    if (writtenToken == null) throw new SecurityTokenException(ResponseMsg.UnableToWriteToken);
+    return writtenToken;
   }
 }

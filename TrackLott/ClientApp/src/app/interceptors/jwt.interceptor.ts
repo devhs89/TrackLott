@@ -1,7 +1,7 @@
 import {Injectable} from '@angular/core';
 import {HttpEvent, HttpHandler, HttpInterceptor, HttpRequest} from '@angular/common/http';
 import {Observable} from 'rxjs';
-import {UserToken} from "../models/user-token";
+import {UserClaim} from "../models/user-claim";
 import {AccountService} from "../services/account.service";
 import {take} from "rxjs/operators";
 
@@ -14,7 +14,7 @@ export class JwtInterceptor implements HttpInterceptor {
   }
 
   intercept(request: HttpRequest<unknown>, next: HttpHandler): Observable<HttpEvent<unknown>> {
-    let currentAppUser: UserToken | null = {userName: '', token: ''};
+    let currentAppUser: UserClaim | null = {email: '', token: ''};
     let tokenizedRequest: HttpRequest<unknown> | null = null;
 
     this.accountService.appUser$.pipe(take(1)).subscribe({

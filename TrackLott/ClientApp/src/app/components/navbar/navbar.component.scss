@@ -1,17 +1,30 @@
-mat-sidenav-container {
+.sidenav-container {
   min-height: 100vh !important;
 }
 
 mat-sidenav {
-  width: 200px;
+  width: 12rem;
+}
+
+.matSpacer {
+  flex: 1 1 auto;
 }
 
 .main-mat-toolbar {
   position: fixed;
   top: 0;
-  z-index: 1500;
+  z-index: 1999;
 }
 
-.space-div {
-  flex: 1 1 auto;
+.main-mat-toolbar a:not(.projectBrand) {
+  font-size: 1rem;
+}
+
+.projectBrand {
+  font-size: 1.5rem;
+  text-transform: capitalize !important;
+}
+
+.selectedLink {
+  background: rgba(0, 0, 0, 0.2);
 }

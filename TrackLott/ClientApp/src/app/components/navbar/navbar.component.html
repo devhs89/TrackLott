@@ -1,80 +1,68 @@
+<div *ngIf="isLoading$ | async" class="spinnerOverlay">
+  <mat-spinner color="accent" diameter="50"></mat-spinner>
+</div>
+
 <mat-sidenav-container class="sidenav-container">
-  <mat-sidenav #drawer [attr.role]="'dialog'" [mode]="'over'" [opened]="false" fixedInViewport="false">
-    <mat-toolbar color="primary">TrackLott</mat-toolbar>
-    <mat-nav-list *ngIf="(isHandset$ | async)">
-      <a [routerLink]="'/home'" class="text-uppercase" mat-list-item>Home</a>
+  <mat-sidenav #navDrawer [attr.role]="'dialog'" mode="over" opened="false" fixedInViewport="false">
 
-      <a [routerLink]="'/add'" class="text-uppercase" mat-list-item>Add</a>
-
-      <a [routerLink]="'/play'" class="text-uppercase" mat-list-item>Play</a>
-
-      <mat-divider></mat-divider>
-
-      <a [routerLink]="'/terms'" class="text-uppercase" mat-list-item>Terms of Use</a>
-
-      <a [routerLink]="'/license'" class="text-uppercase" mat-list-item>License</a>
-
-      <mat-divider></mat-divider>
-
-      <ng-container *ngIf="!userLoggedIn; else sideLinkNotShow">
-        <a [routerLink]="'user/login'" class="text-uppercase" mat-list-item>Login</a>
-
-        <a [routerLink]="'user/register'" class="text-uppercase" mat-list-item>Register</a>
-      </ng-container>
-
-      <ng-template #sideLinkNotShow>
-        <a [routerLink]="'user/account'" class="text-uppercase" mat-list-item>Account</a>
-
-        <a (click)="logout()" class="text-uppercase" mat-list-item>Logout</a>
-      </ng-template>
-
-    </mat-nav-list>
+    <ng-container *ngIf="(isHandset$ | async)">
+      <mat-toolbar color="primary">TrackLott</mat-toolbar>
+      <mat-nav-list>
+        <a [routerLink]="appRoute.homeAbs" mat-list-item>Home</a>
+        <a [routerLink]="appRoute.addAbs" mat-list-item>Add</a>
+        <a [routerLink]="appRoute.playAbs" mat-list-item>Play</a>
+        <a [routerLink]="appRoute.termsAbs" mat-list-item>Terms</a>
+        <a [routerLink]="appRoute.licenseAbs" mat-list-item>License</a>
+        <mat-divider></mat-divider>
+        <ng-container *ngIf="!userLoggedIn; else sideLinkNotShow">
+          <a [routerLink]="appRoute.registerRel" mat-list-item>Register</a>
+          <a [routerLink]="appRoute.loginRel" mat-list-item>Login</a>
+        </ng-container>
+        <ng-template #sideLinkNotShow>
+          <a [routerLink]="appRoute.profileRel" mat-list-item>Profile</a>
+          <a (click)="logout()" mat-list-item>Logout</a>
+        </ng-template>
+      </mat-nav-list>
+    </ng-container>
   </mat-sidenav>
 
   <mat-sidenav-content>
     <mat-toolbar class="mat-elevation-z6 main-mat-toolbar" color="primary">
-
-      <button (click)="drawer.toggle()" *ngIf="(isHandset$ | async)" aria-label="Toggle Sidenav" mat-icon-button
+      <button (click)="navDrawer.toggle()" *ngIf="(isHandset$ | async)" aria-label="Toggle Sidenav" mat-icon-button
               type="button">
         <mat-icon aria-label="Side nav toggle icon">menu</mat-icon>
       </button>
-
-      <a [routerLink]="'/home'" class="navBrand" color="accent" mat-button>TrackLott</a>
-
+      <a [routerLink]="appRoute.homeAbs" color="accent" class="projectBrand" mat-button>TrackLott</a>
       <ng-container *ngIf="!(isHandset$ | async)">
-        <a [routerLink]="'/home'" class="text-uppercase" mat-button>Home</a>
-
-        <a [routerLink]="'/add'" class="text-uppercase" mat-button>Add</a>
-
-        <a [routerLink]="'/play'" class="text-uppercase" mat-button>Play</a>
-
-        <span class="space-div"></span>
+        <a [routerLink]="appRoute.homeAbs" color="primary" routerLinkActive="selectedLink" disableRipple
+           mat-flat-button>Home</a>
+        <a [routerLink]="appRoute.addAbs" mat-flat-button color="primary" routerLinkActive="selectedLink" disableRipple>Add</a>
+        <a [routerLink]="appRoute.playAbs" mat-flat-button color="primary" routerLinkActive="selectedLink"
+           disableRipple>Play</a>
+        <span class="matSpacer"></span>
 
         <ng-container *ngIf="!userLoggedIn; else linkNotShow">
-          <a [routerLink]="'user/login'" class="text-uppercase" mat-button>Login</a>
-
-          <a [routerLink]="'user/register'" class="text-uppercase" mat-button>Register</a>
+          <a [routerLink]="appRoute.loginRel" mat-flat-button color="primary" routerLinkActive="selectedLink"
+             disableRipple>Login</a>
+          <a [routerLink]="appRoute.registerRel" mat-flat-button color="primary" routerLinkActive="selectedLink"
+             disableRipple>Register</a>
         </ng-container>
 
         <ng-template #linkNotShow>
-          <a [routerLink]="'user/account'" class="text-uppercase" mat-button>Account</a>
-
-          <a (click)="logout()" class="text-uppercase" mat-button>Logout</a>
+          <a [routerLink]="appRoute.profileRel" mat-flat-button color="primary" routerLinkActive="selectedLink"
+             disableRipple>Account</a>
+          <a (click)="logout()" mat-flat-button routerLinkActive="selectedLink" color="primary" disableRipple>Logout</a>
         </ng-template>
 
         <button [matMenuTriggerFor]="terms" mat-icon-button>
           <mat-icon>expand_circle_down</mat-icon>
         </button>
-
         <mat-menu #terms="matMenu">
-          <a [routerLink]="'/terms'" class="text-uppercase" mat-menu-item>Terms of Use</a>
-
-          <a [routerLink]="'/license'" class="text-uppercase" mat-menu-item>License</a>
+          <a [routerLink]="appRoute.termsAbs" mat-menu-item>Terms</a>
+          <a [routerLink]="appRoute.licenseAbs" mat-menu-item>License</a>
         </mat-menu>
       </ng-container>
     </mat-toolbar>
-
     <ng-content></ng-content>
-
   </mat-sidenav-content>
 </mat-sidenav-container>

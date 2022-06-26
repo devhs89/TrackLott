@@ -4,16 +4,19 @@ import {Observable, Subscription} from "rxjs";
 import {LottoResultService} from "../../../services/lotto-result.service";
 import {AccountService} from "../../../services/account.service";
 import {take} from "rxjs/operators";
-import {CombinationsResponse, MatchingCombo, MatchingComboResponse} from "../../../models/matching-combo";
+import {MatchComboResponse, MatchedCombo, TableComboModel} from "../../../models/matched-combo";
 import {PickedNumbers} from "../../../models/combination";
 import {DeviceBreakpointService} from "../../../services/device-breakpoint.service";
 import {Breakpoints} from "@angular/cdk/layout";
 import {MatPaginator} from "@angular/material/paginator";
 import {MatTableDataSource} from "@angular/material/table";
 import {LottoResult} from "../../../models/lotto-result";
-import {UserToken} from "../../../models/user-token";
+import {UserClaim} from "../../../models/user-claim";
 import {ProgressIndicatorService} from "../../../services/progress-indicator.service";
-import {parseError} from "../../../helpers/parse-error";
+import {lottoName} from "../../../constants/lotto-select-option";
+import {SnackBarService} from "../../../services/snack-bar.service";
+import {appRouteConst} from "../../../constants/app-route-const";
+import {genericConst} from "../../../constants/generic-const";
 
 @Component({
   selector: 'app-match-combo',
@@ -22,41 +25,48 @@ import {parseError} from "../../../helpers/parse-error";
 })
 export class MatchComboComponent implements OnInit, OnDestroy {
   isHandset$: Observable<boolean>;
-  isLoading$ = this.loadingService.isLoading$;
-  appUser$: Observable<UserToken | null>;
+  lottoName = lottoName;
+  gc = genericConst;
+  appUser$: Observable<UserClaim | null>;
   subscriptions: Subscription[] = [];
-  lotResult: LottoResult;
-  errorMessage: string | null = null;
-  matchingCombos: MatchingCombo[] = [];
-  tableColumns = ["mainNums", "drawDate"];
-  tableDataSource: MatTableDataSource<MatchingCombo>;
-  totalMatchingCombos: number = 0;
+  pathRoute = appRouteConst;
+  lottoResult: LottoResult;
+  matchedCombosList: TableComboModel[] = [];
+  tableColumns = [genericConst.tablePrimaryNumsCol, genericConst.tableDrawDateCol];
+  tableDataSource: MatTableDataSource<TableComboModel>;
+  MatchedCombosTotal: number = 0;
   @ViewChild(MatPaginator) paginator: MatPaginator;
 
-  constructor(private deviceBreakpointService: DeviceBreakpointService, private loadingService: ProgressIndicatorService, private lottoResultService: LottoResultService, private accountService: AccountService, private combinationsService: CombinationsService) {
+  constructor(private deviceBreakpointService: DeviceBreakpointService,
+              private loadingService: ProgressIndicatorService,
+              private lottoResultService: LottoResultService,
+              private accountService: AccountService,
+              private combinationsService: CombinationsService,
+              private snackBarService: SnackBarService) {
   }
 
   ngOnInit(): void {
     this.isHandset$ = this.deviceBreakpointService.handsetBreakpoint(Breakpoints.XSmall);
-    this.appUser$ = this.accountService.appUser$.pipe(take(1));
-
-    this.accountService.appUser$.pipe(take(1)).subscribe(userToken => {
-      if (userToken?.token) {
-        this.lottoResultService.latestLottoResult$.pipe(take(1)).subscribe({
-          next: lottoResult => {
-            if (lottoResult?.drawName) {
-              this.lotResult = lottoResult;
-              if (lottoResult.drawName === "powerball") this.tableColumns.splice(1, 0, "jackpot");
-              this.getMatchingCombinations(lottoResult);
+    this.appUser$ = this.accountService.appUser$;
+    this.appUser$.pipe(take(1)).subscribe({
+      next: userClaim => {
+        if (userClaim?.token) {
+          this.lottoResultService.latestLottoResult$.pipe(take(1)).subscribe({
+            next: lottoResult => {
+              if (lottoResult?.productId) {
+                this.lottoResult = lottoResult;
+                if (lottoResult.productId.toLowerCase() === lottoName.powerballId) this.tableColumns.splice(1, 0, genericConst.tablePowerballCol);
+                this.getMatchingCombinations(lottoResult);
+              }
             }
-          }
-        });
+          });
+        }
       }
     });
   }
 
   onPageEvent() {
-    this.getMatchingCombinations(this.lotResult);
+    this.getMatchingCombinations(this.lottoResult);
   }
 
   ngOnDestroy() {
@@ -64,56 +74,52 @@ export class MatchComboComponent implements OnInit, OnDestroy {
   }
 
   private getMatchingCombinations(lottoResult: LottoResult) {
-    this.subscriptions.push(
-      this.combinationsService.matchCombinations(lottoResult.drawName,
-        this.paginator ? this.paginator.pageIndex : 0,
-        this.paginator ? this.paginator.pageSize : 5)
-        .subscribe({
-          next: (value: MatchingComboResponse[]) => {
-            // @ts-ignore
-            this.totalMatchingCombos = value.totalMatches;
-            // @ts-ignore
-            this.matchingCombos = this.parseMatchingCombos(value.combinationsList);
-
-            this.subscriptions.push(
-              this.isHandset$.subscribe(handset => {
-                if (!handset) {
-                  this.tableDataSource = new MatTableDataSource<MatchingCombo>(this.matchingCombos!);
-                }
-              })
-            );
-          },
-          error: err => this.errorMessage = parseError(err.error)
-        })
-    );
+    this.combinationsService.matchCombinations(lottoResult.productId,
+      this.paginator ? this.paginator.pageIndex : 0,
+      this.paginator ? this.paginator.pageSize : 5)
+      .subscribe({
+        next: (value: MatchComboResponse) => {
+          // @ts-ignore
+          this.MatchedCombosTotal = value.totalMatches;
+          // @ts-ignore
+          this.matchedCombosList = this.parseMatchedCombos(value.combinationsList);
+          this.subscriptions.push(
+            this.isHandset$.subscribe(handset => {
+              if (!handset) {
+                this.tableDataSource = new MatTableDataSource<TableComboModel>(this.matchedCombosList);
+              }
+            })
+          );
+        },
+        error: err => this.snackBarService.showSnackBar(err.error)
+      });
   }
 
-  private parseMatchingCombos(value: CombinationsResponse[]): MatchingCombo[] {
-    let parsedMatchingCombos: MatchingCombo[] = [];
-
+  private parseMatchedCombos(value: MatchedCombo[]): TableComboModel[] {
+    let tableCombosList: TableComboModel[] = [];
     value.forEach(result => {
       const dateStr = new Date(result.dateAdded);
       const pickedNumbers: PickedNumbers = JSON.parse(result.pickedNumbers);
       let numMatches: number = 0;
 
-      pickedNumbers.mainNums.forEach(num => {
-        this.lotResult.winNums.includes(num) && numMatches++;
+      pickedNumbers.primaryNumbers.forEach(num => {
+        this.lottoResult.primaryNumbers.includes(num) && numMatches++;
       });
 
-      if (pickedNumbers.jackpot) {
-        if (this.lotResult.drawName === "Powerball") {
-          this.lotResult.suppNums.includes(pickedNumbers.jackpot) && numMatches++;
+      if (pickedNumbers.secondaryNumbers && this.lottoResult.productId === lottoName.powerballId) {
+        for (const num of pickedNumbers.secondaryNumbers) {
+          this.lottoResult.secondaryNumbers.includes(num) && numMatches++;
         }
       }
 
-      parsedMatchingCombos.push({
+      tableCombosList.push({
         dateAdded: dateStr.toDateString(),
-        mainNums: pickedNumbers.mainNums,
-        jackpot: pickedNumbers.jackpot,
+        primaryNumbers: pickedNumbers.primaryNumbers,
+        secondaryNumbers: pickedNumbers.secondaryNumbers,
         matchesPerCombo: numMatches
       });
     });
-    parsedMatchingCombos.sort((a, b) => b.matchesPerCombo - a.matchesPerCombo);
-    return parsedMatchingCombos;
+    tableCombosList.sort((a, b) => b.matchesPerCombo - a.matchesPerCombo);
+    return tableCombosList;
   }
 }

@@ -1,11 +1,21 @@
 import {SplitDateTime} from "./basic-models";
 
-export interface LottoResult {
-  drawName: string;
-  drawNum: number;
+export interface LottoResultResponse {
+  productId: string;
+  displayName: string;
+  drawNumber: number;
   drawDate: string;
-  winNums: number[];
-  suppNums: number[];
+  primaryNumbers: string;
+  secondaryNumbers: string;
+}
+
+export interface LottoResult {
+  productId: string;
+  displayName: string;
+  drawNumber: number;
+  drawDate: string;
+  primaryNumbers: number[];
+  secondaryNumbers: number[];
 }
 
 export interface SavedLottoResult {

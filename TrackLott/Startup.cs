@@ -1,26 +1,34 @@
 using Microsoft.AspNetCore.HttpOverrides;
+using TrackLott.Constants;
 using TrackLott.Extensions;
-using TrackLott.Interfaces;
-using TrackLott.Services;
 
 namespace TrackLott
 {
   public class Startup
   {
-    private readonly IConfiguration _config;
+    private readonly IWebHostEnvironment _env;
 
-    public Startup(IConfiguration config)
+    public Startup(IWebHostEnvironment env)
     {
-      _config = config;
+      _env = env;
     }
 
     // This method gets called by the runtime. Use this method to add services to the container.
     public void ConfigureServices(IServiceCollection services)
     {
       services.AddControllers();
-      services.AddApplicationServices();
-      services.AddIdentityServices(_config);
-      services.AddScoped<IMailNoticeService, MailNoticeService>();
+
+      // Common services like helper services
+      services.AddHelperServices();
+
+      // Database related services
+      services.AddDataStoreServices(_env);
+
+      // Authentication and Authorization related services
+      services.AddAuthServices(_env);
+
+      // Jwt Token and User Claims related services
+      services.AddJwtTokenServices();
     }
 
     // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -28,6 +36,7 @@ namespace TrackLott
     {
       if (env.IsDevelopment()) app.UseDeveloperExceptionPage();
 
+      // Forward headers in production for reverse proxy
       if (env.IsProduction())
       {
         app.UseForwardedHeaders(new ForwardedHeadersOptions()
@@ -40,8 +49,9 @@ namespace TrackLott
 
       app.UseRouting();
 
+      // Allow Cors from Client App when developing
       if (!env.IsProduction())
-        app.UseCors(builder => builder.AllowAnyHeader().AllowAnyMethod().WithOrigins("https://localhost:44497"));
+        app.UseCors(builder => builder.AllowAnyHeader().AllowAnyMethod().WithOrigins(DomainName.Localhost44497));
 
       app.UseAuthentication();
 
@@ -53,6 +63,8 @@ namespace TrackLott
       app.UseEndpoints(endpoints =>
       {
         endpoints.MapControllers();
+
+        // Let Client App handle routes not recognised by backend
         endpoints.MapFallbackToController("Index", "Fallback");
       });
     }

@@ -1,58 +1,53 @@
 <ng-container *ngIf="(appUser$ | async)">
-  <mat-card *ngIf="lotResult && errorMessage" class="row col-xl-9 mx-auto mb-3 mat-elevation-z6">
-    <mat-card-title>No Results Found</mat-card-title>
+  <mat-card *ngIf="matchedCombosList.length < 1 && lottoResult" [class]="gc.cardClasses">
+    <mat-card-title>No Matching Combinations Found</mat-card-title>
     <mat-divider class="my-3" inset></mat-divider>
     <mat-card-content>
-      <span>{{errorMessage}}.</span>
+      <span>No Combinations match this lotto draw. To add more combinations, please click on the button below.</span>
     </mat-card-content>
     <mat-card-actions align="end">
-      <button color="primary" mat-flat-button routerLink="/add" type="button">Add Combinations</button>
+      <button color="primary" mat-flat-button [routerLink]="pathRoute.addAbs" type="button">Add Combinations</button>
     </mat-card-actions>
   </mat-card>
 
-  <ng-container *ngIf="matchingCombos.length > 0">
+  <ng-container *ngIf="matchedCombosList.length > 0">
     <ng-container *ngIf="(isHandset$ | async); else notHandset">
       <ng-container *ngTemplateOutlet="paginator"></ng-container>
-      <mat-card *ngFor="let combo of matchingCombos" class="row col-xl-9 mx-auto mb-3 mat-elevation-z6">
+      <mat-card *ngFor="let combo of matchedCombosList" [class]="gc.cardClasses" class="mb-2">
         <mat-card-title>{{combo.dateAdded}}</mat-card-title>
         <mat-card-content>
-          <div class="d-inline-flex flex-wrap me-md-3">
-            <app-number-svg *ngFor="let num of combo.mainNums"
-                            [bgFill]="lotResult.winNums.includes(num) ? '#673ab7' : '#ffd740'"
-                            [svgNum]="num"></app-number-svg>
-          </div>
-          <div *ngIf="combo.jackpot" class="d-inline-flex">
-            <app-number-svg [bgFill]="lotResult.suppNums.includes(combo.jackpot) ? '#607d8b' : '#f44336'"
-                            [svgNum]="combo.jackpot"></app-number-svg>
-          </div>
+          <!--          Print primary numbers-->
+          <ng-container *ngTemplateOutlet="primaryNumsTemplate; context: {primary: combo}"></ng-container>
+          <!--          Print secondary numbers (if any)-->
+          <ng-container *ngIf="combo.secondaryNumbers && combo.secondaryNumbers.length > 0">
+            <ng-container *ngTemplateOutlet="secondaryNumsTemplate; context: {secondary: combo}"></ng-container>
+          </ng-container>
         </mat-card-content>
       </mat-card>
     </ng-container>
 
     <ng-template #notHandset>
-      <div class="row col-xl-9 mx-auto mb-3 mat-elevation-z6">
+      <div [class]="gc.cardClasses">
         <mat-table #table [dataSource]="tableDataSource" class="w-100">
-          <ng-container matColumnDef="mainNums">
-            <mat-header-cell *matHeaderCellDef>Main Numbers</mat-header-cell>
-            <mat-cell *matCellDef="let combo">
-              <div class="d-inline-flex flex-wrap">
-                <app-number-svg *ngFor="let num of combo.mainNums"
-                                [bgFill]="lotResult.winNums.includes(num) ? '#673ab7' : '#ffd740'"
-                                [svgNum]="num"></app-number-svg>
-              </div>
+          <ng-container [matColumnDef]="gc.tablePrimaryNumsCol">
+            <mat-header-cell *matHeaderCellDef class="fs-6">Main Numbers</mat-header-cell>
+            <mat-cell *matCellDef="let combo" class="flex-wrap">
+              <!--          Print primary numbers-->
+              <ng-container *ngTemplateOutlet="primaryNumsTemplate; context: {primary: combo}"></ng-container>
             </mat-cell>
           </ng-container>
 
-          <ng-container *ngIf="lotResult && lotResult.drawName === 'powerball'" matColumnDef="jackpot">
-            <mat-header-cell *matHeaderCellDef>Powerball</mat-header-cell>
+          <ng-container *ngIf="lottoResult && lottoResult.productId.toLowerCase() === lottoName.powerballId"
+                        [matColumnDef]="gc.tablePowerballCol">
+            <mat-header-cell *matHeaderCellDef class="fs-6">Powerball</mat-header-cell>
             <mat-cell *matCellDef="let combo">
-              <app-number-svg [bgFill]="lotResult.suppNums.includes(combo.jackpot) ? '#607d8b' : '#f44336'"
-                              [svgNum]="combo.jackpot"></app-number-svg>
+              <!--          Print secondary numbers (if any)-->
+              <ng-container *ngTemplateOutlet="secondaryNumsTemplate; context: {secondary: combo}"></ng-container>
             </mat-cell>
           </ng-container>
 
-          <ng-container matColumnDef="drawDate">
-            <mat-header-cell *matHeaderCellDef>Draw Date</mat-header-cell>
+          <ng-container [matColumnDef]="gc.tableDrawDateCol">
+            <mat-header-cell *matHeaderCellDef class="fs-6">Draw Date</mat-header-cell>
             <mat-cell *matCellDef="let combo">{{combo.dateAdded}}</mat-cell>
           </ng-container>
 
@@ -65,12 +60,25 @@
     </ng-template>
 
     <ng-template #paginator>
-      <mat-paginator (page)="onPageEvent()" [length]="totalMatchingCombos" [pageSizeOptions]="[5, 10]"
+      <mat-paginator (page)="onPageEvent()" [length]="MatchedCombosTotal" [pageSizeOptions]="[5, 10, 20]"
                      [pageSize]="5" aria-label="Matching Combinations"></mat-paginator>
     </ng-template>
   </ng-container>
 </ng-container>
 
-<div *ngIf="isLoading$ | async" class="spinner-overlay">
-  <mat-spinner color="accent" diameter="50"></mat-spinner>
-</div>
+<!--<div *ngIf="isLoading$ | async" class="spinner-overlay">-->
+<!--  <mat-spinner color="accent" diameter="50"></mat-spinner>-->
+<!--</div>-->
+
+<ng-template #primaryNumsTemplate let-combo="primary">
+  <div *ngFor="let num of combo.primaryNumbers" class="gameNum gameNumPrimaryOutline"
+       [ngClass]="lottoResult.primaryNumbers.includes(num) ? 'gameNumMatchPrimary': 'gameNumNotMatch'">
+    <span>{{num}}</span>
+  </div>
+</ng-template>
+
+<ng-template #secondaryNumsTemplate let-combo="secondary">
+  <div *ngFor="let num of combo.secondaryNumbers" class="gameNum gameNumGreyOutline"
+       [ngClass]="lottoResult.secondaryNumbers.includes(num) ? 'gameNumMatchGrey' : 'gameNumNotMatch'">
+    <span>{{num}}</span></div>
+</ng-template>

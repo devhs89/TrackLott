@@ -1,23 +1,23 @@
 import {NgModule} from '@angular/core';
-import {FormsModule, ReactiveFormsModule} from '@angular/forms';
-import {HTTP_INTERCEPTORS, HttpClientModule} from '@angular/common/http';
+import {BrowserModule} from '@angular/platform-browser';
 
+import {AppRoutingModule} from './app-routing.module';
 import {AppComponent} from './app.component';
-import {HomeComponent} from './components/home/home.component';
-import {BrowserModule} from "@angular/platform-browser";
-import {AddComponent} from "./components/add/add.component";
-import {AppRoutingModule} from "./app-routing.module";
-import {PlayComponent} from './components/play/play.component';
-import {LatestLottoResultComponent} from "./components/home/latest-lotto-result/latest-lotto-result.component";
-import {TermsComponent} from './components/terms/terms.component';
-import {NavbarComponent} from "./components/navbar/navbar.component";
-import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
-import {MatchComboComponent} from './components/home/match-combo/match-combo.component';
+import {HTTP_INTERCEPTORS, HttpClientModule} from "@angular/common/http";
+import {FormsModule, ReactiveFormsModule} from "@angular/forms";
+import {BrowserAnimationsModule} from "@angular/platform-browser/animations";
 import {MaterialUiModule} from "./modules/material-ui.module";
 import {JwtInterceptor} from "./interceptors/jwt.interceptor";
 import {LoadingInterceptor} from "./interceptors/loading.interceptor";
-import {NumberSvgComponent} from './components/common/number-svg/number-svg.component';
-import {LicenseComponent} from './components/license/license.component';
+import {AddComponent} from "./components/add/add.component";
+import {PlayComponent} from "./components/play/play.component";
+import {HomeComponent} from "./components/home/home.component";
+import {NavbarComponent} from "./components/navbar/navbar.component";
+import {LatestLottoResultComponent} from "./components/home/latest-lotto-result/latest-lotto-result.component";
+import {MatchComboComponent} from "./components/home/match-combo/match-combo.component";
+import {NumberSvgComponent} from "./components/common/number-svg/number-svg.component";
+import {TermsComponent} from "./components/terms/terms.component";
+import {LicenseComponent} from "./components/license/license.component";
 
 @NgModule({
   declarations: [
@@ -33,11 +33,11 @@ import {LicenseComponent} from './components/license/license.component';
     LicenseComponent
   ],
   imports: [
-    BrowserModule.withServerTransition({appId: 'ng-cli-universal'}),
+    BrowserModule,
+    AppRoutingModule,
     HttpClientModule,
     FormsModule,
     ReactiveFormsModule,
-    AppRoutingModule,
     BrowserAnimationsModule,
     MaterialUiModule
   ],

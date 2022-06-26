@@ -1,39 +1,32 @@
+using AutoMapper;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using TrackLott.Constants;
 using TrackLott.Data;
-using TrackLott.DTOs;
+using TrackLott.Models.DTOs;
 
 namespace TrackLott.Controllers;
 
 public class LottoResultController : BaseApiController
 {
   private readonly TrackLottDbContext _dbContext;
+  private readonly IMapper _mapper;
 
-  public LottoResultController(TrackLottDbContext dbContext)
+  public LottoResultController(TrackLottDbContext dbContext, IMapper mapper)
   {
     _dbContext = dbContext;
+    _mapper = mapper;
   }
 
-  [HttpGet("latest")]
+  [HttpGet(EndRoute.Latest)]
   [AllowAnonymous]
-  public async Task<ActionResult<LottoResultDto>> GetLottoResult()
+  public async Task<ActionResult<LottoResultDto>> GetLatestLottoResult()
   {
     var result = await _dbContext.LottoResults.OrderByDescending(lottery => lottery.DrawDate)
       .FirstOrDefaultAsync();
+    if (result == null) return NotFound(ResponseMsg.NoLatestLottoResult);
 
-    if (result?.Id == null)
-      return NotFound(new ErrorResponseDto()
-        { Code = ErrorCodes.NoLatestLotto.ToString(), Description = "No Result Found" });
-
-    return new LottoResultDto()
-    {
-      DrawName = result.DisplayName,
-      DrawNum = result.DrawNumber,
-      DrawDate = result.DrawDate,
-      WinNums = result.PrimaryNumbers.Split(',').Select(int.Parse).ToList(),
-      SuppNums = result.SecondaryNumbers.Split(',').Select(int.Parse).ToList()
-    };
+    return _mapper.Map<LottoResultDto>(result);
   }
 }

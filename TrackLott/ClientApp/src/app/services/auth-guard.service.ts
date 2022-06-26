@@ -3,7 +3,9 @@ import {take} from "rxjs/operators";
 import {Injectable} from "@angular/core";
 import {ActivatedRouteSnapshot, CanActivate, Router, RouterStateSnapshot, UrlTree} from "@angular/router";
 import {Observable} from "rxjs";
-import {MatSnackBar} from "@angular/material/snack-bar";
+import {appRouteConst} from "../constants/app-route-const";
+import {SnackBarService} from "./snack-bar.service";
+import {notificationMessage} from "../constants/notification-message";
 
 @Injectable({
   providedIn: "root"
@@ -11,7 +13,7 @@ import {MatSnackBar} from "@angular/material/snack-bar";
 export class AuthGuardService implements CanActivate {
   isAuthenticated: boolean = false;
 
-  constructor(private router: Router, private accountService: AccountService, private matSnackBar: MatSnackBar) {
+  constructor(private router: Router, private accountService: AccountService, private snackBarService: SnackBarService) {
   }
 
   canActivate(route: ActivatedRouteSnapshot, state: RouterStateSnapshot)
@@ -23,8 +25,9 @@ export class AuthGuardService implements CanActivate {
     });
 
     if (!this.isAuthenticated) {
-      this.matSnackBar.open("Please login first", "Dismiss");
-      this.router.navigate(["/user/login"]);
+      this.snackBarService.showSnackBar(notificationMessage.loginFirst);
+      const ignore = this.router.navigate([appRouteConst.loginRel],
+        {queryParams: {returnUrl: state.url}});
     }
     return this.isAuthenticated;
   }
