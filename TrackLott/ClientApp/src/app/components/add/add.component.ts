@@ -9,6 +9,7 @@ import {MatSelectChange} from "@angular/material/select";
 import {Combination, CombinationPayload, PickedNumbers} from "../../models/combination";
 import {lottoName, lottoSelectOption} from "../../constants/lotto-select-option";
 import {SnackBarService} from "../../services/snack-bar.service";
+import {genericConst} from "../../constants/generic-const";
 
 @Component({
   selector: 'app-add',
@@ -27,6 +28,7 @@ export class AddComponent implements OnInit {
   allCombinations: Combination[] = [];
   minDate: Date;
   maxDate: Date;
+  gc = genericConst;
 
   constructor(private deviceBreakpoint: DeviceBreakpointService, private combinationsService: CombinationsService, private snackBarService: SnackBarService) {
   }
@@ -65,7 +67,7 @@ export class AddComponent implements OnInit {
     this.numButtons(event.value);
   }
 
-  onMainNumClick(clickedNum: number) {
+  onPrimaryNumClick(clickedNum: number) {
     if (this.currPickedNums.primaryNumbers.includes(clickedNum)) {
       const dex = this.currPickedNums.primaryNumbers.indexOf(clickedNum);
       this.currPickedNums.primaryNumbers.splice(dex, 1);
@@ -77,9 +79,23 @@ export class AddComponent implements OnInit {
     this.autoAddCombination();
   }
 
-  onJackpotNumClick(clickedNum: number) {
-    this.currPickedNums.secondaryNumbers?.push(clickedNum);
+  onSecondaryNumClick(clickedNum: number) {
+    if (this.selectedGameOption.name.toLowerCase() === lottoName.powerballDisplay.toLowerCase()) {
+      this.currPickedNums.secondaryNumbers = [clickedNum];
+    } else {
+      this.currPickedNums.secondaryNumbers?.push(clickedNum);
+    }
     this.autoAddCombination();
+  }
+
+  private checkSelectedLotto() {
+    if (this.selectedGameOption.name.toLowerCase() === lottoName.powerballDisplay.toLowerCase()) {
+      if (this.currPickedNums.secondaryNumbers && this.currPickedNums.secondaryNumbers.length === 1) {
+        this.addCombination();
+      }
+    } else {
+      this.addCombination();
+    }
   }
 
   autoAddCombination() {
@@ -157,19 +173,9 @@ export class AddComponent implements OnInit {
       dateAdded: this.purchaseDateControl.value,
       pickedNumbers: {
         primaryNumbers: this.currPickedNums.primaryNumbers,
-        secondaryNumbers: this.currPickedNums.secondaryNumbers && this.currPickedNums.secondaryNumbers?.length > 0 ? this.currPickedNums.secondaryNumbers : undefined
+        secondaryNumbers: this.currPickedNums.secondaryNumbers && this.currPickedNums.secondaryNumbers.length > 0 ? this.currPickedNums.secondaryNumbers : undefined
       }
     });
     this.clearCurrentPickedNumbers();
-  }
-
-  private checkSelectedLotto() {
-    if (this.selectedGameOption.name === lottoName.powerballId) {
-      if (this.currPickedNums.secondaryNumbers && this.currPickedNums.secondaryNumbers?.length > 0) {
-        this.addCombination();
-      }
-    } else {
-      this.addCombination();
-    }
   }
 }

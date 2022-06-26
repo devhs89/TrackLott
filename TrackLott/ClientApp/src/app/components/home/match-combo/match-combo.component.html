@@ -13,7 +13,7 @@
   <ng-container *ngIf="matchedCombosList.length > 0">
     <ng-container *ngIf="(isHandset$ | async); else notHandset">
       <ng-container *ngTemplateOutlet="paginator"></ng-container>
-      <mat-card *ngFor="let combo of matchedCombosList" [class]="gc.cardClasses">
+      <mat-card *ngFor="let combo of matchedCombosList" [class]="gc.cardClasses" class="mb-2">
         <mat-card-title>{{combo.dateAdded}}</mat-card-title>
         <mat-card-content>
           <!--          Print primary numbers-->
