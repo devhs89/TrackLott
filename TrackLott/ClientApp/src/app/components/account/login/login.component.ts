@@ -13,10 +13,9 @@ import {appRouteConst} from "../../../constants/app-route-const";
   styleUrls: ['./login.component.scss']
 })
 export class LoginComponent implements OnInit {
-  isLoading$ = this.loadingService.isLoading$;
   loginForm: FormGroup;
 
-  constructor(private loadingService: ProgressIndicatorService, private accountService: AccountService, private router: Router, private snackBarService: SnackBarService) {
+  constructor(private accountService: AccountService, private router: Router, private snackBarService: SnackBarService) {
   }
 
   ngOnInit(): void {

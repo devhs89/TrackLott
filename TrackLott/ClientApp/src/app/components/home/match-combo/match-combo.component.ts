@@ -27,7 +27,6 @@ export class MatchComboComponent implements OnInit, OnDestroy {
   isHandset$: Observable<boolean>;
   lottoName = lottoName;
   gc = genericConst;
-  isLoading$ = this.loadingService.isLoading$;
   appUser$: Observable<UserClaim | null>;
   subscriptions: Subscription[] = [];
   pathRoute = appRouteConst;

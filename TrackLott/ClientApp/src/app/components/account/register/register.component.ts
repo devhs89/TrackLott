@@ -14,11 +14,10 @@ import {SnackBarService} from "../../../services/snack-bar.service";
   styleUrls: ['./register.component.scss']
 })
 export class RegisterComponent {
-  isLoading$ = this.loadingService.isLoading$;
   appRoute = appRouteConst;
   countries = Countries;
 
-  constructor(private loadingService: ProgressIndicatorService, private accountService: AccountService, private router: Router, private snackBar: SnackBarService) {
+  constructor(private accountService: AccountService, private router: Router, private snackBar: SnackBarService) {
   }
 
   onRegisterSubmit(ngFormObj: NgForm) {

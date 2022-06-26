@@ -4,7 +4,6 @@ import {Countries} from "../../../constants/countries";
 import {FormBuilder, FormControl, FormGroup, Validators} from "@angular/forms";
 import {UserProfile} from "../../../models/user-profile";
 import {UserPassword} from "../../../models/user-password";
-import {ProgressIndicatorService} from "../../../services/progress-indicator.service";
 import {SnackBarService} from "../../../services/snack-bar.service";
 import {notificationMessage} from "../../../constants/notification-message";
 import {UpdateField} from "../../../models/update-field";
@@ -16,7 +15,6 @@ import {genericConst} from "../../../constants/generic-const";
   styleUrls: ['./profile.component.scss']
 })
 export class ProfileComponent implements OnInit {
-  isLoading$ = this.loadingService.isLoading$;
   countries = Countries;
   profileForm: FormGroup;
   passwordsForm: FormGroup;
@@ -33,7 +31,7 @@ export class ProfileComponent implements OnInit {
   private userPwd: UserPassword = {currentPassword: "", newPassword: "", repeatPassword: ""};
   gc = genericConst;
 
-  constructor(private loadingService: ProgressIndicatorService, private formBuilder: FormBuilder, private accountService: AccountService, private snackBarService: SnackBarService) {
+  constructor(private formBuilder: FormBuilder, private accountService: AccountService, private snackBarService: SnackBarService) {
   }
 
   ngOnInit(): void {
