@@ -36,7 +36,7 @@ public static class CryptoSystem
 
   private static Dictionary<string, string> KeyPaths()
   {
-    var jwtKeysDir = Environment.GetEnvironmentVariable(EnvVarName.JwtKeysDir);
+    var jwtKeysDir = Environment.GetEnvironmentVariable(EnvVarName.TracklottAuthKeysDir);
     if (jwtKeysDir == null) throw new Exception(ResponseMsg.MissingSecurityKeysDir);
 
     if (!Directory.Exists(jwtKeysDir)) Directory.CreateDirectory(jwtKeysDir);
