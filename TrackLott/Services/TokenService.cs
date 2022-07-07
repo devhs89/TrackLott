@@ -11,22 +11,22 @@ namespace TrackLott.Services;
 
 public class TokenService : ITokenService
 {
-  private readonly UserManager<UserModel> _userManager;
+  private readonly UserManager<TrackLottUserModel> _userManager;
   private readonly IWebHostEnvironment _env;
 
-  public TokenService(UserManager<UserModel> userManager, IWebHostEnvironment env)
+  public TokenService(UserManager<TrackLottUserModel> userManager, IWebHostEnvironment env)
   {
     _userManager = userManager;
     _env = env;
   }
 
-  public async Task<string> CreateToken(UserModel userModel)
+  public async Task<string> CreateToken(TrackLottUserModel TrackLottUserModel)
   {
     var claims = new List<Claim>()
     {
-      new(ClaimTypes.Email, userModel.NormalizedEmail)
+      new(ClaimTypes.Email, TrackLottUserModel.NormalizedEmail)
     };
-    var roles = await _userManager.GetRolesAsync(userModel);
+    var roles = await _userManager.GetRolesAsync(TrackLottUserModel);
     claims.AddRange(roles.Select(role => new Claim(ClaimTypes.Role, role)));
 
     var rsa = await CryptoSystem.GetRsaKey();

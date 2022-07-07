@@ -3,7 +3,7 @@ using Microsoft.AspNetCore.Identity;
 
 namespace TrackLott.Models.DataModels;
 
-public class UserModel : IdentityUser<Guid>
+public class TrackLottUserModel : IdentityUser<Guid>
 {
   [Required] public string GivenName { set; get; }
   [Required] public string Surname { get; set; }

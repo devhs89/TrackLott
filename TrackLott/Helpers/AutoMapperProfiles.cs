@@ -8,17 +8,17 @@ public class AutoMapperProfiles : Profile
 {
   public AutoMapperProfiles()
   {
-    CreateMap<RegisterDto, UserModel>()
+    CreateMap<RegisterDto, TrackLottUserModel>()
       .ForMember(model => model.UserName,
         expression => expression.MapFrom(dto => dto.Email))
       .ForMember(model => model.Dob,
         expression => expression.MapFrom(dto => DateOnly.FromDateTime(DateTime.Parse(dto.Dob))));
 
-    CreateMap<UserModel, ProfileDto>()
+    CreateMap<TrackLottUserModel, ProfileDto>()
       .ForMember(dto => dto.Dob,
         expression => expression.MapFrom(model => model.Dob.ToString()));
 
-    CreateMap<ProfileUpdateDto, UserModel>()
+    CreateMap<ProfileUpdateDto, TrackLottUserModel>()
       .ForMember(model => model.GivenName, expression =>
       {
         expression.PreCondition(dto => !string.IsNullOrWhiteSpace(dto.GivenName));

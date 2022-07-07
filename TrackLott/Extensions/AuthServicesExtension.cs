@@ -12,7 +12,7 @@ public static class AuthServicesExtension
 {
   public static IServiceCollection AddAuthServices(this IServiceCollection serviceCollection, IWebHostEnvironment env)
   {
-    serviceCollection.AddIdentityCore<UserModel>(options =>
+    serviceCollection.AddIdentityCore<TrackLottUserModel>(options =>
       {
         options.Password.RequireNonAlphanumeric = true;
         options.Password.RequireDigit = true;
@@ -25,8 +25,8 @@ public static class AuthServicesExtension
           DefaultLockoutTimeSpan = new TimeSpan(8, 0, 0)
         };
       })
-      .AddRoles<AppRoleModel>()
-      .AddSignInManager<SignInManager<UserModel>>()
+      .AddRoles<TrackLottAppRoleModel>()
+      .AddSignInManager<SignInManager<TrackLottUserModel>>()
       .AddEntityFrameworkStores<TrackLottDbContext>();
 
     serviceCollection.AddAuthentication(JwtBearerDefaults.AuthenticationScheme).AddJwtBearer(options =>

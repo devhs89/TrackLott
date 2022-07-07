@@ -12,13 +12,13 @@ namespace TrackLott.Controllers;
 
 public class AccountController : BaseApiController
 {
-  private readonly UserManager<UserModel> _userManager;
-  private readonly SignInManager<UserModel> _signInManager;
+  private readonly UserManager<TrackLottUserModel> _userManager;
+  private readonly SignInManager<TrackLottUserModel> _signInManager;
   private readonly ITokenService _tokenService;
   private readonly IMapper _mapper;
   private readonly IUserClaimsService _userClaimsService;
 
-  public AccountController(UserManager<UserModel> userManager, SignInManager<UserModel> signInManager,
+  public AccountController(UserManager<TrackLottUserModel> userManager, SignInManager<TrackLottUserModel> signInManager,
     ITokenService tokenService, IMapper mapper, IUserClaimsService userClaimsService)
   {
     _userManager = userManager;
@@ -41,7 +41,7 @@ public class AccountController : BaseApiController
     if (userExists != null)
       return BadRequest(ResponseMsg.AccountAlreadyExists);
 
-    var appUser = _mapper.Map<UserModel>(registerDto);
+    var appUser = _mapper.Map<TrackLottUserModel>(registerDto);
     var createResult = await _userManager.CreateAsync(appUser, registerDto.Password);
     if (!createResult.Succeeded) return BadRequest(createResult.Errors.FirstOrDefault());
 
@@ -90,7 +90,7 @@ public class AccountController : BaseApiController
   }
 
   [HttpPut(EndRoute.UpdateInfo)]
-  public async Task<ActionResult<UserModel>> UpdateInfo(ProfileUpdateDto profileUpdateDto)
+  public async Task<ActionResult<TrackLottUserModel>> UpdateInfo(ProfileUpdateDto profileUpdateDto)
   {
     var userEmail = _userClaimsService.GetNormalisedEmail();
     if (userEmail == null) return BadRequest(ResponseMsg.InvalidToken);

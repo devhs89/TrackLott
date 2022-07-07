@@ -33,7 +33,7 @@ public class CombinationController : BaseApiController
     {
       var combination = new CombinationModel()
       {
-        UserModelId = user.Value.Id,
+        TrackLottUserId = user.Value.Id,
         DateAdded = combo.DateAdded,
         PickedNumbers = combo.PickedNumbers
       };
@@ -72,12 +72,12 @@ public class CombinationController : BaseApiController
     var totalResults = await _dbContext.Combinations.Where(model =>
       model.LottoProductId != null &&
       model.LottoProductId.ToLower().Equals(lottoResult.ProductId.ToLower()) &&
-      model.UserModelId.Equals(user.Value.Id)).CountAsync();
+      model.TrackLottUserId.Equals(user.Value.Id)).CountAsync();
 
     var combinationsResult = await _dbContext.Combinations.Where(model =>
         model.LottoProductId != null &&
         model.LottoProductId.ToLower().Equals(lottoResult.ProductId.ToLower()) &&
-        model.UserModelId.Equals(user.Value.Id))
+        model.TrackLottUserId.Equals(user.Value.Id))
       .Skip(pageIndex * pageSize)
       .Take(pageSize)
       .ToListAsync();
@@ -89,7 +89,7 @@ public class CombinationController : BaseApiController
     return new MatchComboResponseDto { CombinationsList = matchingCombos, totalMatches = totalResults };
   }
 
-  private async Task<ActionResult<UserModel?>> GetUser()
+  private async Task<ActionResult<TrackLottUserModel?>> GetUser()
   {
     var userEmail = _userClaimsService.GetNormalisedEmail();
     if (userEmail == null) return Unauthorized(ResponseMsg.InvalidToken);
