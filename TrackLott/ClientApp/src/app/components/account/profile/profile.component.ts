@@ -6,8 +6,8 @@ import {UserProfile} from "../../../models/user-profile";
 import {UserPassword} from "../../../models/user-password";
 import {SnackBarService} from "../../../services/snack-bar.service";
 import {responseMsg} from "../../../constants/response-msg";
-import {UpdateField} from "../../../models/update-field";
 import {genericConst} from "../../../constants/generic-const";
+import {UpdateFieldModel} from "../../../models/update-field.model";
 
 @Component({
   selector: 'app-account',
@@ -73,7 +73,7 @@ export class ProfileComponent implements OnInit {
   onUpdateSubmit() {
     if (this.profileForm.invalid) return;
 
-    const infoToUpdate: UpdateField = {
+    const infoToUpdate: UpdateFieldModel = {
       givenName: undefined,
       surname: undefined,
       country: undefined

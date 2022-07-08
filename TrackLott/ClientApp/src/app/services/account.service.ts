@@ -6,10 +6,10 @@ import {UserLogin} from "../models/user-login";
 import {UserClaim} from "../models/user-claim";
 import {UserProfile} from "../models/user-profile";
 import {UserPassword} from "../models/user-password";
-import {UpdateField} from "../models/update-field";
 import {map} from "rxjs/operators";
 import {endRoute} from "../constants/end-route";
 import {setLocalUserToken, setSessionUserToken} from "../helpers/local-storage";
+import {UpdateFieldModel} from "../models/update-field.model";
 
 @Injectable({
   providedIn: "root"
@@ -54,7 +54,7 @@ export class AccountService {
     return this.httpClient.post<UserProfile>(endRoute.accountShow, {});
   }
 
-  updateInfo(newInfo: UpdateField) {
+  updateInfo(newInfo: UpdateFieldModel) {
     return this.httpClient.put<string>(endRoute.accountUpdate, newInfo);
   }
 
