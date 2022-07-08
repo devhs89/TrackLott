@@ -24,7 +24,7 @@ export class RegisterComponent {
     if (ngFormObj.invalid) return;
     let userDetails: UserRegister = {...ngFormObj.value};
 
-    this.accountService.onRegister(userDetails).subscribe({
+    this.accountService.register(userDetails).subscribe({
       next: () => {
         const ignore = this.router.navigate([appRoute.profileRel]);
       },

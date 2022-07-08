@@ -95,7 +95,7 @@ export class ProfileComponent implements OnInit {
 
     if (infoToUpdate.givenName === undefined && infoToUpdate.surname === undefined && infoToUpdate.country === undefined) return;
 
-    this.accountService.onUpdateInfo(infoToUpdate).subscribe({
+    this.accountService.updateInfo(infoToUpdate).subscribe({
       next: resp => this.snackBarService.showSnackBar(resp === null ? responseMsg.profileUpdateSuccess : responseMsg.generic),
       error: err => this.snackBarService.showSnackBar(err.error),
       complete: () => this.getUserProfile()
@@ -127,7 +127,7 @@ export class ProfileComponent implements OnInit {
       this.userPwd.repeatPassword = this.repeatPassword.value;
 
       if (this.userPwd.newPassword === this.userPwd.repeatPassword) {
-        this.accountService.onUpdatePassword(this.userPwd)
+        this.accountService.updatePassword(this.userPwd)
           .subscribe({
             next: resp => this.snackBarService.showSnackBar(resp),
             error: err => this.snackBarService.showSnackBar(err.error),

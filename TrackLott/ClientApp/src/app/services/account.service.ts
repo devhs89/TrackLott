@@ -29,7 +29,7 @@ export class AccountService {
     this.appUserBehaviorSubject.next(null);
   }
 
-  onRegister(userRegister: UserRegister) {
+  register(userRegister: UserRegister) {
     return this.httpClient.post<UserClaim>(endRoute.accountRegister, userRegister).pipe(map(value => {
       if (value.email && value.token) {
         this.emitAppUser(value);
@@ -39,7 +39,7 @@ export class AccountService {
     }));
   }
 
-  onLogin(userCredentials: UserLogin) {
+  login(userCredentials: UserLogin) {
     return this.httpClient.post<UserClaim>(endRoute.accountLogin, userCredentials).pipe(map(value => {
       if (value.email && value.token) {
         this.emitAppUser(value);
@@ -53,11 +53,11 @@ export class AccountService {
     return this.httpClient.post<UserProfile>(endRoute.accountShow, {});
   }
 
-  onUpdateInfo(newInfo: UpdateField) {
+  updateInfo(newInfo: UpdateField) {
     return this.httpClient.put<string>(endRoute.accountUpdate, newInfo);
   }
 
-  onUpdatePassword(passwords: UserPassword) {
+  updatePassword(passwords: UserPassword) {
     return this.httpClient.post(endRoute.updatePassword, passwords, {responseType: "text"});
   }
 }

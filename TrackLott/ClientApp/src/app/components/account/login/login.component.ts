@@ -28,7 +28,7 @@ export class LoginComponent implements OnInit {
   onLoginSubmit() {
     if (this.loginForm.valid) {
       let userCredentials: UserLogin = {...this.loginForm.value};
-      this.accountService.onLogin(userCredentials).subscribe({
+      this.accountService.login(userCredentials).subscribe({
         next: () => {
           const returnUrl = this.activatedRoute.snapshot.queryParamMap.get("returnUrl");
           returnUrl
