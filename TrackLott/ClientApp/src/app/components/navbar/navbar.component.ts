@@ -1,7 +1,6 @@
 import {Component, OnDestroy, OnInit} from '@angular/core';
 import {AccountService} from "../../services/account.service";
 import {Observable, Subscription} from "rxjs";
-import {UserClaim} from "../../models/user-claim";
 import {removeLocalUserToken, removeSessionUserToken} from "../../helpers/local-storage";
 import {DeviceBreakpointService} from "../../services/device-breakpoint.service";
 import {Breakpoints} from "@angular/cdk/layout";
@@ -9,6 +8,7 @@ import {Router} from "@angular/router";
 import {AuthGuardService} from "../../services/auth-guard.service";
 import {appRoute} from "../../constants/app-route";
 import {ProgressIndicatorService} from "../../services/progress-indicator.service";
+import {UserClaimModel} from "../../models/user-claim.model";
 
 @Component({
   selector: 'app-navbar',
@@ -26,7 +26,7 @@ export class NavbarComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit(): void {
-    this.appUserSubscription = this.accountService.appUser$.subscribe((ut: UserClaim | null) => {
+    this.appUserSubscription = this.accountService.appUser$.subscribe((ut: UserClaimModel | null) => {
       if (ut !== null) {
         this.userLoggedIn = true;
       }

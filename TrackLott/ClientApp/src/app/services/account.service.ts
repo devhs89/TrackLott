@@ -2,26 +2,26 @@ import {Injectable} from "@angular/core";
 import {HttpClient} from "@angular/common/http";
 import {UserRegister} from "../models/user-register";
 import {ReplaySubject} from "rxjs";
-import {UserLogin} from "../models/user-login";
-import {UserClaim} from "../models/user-claim";
 import {UserProfile} from "../models/user-profile";
 import {UserPassword} from "../models/user-password";
 import {map} from "rxjs/operators";
 import {endRoute} from "../constants/end-route";
 import {setLocalUserToken, setSessionUserToken} from "../helpers/local-storage";
 import {UpdateFieldModel} from "../models/update-field.model";
+import {UserClaimModel} from "../models/user-claim.model";
+import {UserLoginModel} from "../models/user-login.model";
 
 @Injectable({
   providedIn: "root"
 })
 export class AccountService {
-  private appUserBehaviorSubject = new ReplaySubject<UserClaim | null>(1);
+  private appUserBehaviorSubject = new ReplaySubject<UserClaimModel | null>(1);
   appUser$ = this.appUserBehaviorSubject.asObservable();
 
   constructor(private httpClient: HttpClient) {
   }
 
-  emitAppUser(userClaim: UserClaim) {
+  emitAppUser(userClaim: UserClaimModel) {
     this.appUserBehaviorSubject.next(userClaim);
   }
 
@@ -30,7 +30,7 @@ export class AccountService {
   }
 
   register(userRegister: UserRegister) {
-    return this.httpClient.post<UserClaim>(endRoute.accountRegister, userRegister).pipe(map(value => {
+    return this.httpClient.post<UserClaimModel>(endRoute.accountRegister, userRegister).pipe(map(value => {
       if (value.token) {
         this.emitAppUser(value);
         setSessionUserToken(value);
@@ -39,8 +39,8 @@ export class AccountService {
     }));
   }
 
-  login(userCredentials: UserLogin) {
-    return this.httpClient.post<UserClaim>(endRoute.accountLogin, userCredentials)
+  login(userCredentials: UserLoginModel) {
+    return this.httpClient.post<UserClaimModel>(endRoute.accountLogin, userCredentials)
       .pipe(map(value => {
       if (value.token) {
         this.emitAppUser(value);

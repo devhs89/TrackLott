@@ -8,7 +8,6 @@ import {DeviceBreakpointService} from "../../../services/device-breakpoint.servi
 import {Breakpoints} from "@angular/cdk/layout";
 import {MatPaginator} from "@angular/material/paginator";
 import {MatTableDataSource} from "@angular/material/table";
-import {UserClaim} from "../../../models/user-claim";
 import {ProgressIndicatorService} from "../../../services/progress-indicator.service";
 import {lottoName} from "../../../constants/lotto-select-option";
 import {SnackBarService} from "../../../services/snack-bar.service";
@@ -17,6 +16,7 @@ import {genericConst} from "../../../constants/generic-const";
 import {PickedNumbers} from "../../../models/combination.model";
 import {LottoResult} from "../../../models/latest-lotto-result.model";
 import {MatchComboResponse, MatchedCombo, TableComboModel} from "../../../models/matched-combo.model";
+import {UserClaimModel} from "../../../models/user-claim.model";
 
 @Component({
   selector: 'app-match-combo',
@@ -27,7 +27,7 @@ export class MatchComboComponent implements OnInit, OnDestroy {
   isHandset$: Observable<boolean>;
   lottoName = lottoName;
   gc = genericConst;
-  appUser$: Observable<UserClaim | null>;
+  appUser$: Observable<UserClaimModel | null>;
   subscriptions: Subscription[] = [];
   pathRoute = appRoute;
   lottoResult: LottoResult;

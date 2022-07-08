@@ -1,8 +1,8 @@
-import {UserClaim} from "../models/user-claim";
 import {splitDateTime} from "./split-date-time";
 import {LottoResult, SavedLottoResult} from "../models/latest-lotto-result.model";
+import {UserClaimModel} from "../models/user-claim.model";
 
-export const setLocalUserToken = (userToken: UserClaim) => {
+export const setLocalUserToken = (userToken: UserClaimModel) => {
   localStorage.setItem("user", JSON.stringify(userToken));
 };
 
@@ -14,7 +14,7 @@ export const removeLocalUserToken = () => {
   localStorage.removeItem("user");
 };
 
-export const setSessionUserToken = (userToken: UserClaim) => {
+export const setSessionUserToken = (userToken: UserClaimModel) => {
   sessionStorage.setItem("user", JSON.stringify(userToken));
 };
 
