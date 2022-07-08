@@ -76,7 +76,7 @@ export class MatchComboComponent implements OnInit, OnDestroy {
   private getMatchingCombinations(lottoResult: LottoResult) {
     this.combinationsService.matchCombinations(lottoResult.productId,
       this.paginator ? this.paginator.pageIndex : 0,
-      this.paginator ? this.paginator.pageSize : 5)
+      this.paginator ? this.paginator.pageSize : 10)
       .subscribe({
         next: (value: MatchComboResponse) => {
           // @ts-ignore

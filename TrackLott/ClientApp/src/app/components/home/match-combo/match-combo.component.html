@@ -28,7 +28,7 @@
 
     <ng-template #notHandset>
       <div [class]="gc.cardClasses">
-        <mat-table #table [dataSource]="tableDataSource" class="w-100">
+        <mat-table [dataSource]="tableDataSource" class="w-100">
           <ng-container [matColumnDef]="gc.tablePrimaryNumsCol">
             <mat-header-cell *matHeaderCellDef class="fs-6">Main Numbers</mat-header-cell>
             <mat-cell *matCellDef="let combo" class="flex-wrap">
@@ -60,8 +60,8 @@
     </ng-template>
 
     <ng-template #paginator>
-      <mat-paginator (page)="onPageEvent()" [length]="MatchedCombosTotal" [pageSizeOptions]="[5, 10, 20]"
-                     [pageSize]="5" aria-label="Matching Combinations"></mat-paginator>
+      <mat-paginator (page)="onPageEvent()" [length]="MatchedCombosTotal" [pageSizeOptions]="[10, 20, 40, 80]"
+                     [pageSize]="10" aria-label="Matching Combinations"></mat-paginator>
     </ng-template>
   </ng-container>
 </ng-container>
