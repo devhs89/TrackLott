@@ -3,11 +3,11 @@ import {AccountService} from "../../../services/account.service";
 import {Countries} from "../../../constants/countries";
 import {FormBuilder, FormControl, FormGroup, Validators} from "@angular/forms";
 import {UserProfile} from "../../../models/user-profile";
-import {UserPassword} from "../../../models/user-password";
 import {SnackBarService} from "../../../services/snack-bar.service";
 import {responseMsg} from "../../../constants/response-msg";
 import {genericConst} from "../../../constants/generic-const";
 import {UpdateFieldModel} from "../../../models/update-field.model";
+import {UserPasswordModel} from "../../../models/user-password.model";
 
 @Component({
   selector: 'app-account',
@@ -28,7 +28,7 @@ export class ProfileComponent implements OnInit {
   private newPassword: FormControl;
   private repeatPassword: FormControl;
   private userProfile: UserProfile;
-  private userPwd: UserPassword = {currentPassword: "", newPassword: "", repeatPassword: ""};
+  private userPwd: UserPasswordModel = {currentPassword: "", newPassword: "", repeatPassword: ""};
   gc = genericConst;
 
   constructor(private formBuilder: FormBuilder, private accountService: AccountService, private snackBarService: SnackBarService) {

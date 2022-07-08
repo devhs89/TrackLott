@@ -3,13 +3,13 @@ import {HttpClient} from "@angular/common/http";
 import {UserRegister} from "../models/user-register";
 import {ReplaySubject} from "rxjs";
 import {UserProfile} from "../models/user-profile";
-import {UserPassword} from "../models/user-password";
 import {map} from "rxjs/operators";
 import {endRoute} from "../constants/end-route";
 import {setLocalUserToken, setSessionUserToken} from "../helpers/local-storage";
 import {UpdateFieldModel} from "../models/update-field.model";
 import {UserClaimModel} from "../models/user-claim.model";
 import {UserLoginModel} from "../models/user-login.model";
+import {UserPasswordModel} from "../models/user-password.model";
 
 @Injectable({
   providedIn: "root"
@@ -42,12 +42,12 @@ export class AccountService {
   login(userCredentials: UserLoginModel) {
     return this.httpClient.post<UserClaimModel>(endRoute.accountLogin, userCredentials)
       .pipe(map(value => {
-      if (value.token) {
-        this.emitAppUser(value);
-        userCredentials.rememberMe ? setLocalUserToken(value) : setSessionUserToken(value);
-      }
-      return value;
-    }));
+        if (value.token) {
+          this.emitAppUser(value);
+          userCredentials.rememberMe ? setLocalUserToken(value) : setSessionUserToken(value);
+        }
+        return value;
+      }));
   }
 
   showUser() {
@@ -58,7 +58,7 @@ export class AccountService {
     return this.httpClient.put<string>(endRoute.accountUpdate, newInfo);
   }
 
-  updatePassword(passwords: UserPassword) {
+  updatePassword(passwords: UserPasswordModel) {
     return this.httpClient.post(endRoute.updatePassword, passwords, {responseType: "text"});
   }
 }
