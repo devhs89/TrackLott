@@ -15,7 +15,7 @@ import {UserClaim} from "../../../models/user-claim";
 import {ProgressIndicatorService} from "../../../services/progress-indicator.service";
 import {lottoName} from "../../../constants/lotto-select-option";
 import {SnackBarService} from "../../../services/snack-bar.service";
-import {appRouteConst} from "../../../constants/app-route-const";
+import {appRoute} from "../../../constants/app-route";
 import {genericConst} from "../../../constants/generic-const";
 
 @Component({
@@ -29,7 +29,7 @@ export class MatchComboComponent implements OnInit, OnDestroy {
   gc = genericConst;
   appUser$: Observable<UserClaim | null>;
   subscriptions: Subscription[] = [];
-  pathRoute = appRouteConst;
+  pathRoute = appRoute;
   lottoResult: LottoResult;
   matchedCombosList: TableComboModel[] = [];
   tableColumns = [genericConst.tablePrimaryNumsCol, genericConst.tableDrawDateCol];

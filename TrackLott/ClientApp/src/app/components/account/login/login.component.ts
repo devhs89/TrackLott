@@ -4,7 +4,7 @@ import {AccountService} from "../../../services/account.service";
 import {UserLogin} from "../../../models/user-login";
 import {ActivatedRoute, Router} from "@angular/router";
 import {SnackBarService} from "../../../services/snack-bar.service";
-import {appRouteConst} from "../../../constants/app-route-const";
+import {appRoute} from "../../../constants/app-route";
 
 @Component({
   selector: 'app-login',
@@ -33,7 +33,7 @@ export class LoginComponent implements OnInit {
           const returnUrl = this.activatedRoute.snapshot.queryParamMap.get("returnUrl");
           returnUrl
             ? this.router.navigate([returnUrl])
-            : this.router.navigate([appRouteConst.homeAbs]);
+            : this.router.navigate([appRoute.homeAbs]);
         },
         error: err => this.snackBarService.showSnackBar(err.error)
       });

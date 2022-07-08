@@ -5,7 +5,7 @@ import {FormBuilder, FormControl, FormGroup, Validators} from "@angular/forms";
 import {UserProfile} from "../../../models/user-profile";
 import {UserPassword} from "../../../models/user-password";
 import {SnackBarService} from "../../../services/snack-bar.service";
-import {notificationMessage} from "../../../constants/notification-message";
+import {responseMsg} from "../../../constants/response-msg";
 import {UpdateField} from "../../../models/update-field";
 import {genericConst} from "../../../constants/generic-const";
 
@@ -96,7 +96,7 @@ export class ProfileComponent implements OnInit {
     if (infoToUpdate.givenName === undefined && infoToUpdate.surname === undefined && infoToUpdate.country === undefined) return;
 
     this.accountService.onUpdateInfo(infoToUpdate).subscribe({
-      next: resp => this.snackBarService.showSnackBar(resp === null ? notificationMessage.profileUpdateSuccess : notificationMessage.generic),
+      next: resp => this.snackBarService.showSnackBar(resp === null ? responseMsg.profileUpdateSuccess : responseMsg.generic),
       error: err => this.snackBarService.showSnackBar(err.error),
       complete: () => this.getUserProfile()
     });
@@ -137,7 +137,7 @@ export class ProfileComponent implements OnInit {
             }
           });
       } else {
-        this.snackBarService.showSnackBar(notificationMessage.passwordMismatch);
+        this.snackBarService.showSnackBar(responseMsg.passwordMismatch);
       }
     }
   }

@@ -3,9 +3,9 @@ import {take} from "rxjs/operators";
 import {Injectable} from "@angular/core";
 import {ActivatedRouteSnapshot, CanActivate, Router, RouterStateSnapshot, UrlTree} from "@angular/router";
 import {Observable} from "rxjs";
-import {appRouteConst} from "../constants/app-route-const";
+import {appRoute} from "../constants/app-route";
 import {SnackBarService} from "./snack-bar.service";
-import {notificationMessage} from "../constants/notification-message";
+import {responseMsg} from "../constants/response-msg";
 
 @Injectable({
   providedIn: "root"
@@ -25,8 +25,8 @@ export class AuthGuardService implements CanActivate {
     });
 
     if (!this.isAuthenticated) {
-      this.snackBarService.showSnackBar(notificationMessage.loginFirst);
-      const ignore = this.router.navigate([appRouteConst.loginRel],
+      this.snackBarService.showSnackBar(responseMsg.loginFirst);
+      const ignore = this.router.navigate([appRoute.loginRel],
         {queryParams: {returnUrl: state.url}});
     }
     return this.isAuthenticated;

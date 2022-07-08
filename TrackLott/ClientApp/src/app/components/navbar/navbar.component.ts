@@ -7,7 +7,7 @@ import {DeviceBreakpointService} from "../../services/device-breakpoint.service"
 import {Breakpoints} from "@angular/cdk/layout";
 import {Router} from "@angular/router";
 import {AuthGuardService} from "../../services/auth-guard.service";
-import {appRouteConst} from "../../constants/app-route-const";
+import {appRoute} from "../../constants/app-route";
 import {ProgressIndicatorService} from "../../services/progress-indicator.service";
 
 @Component({
@@ -19,7 +19,7 @@ export class NavbarComponent implements OnInit, OnDestroy {
   isHandset$: Observable<boolean>;
   isLoading$ = this.loadingService.isLoading$;
   appUserSubscription = new Subscription();
-  appRoute = appRouteConst;
+  appRoute = appRoute;
   userLoggedIn = false;
 
   constructor(private loadingService: ProgressIndicatorService, private deviceBreakpoint: DeviceBreakpointService, private accountService: AccountService, private router: Router, private authGuardService: AuthGuardService) {

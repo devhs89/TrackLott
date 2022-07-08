@@ -1,4 +1,4 @@
-export const notificationMessage = {
+export const responseMsg = {
   generic: "Something went wrong. Please contact the administrator.",
   invalidForm: "Invalid fields found. Please fix the issues and try again.",
   passwordMismatch: "Password and Repeat Password fields must match.",

@@ -1,4 +1,4 @@
-export const appRouteConst = {
+export const appRoute = {
   root: "",
   home: "home",
   add: "add",
