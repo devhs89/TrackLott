@@ -122,11 +122,11 @@ export class AddComponent implements OnInit {
       }
       this.combinationsService.addCombinations(payload).subscribe({
         next: resp => {
-          this.snackBarService.showSnackBar(resp);
+          this.snackBarService.handleResponse(resp);
           this.clearCurrentPickedNumbers();
           this.clearAllPickedNumbers();
         },
-        error: err => this.snackBarService.showSnackBar(err.error)
+        error: err => this.snackBarService.handleResponse(err.error)
       });
     }
   }

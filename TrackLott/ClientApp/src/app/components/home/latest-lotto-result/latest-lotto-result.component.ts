@@ -21,7 +21,7 @@ export class LatestLottoResultComponent implements OnInit {
       next: (resp) => {
         this.latestLottoResult = {...resp};
       },
-      error: err => this.snackBarService.showSnackBar(err.error)
+      error: err => this.snackBarService.handleResponse(err.error)
     });
   }
 }

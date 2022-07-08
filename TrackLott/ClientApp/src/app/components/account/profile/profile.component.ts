@@ -96,8 +96,8 @@ export class ProfileComponent implements OnInit {
     if (infoToUpdate.givenName === undefined && infoToUpdate.surname === undefined && infoToUpdate.country === undefined) return;
 
     this.accountService.updateInfo(infoToUpdate).subscribe({
-      next: resp => this.snackBarService.showSnackBar(resp === null ? responseMsg.profileUpdateSuccess : responseMsg.generic),
-      error: err => this.snackBarService.showSnackBar(err.error),
+      next: resp => this.snackBarService.handleResponse(resp === null ? responseMsg.profileUpdateSuccess : responseMsg.generic),
+      error: err => this.snackBarService.handleResponse(err.error),
       complete: () => this.getUserProfile()
     });
   }
@@ -116,7 +116,7 @@ export class ProfileComponent implements OnInit {
           country: resp.country.toUpperCase() || ''
         });
       },
-      error: err => this.snackBarService.showSnackBar(err.error)
+      error: err => this.snackBarService.handleResponse(err.error)
     });
   }
 
@@ -129,15 +129,15 @@ export class ProfileComponent implements OnInit {
       if (this.userPwd.newPassword === this.userPwd.repeatPassword) {
         this.accountService.updatePassword(this.userPwd)
           .subscribe({
-            next: resp => this.snackBarService.showSnackBar(resp),
-            error: err => this.snackBarService.showSnackBar(err.error),
+            next: resp => this.snackBarService.handleResponse(resp),
+            error: err => this.snackBarService.handleResponse(err.error),
             complete: () => {
               this.resetPasswordForm();
               this.disablePasswordControls = true;
             }
           });
       } else {
-        this.snackBarService.showSnackBar(responseMsg.passwordMismatch);
+        this.snackBarService.handleResponse(responseMsg.passwordMismatch);
       }
     }
   }

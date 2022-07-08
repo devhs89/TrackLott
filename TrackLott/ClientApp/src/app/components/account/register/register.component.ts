@@ -27,7 +27,7 @@ export class RegisterComponent {
       next: () => {
         const ignore = this.router.navigate([appRoute.profileRel]);
       },
-      error: resp => this.snackBar.showSnackBar(resp.error)
+      error: resp => this.snackBar.handleResponse(resp.error)
     });
   }
 }

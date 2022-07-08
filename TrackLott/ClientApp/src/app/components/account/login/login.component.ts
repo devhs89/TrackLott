@@ -35,7 +35,7 @@ export class LoginComponent implements OnInit {
             ? this.router.navigate([returnUrl])
             : this.router.navigate([appRoute.homeAbs]);
         },
-        error: err => this.snackBarService.showSnackBar(err.error)
+        error: err => this.snackBarService.handleResponse(err.error)
       });
     }
   }

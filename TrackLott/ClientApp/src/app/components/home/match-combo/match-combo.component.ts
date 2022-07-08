@@ -91,7 +91,7 @@ export class MatchComboComponent implements OnInit, OnDestroy {
             })
           );
         },
-        error: err => this.snackBarService.showSnackBar(err.error)
+        error: err => this.snackBarService.handleResponse(err.error)
       });
   }
 
