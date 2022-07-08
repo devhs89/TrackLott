@@ -1,18 +1,18 @@
-<mat-card class="row col-lg-9 mx-auto mb-2 mat-elevation-z6">
+<mat-card [class]="cardClasses" class="mb-2">
   <mat-card-title>{{greeting}}</mat-card-title>
   <mat-divider class="my-3" inset></mat-divider>
   <mat-card-content>
-    <p>Have you ever wondered if you had played those winning lottery numbers ever before?</p>
-    <p>With TrackLott, now you can know for sure.</p>
-    <p>
-      Additionally, save your old lottery tickets, and TrackLott will match all your previously selected number
-      combinations with
-      recently drawn game. TrackLott can help you find out your lucky numbers by matching number combinations that
-      you have previously selected.
-    </p>
-    <p>
-      And, play the lotto game to find out possible winning numbers and add them to your combinations.
-    </p>
+    <p class="lh-base">Have you ever wondered if you had played those winning lottery numbers before? With
+      TrackLott, now you can know
+      for sure.</p>
+    <p>Additionally,</p>
+    <ul class="lh-base">
+      <li class="mb-1">Save your old lottery tickets, and TrackLott will match all your previously played lottery games
+        with the latest lottery draw.
+      </li>
+      <li class="mb-1">TrackLott can help you find your lucky numbers by matching numbers previously selected.</li>
+      <li>Play the lotto game to find possible winning numbers and save them as combinations in your account.</li>
+    </ul>
   </mat-card-content>
 </mat-card>
 
