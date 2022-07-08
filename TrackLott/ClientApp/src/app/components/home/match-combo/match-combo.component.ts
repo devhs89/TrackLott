@@ -4,7 +4,6 @@ import {Observable, Subscription} from "rxjs";
 import {LottoResultService} from "../../../services/lotto-result.service";
 import {AccountService} from "../../../services/account.service";
 import {take} from "rxjs/operators";
-import {MatchComboResponse, MatchedCombo, TableComboModel} from "../../../models/matched-combo";
 import {DeviceBreakpointService} from "../../../services/device-breakpoint.service";
 import {Breakpoints} from "@angular/cdk/layout";
 import {MatPaginator} from "@angular/material/paginator";
@@ -17,6 +16,7 @@ import {appRoute} from "../../../constants/app-route";
 import {genericConst} from "../../../constants/generic-const";
 import {PickedNumbers} from "../../../models/combination.model";
 import {LottoResult} from "../../../models/latest-lotto-result.model";
+import {MatchComboResponse, MatchedCombo, TableComboModel} from "../../../models/matched-combo.model";
 
 @Component({
   selector: 'app-match-combo',

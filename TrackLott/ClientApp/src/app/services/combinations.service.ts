@@ -1,8 +1,8 @@
 import {Injectable} from '@angular/core';
 import {HttpClient} from "@angular/common/http";
-import {MatchComboResponse} from "../models/matched-combo";
 import {endRoute} from "../constants/end-route";
 import {CombinationPayload} from "../models/combination.model";
+import {MatchComboResponse} from "../models/matched-combo.model";
 
 @Injectable({
   providedIn: 'root'
