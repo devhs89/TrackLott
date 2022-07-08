@@ -31,7 +31,7 @@ export class AccountService {
 
   register(userRegister: UserRegister) {
     return this.httpClient.post<UserClaim>(endRoute.accountRegister, userRegister).pipe(map(value => {
-      if (value.email && value.token) {
+      if (value.token) {
         this.emitAppUser(value);
         setSessionUserToken(value);
       }
@@ -41,7 +41,7 @@ export class AccountService {
 
   login(userCredentials: UserLogin) {
     return this.httpClient.post<UserClaim>(endRoute.accountLogin, userCredentials).pipe(map(value => {
-      if (value.email && value.token) {
+      if (value.token) {
         this.emitAppUser(value);
         userCredentials.rememberMe ? setLocalUserToken(value) : setSessionUserToken(value);
       }
