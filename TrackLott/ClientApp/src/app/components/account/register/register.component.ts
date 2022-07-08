@@ -1,4 +1,4 @@
-import {Component} from '@angular/core';
+import {Component, OnInit} from '@angular/core';
 import {Countries} from "../../../constants/countries";
 import {NgForm} from "@angular/forms";
 import {AccountService} from "../../../services/account.service";
@@ -13,12 +13,20 @@ import {genericConst} from "../../../constants/generic-const";
   templateUrl: './register.component.html',
   styleUrls: ['./register.component.scss']
 })
-export class RegisterComponent {
-  cardClasses = genericConst.cardClasses
+export class RegisterComponent implements OnInit {
+  cardClasses = genericConst.cardClasses;
   appRoute = appRoute;
   countries = Countries;
+  minDate: Date;
+  maxDate: Date;
 
   constructor(private accountService: AccountService, private router: Router, private snackBar: SnackBarService) {
+  }
+
+  ngOnInit(): void {
+    const dt = new Date();
+    this.minDate = new Date(dt.getFullYear() - 100, 0, 1);
+    this.maxDate = new Date(dt.getFullYear() - 18, dt.getMonth(), dt.getDate());
   }
 
   onRegisterSubmit(ngFormObj: NgForm) {

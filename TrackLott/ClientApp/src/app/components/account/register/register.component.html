@@ -68,8 +68,9 @@
         <div class="col-md-4">
           <mat-form-field appearance="outline" class="w-100">
             <mat-label>Date of Birth</mat-label>
+            <!--suppress TypeScriptValidateTypes -->
             <input [matDatepicker]="dobPicker" matInput name="dob" readonly="true" aria-readonly="true" ngModel
-                   placeholder="dd/mm/yyyy" required>
+                   placeholder="mm/dd/yyyy" [min]="minDate" [max]="maxDate" required>
             <mat-datepicker-toggle [for]="dobPicker" matSuffix></mat-datepicker-toggle>
             <mat-datepicker #dobPicker></mat-datepicker>
             <mat-error>Invalid date</mat-error>
