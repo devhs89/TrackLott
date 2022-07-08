@@ -8,13 +8,13 @@ import {take} from "rxjs/operators";
 @Injectable({
   providedIn: "root"
 })
-export class JwtInterceptor implements HttpInterceptor {
+export class JwtAuthInterceptor implements HttpInterceptor {
 
   constructor(private accountService: AccountService) {
   }
 
   intercept(request: HttpRequest<unknown>, next: HttpHandler): Observable<HttpEvent<unknown>> {
-    let currentAppUser: UserClaim | null = {email: '', token: ''};
+    let currentAppUser: UserClaim | null = {token: ''};
     let tokenizedRequest: HttpRequest<unknown> | null = null;
 
     this.accountService.appUser$.pipe(take(1)).subscribe({
