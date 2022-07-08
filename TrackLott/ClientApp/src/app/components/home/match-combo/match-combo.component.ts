@@ -5,7 +5,6 @@ import {LottoResultService} from "../../../services/lotto-result.service";
 import {AccountService} from "../../../services/account.service";
 import {take} from "rxjs/operators";
 import {MatchComboResponse, MatchedCombo, TableComboModel} from "../../../models/matched-combo";
-import {PickedNumbers} from "../../../models/combination";
 import {DeviceBreakpointService} from "../../../services/device-breakpoint.service";
 import {Breakpoints} from "@angular/cdk/layout";
 import {MatPaginator} from "@angular/material/paginator";
@@ -17,6 +16,7 @@ import {lottoName} from "../../../constants/lotto-select-option";
 import {SnackBarService} from "../../../services/snack-bar.service";
 import {appRoute} from "../../../constants/app-route";
 import {genericConst} from "../../../constants/generic-const";
+import {PickedNumbers} from "../../../models/combination.model";
 
 @Component({
   selector: 'app-match-combo',

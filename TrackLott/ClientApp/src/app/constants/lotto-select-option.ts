@@ -1,4 +1,4 @@
-import {LottoGame} from "../models/lotto-game";
+import {LottoGame} from "../models/lotto-game.model";
 
 export const lottoName = {
   genericId: "generic",
