@@ -3,10 +3,9 @@ import {Countries} from "../../../constants/countries";
 import {NgForm} from "@angular/forms";
 import {AccountService} from "../../../services/account.service";
 import {Router} from "@angular/router";
-import {UserRegister} from "../../../models/user-register";
-import {ProgressIndicatorService} from "../../../services/progress-indicator.service";
 import {appRoute} from "../../../constants/app-route";
 import {SnackBarService} from "../../../services/snack-bar.service";
+import {UserRegisterModel} from "../../../models/user-register.model";
 
 @Component({
   selector: 'app-register',
@@ -22,7 +21,7 @@ export class RegisterComponent {
 
   onRegisterSubmit(ngFormObj: NgForm) {
     if (ngFormObj.invalid) return;
-    let userDetails: UserRegister = {...ngFormObj.value};
+    let userDetails: UserRegisterModel = {...ngFormObj.value};
 
     this.accountService.register(userDetails).subscribe({
       next: () => {

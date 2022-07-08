@@ -1,6 +1,5 @@
 import {Injectable} from "@angular/core";
 import {HttpClient} from "@angular/common/http";
-import {UserRegister} from "../models/user-register";
 import {ReplaySubject} from "rxjs";
 import {map} from "rxjs/operators";
 import {endRoute} from "../constants/end-route";
@@ -10,6 +9,7 @@ import {UserClaimModel} from "../models/user-claim.model";
 import {UserLoginModel} from "../models/user-login.model";
 import {UserPasswordModel} from "../models/user-password.model";
 import {UserProfileModel} from "../models/user-profile.model";
+import {UserRegisterModel} from "../models/user-register.model";
 
 @Injectable({
   providedIn: "root"
@@ -29,7 +29,7 @@ export class AccountService {
     this.appUserBehaviorSubject.next(null);
   }
 
-  register(userRegister: UserRegister) {
+  register(userRegister: UserRegisterModel) {
     return this.httpClient.post<UserClaimModel>(endRoute.accountRegister, userRegister).pipe(map(value => {
       if (value.token) {
         this.emitAppUser(value);
