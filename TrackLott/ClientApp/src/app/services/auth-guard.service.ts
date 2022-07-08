@@ -18,7 +18,7 @@ export class AuthGuardService implements CanActivate {
 
   canActivate(route: ActivatedRouteSnapshot, state: RouterStateSnapshot)
     : Observable<boolean | UrlTree> | Promise<boolean | UrlTree> | boolean | UrlTree {
-    this.accountService.appUser$.pipe(take(1)).subscribe(value => {
+    this.accountService.userClaim$.pipe(take(1)).subscribe(value => {
       if (value?.token) {
         this.isAuthenticated = true;
       }

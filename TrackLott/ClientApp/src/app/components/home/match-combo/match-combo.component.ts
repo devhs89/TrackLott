@@ -47,7 +47,7 @@ export class MatchComboComponent implements OnInit, OnDestroy {
 
   ngOnInit(): void {
     this.isHandset$ = this.deviceBreakpointService.handsetBreakpoint(Breakpoints.XSmall);
-    this.appUser$ = this.accountService.appUser$;
+    this.appUser$ = this.accountService.userClaim$;
     this.appUser$.pipe(take(1)).subscribe({
       next: userClaim => {
         if (userClaim?.token) {

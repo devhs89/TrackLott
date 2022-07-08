@@ -15,18 +15,18 @@ import {UserRegisterModel} from "../models/user-register.model";
   providedIn: "root"
 })
 export class AccountService {
-  private appUserBehaviorSubject = new ReplaySubject<UserClaimModel | null>(1);
-  appUser$ = this.appUserBehaviorSubject.asObservable();
+  private userClaimBehaviorSubject = new ReplaySubject<UserClaimModel | null>(1);
+  userClaim$ = this.userClaimBehaviorSubject.asObservable();
 
   constructor(private httpClient: HttpClient) {
   }
 
   emitAppUser(userClaim: UserClaimModel) {
-    this.appUserBehaviorSubject.next(userClaim);
+    this.userClaimBehaviorSubject.next(userClaim);
   }
 
   removeAppUser() {
-    this.appUserBehaviorSubject.next(null);
+    this.userClaimBehaviorSubject.next(null);
   }
 
   register(userRegister: UserRegisterModel) {

@@ -17,7 +17,7 @@ export class JwtAuthInterceptor implements HttpInterceptor {
     let currentAppUser: UserClaimModel | null = {token: ''};
     let tokenizedRequest: HttpRequest<unknown> | null = null;
 
-    this.accountService.appUser$.pipe(take(1)).subscribe({
+    this.accountService.userClaim$.pipe(take(1)).subscribe({
       next: (user) => currentAppUser = user,
       error: () => {
       }

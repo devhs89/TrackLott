@@ -26,7 +26,7 @@ export class NavbarComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit(): void {
-    this.appUserSubscription = this.accountService.appUser$.subscribe((ut: UserClaimModel | null) => {
+    this.appUserSubscription = this.accountService.userClaim$.subscribe((ut: UserClaimModel | null) => {
       if (ut !== null) {
         this.userLoggedIn = true;
       }
