@@ -1,6 +1,6 @@
 import {UserClaim} from "../models/user-claim";
-import {LottoResult, SavedLottoResult} from "../models/lotto-result";
 import {splitDateTime} from "./split-date-time";
+import {LottoResult, SavedLottoResult} from "../models/latest-lotto-result.model";
 
 export const setLocalUserToken = (userToken: UserClaim) => {
   localStorage.setItem("user", JSON.stringify(userToken));

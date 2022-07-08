@@ -9,7 +9,6 @@ import {DeviceBreakpointService} from "../../../services/device-breakpoint.servi
 import {Breakpoints} from "@angular/cdk/layout";
 import {MatPaginator} from "@angular/material/paginator";
 import {MatTableDataSource} from "@angular/material/table";
-import {LottoResult} from "../../../models/lotto-result";
 import {UserClaim} from "../../../models/user-claim";
 import {ProgressIndicatorService} from "../../../services/progress-indicator.service";
 import {lottoName} from "../../../constants/lotto-select-option";
@@ -17,6 +16,7 @@ import {SnackBarService} from "../../../services/snack-bar.service";
 import {appRoute} from "../../../constants/app-route";
 import {genericConst} from "../../../constants/generic-const";
 import {PickedNumbers} from "../../../models/combination.model";
+import {LottoResult} from "../../../models/latest-lotto-result.model";
 
 @Component({
   selector: 'app-match-combo',

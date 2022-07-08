@@ -1,8 +1,8 @@
 import {Component, OnInit} from '@angular/core';
 import {LottoResultService} from "../../../services/lotto-result.service";
-import {LottoResult} from "../../../models/lotto-result";
 import {SnackBarService} from "../../../services/snack-bar.service";
 import {genericConst} from "../../../constants/generic-const";
+import {LottoResult} from "../../../models/latest-lotto-result.model";
 
 @Component({
   selector: 'app-latest-lotto-result',
