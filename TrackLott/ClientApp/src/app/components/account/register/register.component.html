@@ -1,4 +1,4 @@
-<mat-card class="mat-elevation-z6">
+<mat-card [class]="cardClasses">
   <mat-card-title>Register</mat-card-title>
   <mat-divider class="my-3" inset></mat-divider>
   <mat-card-content>
@@ -80,7 +80,7 @@
       <div class="row mb-4">
         <div class="col-12">
           <mat-checkbox #termsCheck color="primary" name="termsCheck" ngModel required="true" pattern="true|false">
-            Agree to <a [routerLink]="appRoute.termsAbs" class="text-decoration-none">
+            Agree to <a [routerLink]="appRoute.termsAbs" class="link-secondary">
             terms and conditions</a>
           </mat-checkbox>
           <mat-error *ngIf="(ngFormObj.submitted && !termsCheck.checked)" [style]="{fontSize: 'x-small'}">

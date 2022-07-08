@@ -66,10 +66,6 @@
   </ng-container>
 </ng-container>
 
-<!--<div *ngIf="isLoading$ | async" class="spinner-overlay">-->
-<!--  <mat-spinner color="accent" diameter="50"></mat-spinner>-->
-<!--</div>-->
-
 <ng-template #primaryNumsTemplate let-combo="primary">
   <div *ngFor="let num of combo.primaryNumbers" class="gameNum gameNumPrimaryOutline"
        [ngClass]="lottoResult.primaryNumbers.includes(num) ? 'gameNumMatchPrimary': 'gameNumNotMatch'">

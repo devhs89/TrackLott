@@ -6,6 +6,7 @@ import {Router} from "@angular/router";
 import {appRoute} from "../../../constants/app-route";
 import {SnackBarService} from "../../../services/snack-bar.service";
 import {UserRegisterModel} from "../../../models/user-register.model";
+import {genericConst} from "../../../constants/generic-const";
 
 @Component({
   selector: 'app-register',
@@ -13,6 +14,7 @@ import {UserRegisterModel} from "../../../models/user-register.model";
   styleUrls: ['./register.component.scss']
 })
 export class RegisterComponent {
+  cardClasses = genericConst.cardClasses
   appRoute = appRoute;
   countries = Countries;
 
