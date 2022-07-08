@@ -30,7 +30,7 @@ public class AccountController : BaseApiController
 
   [HttpPost(EndRoute.Register)]
   [AllowAnonymous]
-  public async Task<ActionResult<UserTokenDto>> Register(RegisterDto registerDto)
+  public async Task<ActionResult<WebTokenDto>> Register(RegisterDto registerDto)
   {
     if (!registerDto.Password.Equals(registerDto.RepeatPassword, StringComparison.Ordinal))
       return BadRequest(ResponseMsg.PasswordsMismatch);
@@ -48,16 +48,15 @@ public class AccountController : BaseApiController
     var roleResult = await _userManager.AddToRoleAsync(appUser, AppRole.User);
     if (!roleResult.Succeeded) return BadRequest(roleResult.Errors.FirstOrDefault());
 
-    return new UserTokenDto
+    return new WebTokenDto
     {
-      Email = appUser.Email,
       Token = await _tokenService.CreateToken(appUser)
     };
   }
 
   [HttpPost(EndRoute.Login)]
   [AllowAnonymous]
-  public async Task<ActionResult<UserTokenDto>> Login(LoginDto loginDto)
+  public async Task<ActionResult<WebTokenDto>> Login(LoginDto loginDto)
   {
     var user = await _userManager.Users
       .SingleOrDefaultAsync(rec => rec.NormalizedEmail.Equals(loginDto.Email.Normalize()));
@@ -68,9 +67,8 @@ public class AccountController : BaseApiController
     var result = await _signInManager.CheckPasswordSignInAsync(user, loginDto.Password, true);
     if (!result.Succeeded) return Unauthorized(ResponseMsg.InvalidLoginDetails);
 
-    return new UserTokenDto()
+    return new WebTokenDto()
     {
-      Email = user.NormalizedEmail,
       Token = await _tokenService.CreateToken(user)
     };
   }

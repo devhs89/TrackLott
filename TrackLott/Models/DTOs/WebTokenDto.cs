@@ -1,7 +1,6 @@
 namespace TrackLott.Models.DTOs;
 
-public class UserTokenDto
+public class WebTokenDto
 {
-  public string Email { get; set; }
   public string Token { get; set; }
 }
