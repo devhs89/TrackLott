@@ -2,12 +2,12 @@ import {Component, OnInit} from '@angular/core';
 import {AccountService} from "../../../services/account.service";
 import {Countries} from "../../../constants/countries";
 import {FormBuilder, FormControl, FormGroup, Validators} from "@angular/forms";
-import {UserProfile} from "../../../models/user-profile";
 import {SnackBarService} from "../../../services/snack-bar.service";
 import {responseMsg} from "../../../constants/response-msg";
 import {genericConst} from "../../../constants/generic-const";
 import {UpdateFieldModel} from "../../../models/update-field.model";
 import {UserPasswordModel} from "../../../models/user-password.model";
+import {UserProfileModel} from "../../../models/user-profile.model";
 
 @Component({
   selector: 'app-account',
@@ -27,7 +27,7 @@ export class ProfileComponent implements OnInit {
   private currentPassword: FormControl;
   private newPassword: FormControl;
   private repeatPassword: FormControl;
-  private userProfile: UserProfile;
+  private userProfile: UserProfileModel;
   private userPwd: UserPasswordModel = {currentPassword: "", newPassword: "", repeatPassword: ""};
   gc = genericConst;
 
@@ -104,7 +104,7 @@ export class ProfileComponent implements OnInit {
 
   private getUserProfile() {
     this.accountService.showUser().subscribe({
-      next: (resp: UserProfile) => {
+      next: (resp: UserProfileModel) => {
         const dobReversed = resp.dob.split('/').reverse().join('/');
         this.userProfile = resp;
 

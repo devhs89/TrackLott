@@ -2,7 +2,6 @@ import {Injectable} from "@angular/core";
 import {HttpClient} from "@angular/common/http";
 import {UserRegister} from "../models/user-register";
 import {ReplaySubject} from "rxjs";
-import {UserProfile} from "../models/user-profile";
 import {map} from "rxjs/operators";
 import {endRoute} from "../constants/end-route";
 import {setLocalUserToken, setSessionUserToken} from "../helpers/local-storage";
@@ -10,6 +9,7 @@ import {UpdateFieldModel} from "../models/update-field.model";
 import {UserClaimModel} from "../models/user-claim.model";
 import {UserLoginModel} from "../models/user-login.model";
 import {UserPasswordModel} from "../models/user-password.model";
+import {UserProfileModel} from "../models/user-profile.model";
 
 @Injectable({
   providedIn: "root"
@@ -51,7 +51,7 @@ export class AccountService {
   }
 
   showUser() {
-    return this.httpClient.post<UserProfile>(endRoute.accountShow, {});
+    return this.httpClient.post<UserProfileModel>(endRoute.accountShow, {});
   }
 
   updateInfo(newInfo: UpdateFieldModel) {
