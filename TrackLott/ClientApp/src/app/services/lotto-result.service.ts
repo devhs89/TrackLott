@@ -49,7 +49,7 @@ export class LottoResultService {
   }
 
   private fetchLotResults() {
-    return this.httpClient.get<LottoResultResponse>(endRoute.latestLotto).pipe(
+    return this.httpClient.get<LottoResultResponse>(endRoute.lottoResultLatest).pipe(
       map((value) => {
         const lotResult = LottoResultService.mapRespToLottoResult(value);
         setLocalLotResult(lotResult);
