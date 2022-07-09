@@ -46,12 +46,16 @@ public class AccountController : BaseApiController
     if (!createResult.Succeeded) return BadRequest(createResult.Errors.FirstOrDefault());
 
     var roleResult = await _userManager.AddToRoleAsync(appUser, AppRole.User);
-    if (!roleResult.Succeeded) return BadRequest(roleResult.Errors.FirstOrDefault());
-
-    return new WebTokenDto
+    if (roleResult.Succeeded)
     {
-      Token = await _tokenService.CreateToken(appUser)
-    };
+      return new WebTokenDto
+      {
+        Token = await _tokenService.CreateToken(appUser)
+      };
+    }
+
+    await _userManager.DeleteAsync(appUser);
+    return BadRequest(roleResult.Errors.FirstOrDefault());
   }
 
   [HttpPost(EndRoute.Login)]

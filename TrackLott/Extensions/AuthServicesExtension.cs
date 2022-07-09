@@ -1,4 +1,5 @@
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.IdentityModel.Tokens;
 using TrackLott.Constants;
 using TrackLott.Interfaces;
@@ -28,9 +29,13 @@ public static class AuthServicesExtension
         ValidateIssuerSigningKey = true
       });
 
+    var requireAuthenticatedUserPolicy = new AuthorizationPolicyBuilder().RequireAuthenticatedUser().Build();
+
     serviceCollection.AddAuthorization(options =>
     {
-      options.AddPolicy(AuthPolicyName.RequireAuthenticatedUser, builder => builder.RequireAuthenticatedUser());
+      options.AddPolicy(AuthPolicyName.RequireAuthenticatedUser, requireAuthenticatedUserPolicy);
+      options.DefaultPolicy = requireAuthenticatedUserPolicy;
+      options.FallbackPolicy = requireAuthenticatedUserPolicy;
     });
 
     serviceCollection.AddScoped<IUserClaimsService, UserClaimsService>();
