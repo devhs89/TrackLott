@@ -13,6 +13,7 @@ import {UserLoginModel} from "../../../models/user-login.model";
 })
 export class LoginComponent implements OnInit {
   loginForm: FormGroup;
+  appRoute = appRoute
 
   constructor(private accountService: AccountService, private activatedRoute: ActivatedRoute, private router: Router, private snackBarService: SnackBarService) {
   }

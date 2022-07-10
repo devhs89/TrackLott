@@ -35,7 +35,7 @@ export class RegisterComponent implements OnInit {
 
     this.accountService.register(userDetails).subscribe({
       next: () => {
-        const ignore = this.router.navigate([appRoute.profileRel]);
+        const ignore = this.router.navigate([appRoute.profileAbs]);
       },
       error: resp => this.snackBar.handleResponse(resp.error)
     });

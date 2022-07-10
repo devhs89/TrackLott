@@ -26,7 +26,7 @@ export class AuthGuardService implements CanActivate {
 
     if (!this.isAuthenticated) {
       this.snackBarService.handleResponse(responseMsg.loginFirst);
-      const ignore = this.router.navigate([appRoute.loginRel],
+      const ignore = this.router.navigate([appRoute.loginAbs],
         {queryParams: {returnUrl: state.url}});
     }
     return this.isAuthenticated;
