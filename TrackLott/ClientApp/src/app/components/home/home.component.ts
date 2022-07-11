@@ -7,5 +7,4 @@ import {genericConst} from "../../constants/generic-const";
 })
 export class HomeComponent {
   greeting: string = "Welcome";
-  cardClasses = genericConst.cardClasses;
 }

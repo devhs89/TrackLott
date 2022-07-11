@@ -6,7 +6,6 @@ import {Router} from "@angular/router";
 import {appRoute} from "../../../constants/app-route";
 import {SnackBarService} from "../../../services/snack-bar.service";
 import {UserRegisterModel} from "../../../models/user-register.model";
-import {genericConst} from "../../../constants/generic-const";
 
 @Component({
   selector: 'app-register',
@@ -14,7 +13,6 @@ import {genericConst} from "../../../constants/generic-const";
   styleUrls: ['./register.component.scss']
 })
 export class RegisterComponent implements OnInit {
-  cardClasses = genericConst.cardClasses;
   appRoute = appRoute;
   countries = Countries;
   minDate: Date;

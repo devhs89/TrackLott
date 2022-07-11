@@ -1,0 +1,102 @@
+// Use sass key-value pairs
+@use 'sass:map';
+
+// CUSTOMIZE ANGULAR MATERIAL
+// For more information: https://material.angular.io/guide/theming
+@use '@angular/material' as mat;
+
+//Change mat typography sizes
+$TrackLott-typography: mat.define-typography-config(
+  $body-1: mat.define-typography-level(1rem, 1.2),
+  $button: mat.define-typography-level(1rem)
+);
+
+// Include the common styles for Angular Material. We include this here so that you only
+// have to load a single css file for Angular Material in your app.
+// Be sure that you only ever include this mixin once!
+@include mat.core($TrackLott-typography);
+
+// Define the palettes for your theme using the Material Design palettes available in palette.scss
+// (imported above). For each palette, you can optionally specify a default, lighter, and darker
+// hue. Available color palettes: https://material.io/design/color/
+$TrackLott-primary: mat.define-palette(mat.$teal-palette);
+$TrackLott-accent: mat.define-palette(mat.$amber-palette);
+
+// Create the theme object. A theme consists of configurations for individual
+// theming systems such as "color" or "typography".
+$TrackLott-theme: mat.define-dark-theme((
+  color: (
+    primary: $TrackLott-primary,
+    accent: $TrackLott-accent
+  )
+));
+
+// Include theme styles for core and each component used in your app.
+// Alternatively, you can import and @include the theme mixins for each component
+// that you are using.
+@include mat.core-theme($TrackLott-theme);
+@include mat.button-theme($TrackLott-theme);
+@include mat.button-toggle-theme($TrackLott-theme);
+@include mat.card-theme($TrackLott-theme);
+@include mat.checkbox-theme($TrackLott-theme);
+@include mat.table-theme($TrackLott-theme);
+@include mat.datepicker-theme($TrackLott-theme);
+@include mat.divider-theme($TrackLott-theme);
+@include mat.form-field-theme($TrackLott-theme);
+@include mat.list-theme($TrackLott-theme);
+@include mat.menu-theme($TrackLott-theme);
+@include mat.paginator-theme($TrackLott-theme);
+@include mat.progress-spinner-theme($TrackLott-theme);
+@include mat.select-theme($TrackLott-theme);
+@include mat.sidenav-theme($TrackLott-theme);
+@include mat.toolbar-theme($TrackLott-theme);
+@include mat.tooltip-theme($TrackLott-theme);
+@include mat.snack-bar-theme($TrackLott-theme);
+
+// CUSTOMIZING BOOTSTRAP
+/* Import Bootstrap SCSS components */
+@import "~bootstrap/scss/functions";
+@import "~bootstrap/scss/variables";
+
+$spacers: (
+  0: 0,
+  1: $spacer * .25,
+  2: $spacer * .5,
+  3: $spacer,
+  4: $spacer * 1.5,
+  5: $spacer * 3,
+  6: ($spacer * 3.25),
+  7: ($spacer * 3.5),
+  8: ($spacer * 4),
+  9: ($spacer * 5.5),
+  10: ($spacer * 5)
+);
+
+@import "~bootstrap/scss/mixins";
+@import "~bootstrap/scss/utilities";
+@import "~bootstrap/scss/root";
+
+//Override Bootstrap theme colors in accordance with Angular Material theme
+$mat-color-config: mat.get-color-config($TrackLott-theme);
+$primary-palette: map.get($mat-color-config, 'primary');
+$secondary-palette: map.get($mat-color-config, 'accent');
+$danger-palette: map.get($mat-color-config, 'warn');
+
+// Bootstrap custom theme
+$theme-colors: (
+  "primary": mat.get-color-from-palette($primary-palette, 500),
+  "secondary": mat.get-color-from-palette($secondary-palette, 500),
+  "danger": mat.get-color-from-palette($danger-palette, 500),
+  "info": mat.get-color-from-palette(mat.$cyan-palette, 500)
+);
+
+//Make width class responsive
+$utilities: map.merge($utilities,
+  ("width": map.merge(map.get($utilities, "width"), (responsive: true)))
+);
+
+/* Import Bootstrap SCSS file. */
+@import "~bootstrap/scss/bootstrap";
+
+/* Import Datepicker SCSS file. */
+@import "node_modules/ngx-bootstrap/datepicker/bs-datepicker";

@@ -26,7 +26,6 @@ import {UserClaimModel} from "../../../models/user-claim.model";
 export class MatchComboComponent implements OnInit, OnDestroy {
   isHandset$: Observable<boolean>;
   lottoName = lottoName;
-  gc = genericConst;
   appUser$: Observable<UserClaimModel | null>;
   subscriptions: Subscription[] = [];
   pathRoute = appRoute;
@@ -36,6 +35,7 @@ export class MatchComboComponent implements OnInit, OnDestroy {
   tableDataSource: MatTableDataSource<TableComboModel>;
   MatchedCombosTotal: number = 0;
   @ViewChild(MatPaginator) paginator: MatPaginator;
+  gc = genericConst;
 
   constructor(private deviceBreakpointService: DeviceBreakpointService,
               private loadingService: ProgressIndicatorService,

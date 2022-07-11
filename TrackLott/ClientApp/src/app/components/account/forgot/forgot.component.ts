@@ -9,7 +9,6 @@ import {NgForm} from "@angular/forms";
   styleUrls: ['./forgot.component.scss']
 })
 export class ForgotComponent {
-  cardClasses = genericConst.cardClasses;
   appRoute = appRoute;
 
   onForgotSubmit(forgotForm: NgForm) {

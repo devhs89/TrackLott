@@ -7,5 +7,4 @@ import {genericConst} from "../../constants/generic-const";
   styleUrls: ['./license.component.scss']
 })
 export class LicenseComponent {
-  cardClasses = genericConst.cardClasses
 }

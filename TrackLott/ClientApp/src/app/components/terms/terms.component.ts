@@ -1,5 +1,4 @@
 import {Component} from '@angular/core';
-import {genericConst} from "../../constants/generic-const";
 
 @Component({
   selector: 'app-terms',
@@ -7,5 +6,4 @@ import {genericConst} from "../../constants/generic-const";
   styleUrls: ['./terms.component.scss']
 })
 export class TermsComponent {
-  cardClasses = genericConst.cardClasses;
 }

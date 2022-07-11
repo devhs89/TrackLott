@@ -1,5 +1,5 @@
 <ng-container *ngIf="(appUser$ | async)">
-  <mat-card *ngIf="matchedCombosList.length < 1 && lottoResult" [class]="gc.cardClasses">
+  <mat-card *ngIf="matchedCombosList.length < 1 && lottoResult">
     <mat-card-title>No Matching Combinations Found</mat-card-title>
     <mat-divider class="my-3" inset></mat-divider>
     <mat-card-content>
@@ -13,7 +13,7 @@
   <ng-container *ngIf="matchedCombosList.length > 0">
     <ng-container *ngIf="(isHandset$ | async); else notHandset">
       <ng-container *ngTemplateOutlet="paginator"></ng-container>
-      <mat-card *ngFor="let combo of matchedCombosList" [class]="gc.cardClasses" class="mb-2">
+      <mat-card *ngFor="let combo of matchedCombosList" class="mb-2">
         <mat-card-title>{{combo.dateAdded}}</mat-card-title>
         <mat-card-content>
           <!--          Print primary numbers-->
@@ -27,7 +27,7 @@
     </ng-container>
 
     <ng-template #notHandset>
-      <div [class]="gc.cardClasses">
+      <div>
         <mat-table [dataSource]="tableDataSource" class="w-100">
           <ng-container [matColumnDef]="gc.tablePrimaryNumsCol">
             <mat-header-cell *matHeaderCellDef class="fs-6">Main Numbers</mat-header-cell>

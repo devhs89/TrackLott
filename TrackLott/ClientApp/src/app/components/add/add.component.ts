@@ -28,7 +28,6 @@ export class AddComponent implements OnInit {
   allCombinations: Combination[] = [];
   minDate: Date;
   maxDate: Date;
-  gc = genericConst;
 
   constructor(private deviceBreakpoint: DeviceBreakpointService, private combinationsService: CombinationsService, private snackBarService: SnackBarService) {
   }
