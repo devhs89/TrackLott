@@ -21,8 +21,9 @@
       <mat-checkbox name="rememberMe">Remember Me</mat-checkbox>
       <button class="w-50 mb-3 mx-auto text-uppercase" color="primary" mat-flat-button type="submit">Login</button>
     </form>
-    <div class="w-100">
-      <a [routerLink]="appRoute.forgotAbs"></a>
+    <div class="row g-2 mb-3 text-center">
+      <a class="col-12 link-primary text-decoration-none" [routerLink]="appRoute.registerAbs">Register</a>
+      <a class="col-12 link-primary text-decoration-none" [routerLink]="appRoute.forgotAbs">Forgot password</a>
     </div>
 
   </mat-card-content>
