@@ -3,10 +3,10 @@
   <mat-divider class="my-3" inset></mat-divider>
   <mat-card-content>
     <div *ngFor="let num of latestLottoResult.primaryNumbers" class="gameNum gameNumPrimary">
-      <span>{{num}}</span>
+      {{num}}
     </div>
     <div *ngFor="let num of latestLottoResult.secondaryNumbers" class="gameNum gameNumGrey">
-      <span>{{num}}</span>
+      {{num}}
     </div>
   </mat-card-content>
 </mat-card>

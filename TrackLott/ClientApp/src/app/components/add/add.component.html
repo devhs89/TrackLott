@@ -41,13 +41,11 @@
                         else showBlank"
                 class="border rounded-3 p-2 mb-2">
                 <!--Print current selected primary numbers sequence-->
-                <div *ngFor="let num of currPickedNums.primaryNumbers" class="gameNum gameNumPrimaryOutline">
-                  <span>{{num}}</span>
-                </div>
+                <div *ngFor="let num of currPickedNums.primaryNumbers" class="gameNum gameNumPrimaryOutline">{{num}}</div>
                 <!--Print current selected secondary numbers sequence-->
                 <ng-container *ngIf="currPickedNums.secondaryNumbers && currPickedNums.secondaryNumbers.length > 0">
                   <div *ngFor="let num of currPickedNums.secondaryNumbers" class="gameNum gameNumGrey">
-                    <span>{{num}}</span>
+                    {{num}}
                   </div>
                 </ng-container>
                 <div class="w-100 pt-1 justify-content-end text-end">
@@ -118,11 +116,11 @@
         </div>
         <mat-divider class="my-1" inset></mat-divider>
         <div *ngFor="let num of row.pickedNumbers.primaryNumbers" class="gameNum gameNumPrimaryOutline">
-          <span>{{num}}</span>
+          {{num}}
         </div>
         <ng-container *ngIf="row.pickedNumbers.secondaryNumbers && row.pickedNumbers.secondaryNumbers.length > 0">
           <div *ngFor="let num of row.pickedNumbers.secondaryNumbers" class="gameNum gameNumGrey">
-            <span>{{num}}</span>
+            {{num}}
           </div>
         </ng-container>
       </div>

@@ -3,7 +3,7 @@
   <mat-divider class="my-3" inset></mat-divider>
   <mat-card-content>
     <div *ngFor="let num of resultNums" class="gameNum gameNumSecondary">
-      <span>{{num}}</span>
+      {{num}}
     </div>
   </mat-card-content>
 </mat-card>
@@ -27,7 +27,7 @@
               type="button">{{num}}</button>
     </div>
     <div class="mb-3">
-      <div class="mb-1">Pick one number</div>
+      <div class="mb-1">Pick a number</div>
       <button (click)="onClickBtn($event, 2)" *ngFor="let num of deltaNums[2]"
               [color]="rowThreeNum === num ? 'accent' : 'primary'" [disabled]="rowThreeNum > 0 && (rowThreeNum !== num)"
               class="m-1" mat-mini-fab

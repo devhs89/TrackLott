@@ -68,13 +68,10 @@
 
 <ng-template #primaryNumsTemplate let-combo="primary">
   <div *ngFor="let num of combo.primaryNumbers" class="gameNum gameNumPrimaryOutline"
-       [ngClass]="lottoResult.primaryNumbers.includes(num) ? 'gameNumMatchPrimary': 'gameNumNotMatch'">
-    <span>{{num}}</span>
-  </div>
+       [ngClass]="lottoResult.primaryNumbers.includes(num) ? 'gameNumMatchPrimary': 'gameNumNotMatch'">{{num}}</div>
 </ng-template>
 
 <ng-template #secondaryNumsTemplate let-combo="secondary">
   <div *ngFor="let num of combo.secondaryNumbers" class="gameNum gameNumGreyOutline"
-       [ngClass]="lottoResult.secondaryNumbers.includes(num) ? 'gameNumMatchGrey' : 'gameNumNotMatch'">
-    <span>{{num}}</span></div>
+       [ngClass]="lottoResult.secondaryNumbers.includes(num) ? 'gameNumMatchGrey' : 'gameNumNotMatch'">{{num}}</div>
 </ng-template>

@@ -36,29 +36,29 @@ mat-spinner {
 
 //Lotto number styles
 .gameNum {
-  width: 2.8rem !important;
-  height: 2.8rem !important;
   display: inline-block !important;
-  line-height: 2.8rem !important;
-  min-height: 2.8rem !important;
-  min-width: 2.8rem !important;
+  width: 2.7rem !important;
+  height: 2.7rem !important;
+  min-height: 2.7rem !important;
+  min-width: 2.7rem !important;
+  padding: 0.61rem 0 0 0.05rem !important;
+  font: 1.4rem "Anonymous Pro", monospace !important;
+  font-weight: 500 !important;
+  margin: 0.2rem !important;
   -webkit-border-radius: 1.5rem !important;
   -moz-border-radius: 1.5rem !important;
   -ms-border-radius: 1.5rem !important;
   border-radius: 1.5rem !important;
+  line-height: 1 !important;
   text-align: center !important;
-  font-weight: 600 !important;
-  margin: 0.2rem !important;
   position: relative !important;
-  padding: 0.7rem 0.55rem !important;
-  border: 0 !important;
-  font: 1.4rem "Anonymous Pro", monospace !important;
   overflow: hidden !important;
 }
 
 .gameNumPrimary {
   color: var(--bs-light) !important;
   background-color: var(--bs-primary) !important;
+  border: 0.06rem solid var(--bs-primary) !important;
 }
 
 .gameNumPrimaryOutline {
@@ -69,6 +69,7 @@ mat-spinner {
 .gameNumSecondary {
   color: var(--bs-dark) !important;
   background-color: var(--bs-secondary) !important;
+  border: 0.06rem solid var(--bs-secondary) !important;
 }
 
 .gameNumSecondaryOutline {
@@ -79,6 +80,7 @@ mat-spinner {
 .gameNumGrey {
   color: var(--bs-dark) !important;
   background-color: var(--bs-gray-300) !important;
+  border: 0.06rem solid var(--bs-gray-300) !important;
 }
 
 .gameNumGreyOutline {
@@ -89,18 +91,15 @@ mat-spinner {
 .gameNumMatchPrimary {
   color: var(--bs-light) !important;
   background-color: var(--bs-primary) !important;
+  border: 0.06rem solid var(--bs-primary) !important;
 }
 
 .gameNumMatchGrey {
   color: var(--bs-dark) !important;
   background-color: var(--bs-gray-300) !important;
+  border: 0.06rem solid var(--bs-dark) !important;
 }
 
 .gameNumNotMatch {
   background-color: transparent !important;
-}
-
-//Custom styles in bootstrap format
-.mt-5rem {
-  margin-top: 5rem !important;
 }
