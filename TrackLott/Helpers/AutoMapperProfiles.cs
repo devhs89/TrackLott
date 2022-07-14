@@ -10,9 +10,7 @@ public class AutoMapperProfiles : Profile
   {
     CreateMap<RegisterDto, TrackLottUserModel>()
       .ForMember(model => model.UserName,
-        expression => expression.MapFrom(dto => dto.Email))
-      .ForMember(model => model.Dob,
-        expression => expression.MapFrom(dto => DateOnly.FromDateTime(DateTime.Parse(dto.Dob))));
+        expression => expression.MapFrom(dto => dto.Email));
 
     CreateMap<TrackLottUserModel, ProfileDto>()
       .ForMember(dto => dto.Dob,
