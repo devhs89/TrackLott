@@ -50,7 +50,7 @@ public class AccountController : BaseApiController
     {
       return new WebTokenDto
       {
-        Token = await _tokenService.CreateToken(appUser)
+        JwtToken = await _tokenService.CreateToken(appUser)
       };
     }
 
@@ -73,7 +73,7 @@ public class AccountController : BaseApiController
 
     return new WebTokenDto()
     {
-      Token = await _tokenService.CreateToken(user)
+      JwtToken = await _tokenService.CreateToken(user)
     };
   }
 
@@ -109,9 +109,9 @@ public class AccountController : BaseApiController
   }
 
   [HttpPost(EndRoute.UpdatePassword)]
-  public async Task<ActionResult<string>> UpdatePassword(PasswordDto passwordDto)
+  public async Task<ActionResult<string>> UpdatePassword(ChangePasswordDto changePasswordDto)
   {
-    if (!passwordDto.newPassword.Equals(passwordDto.repeatPassword, StringComparison.Ordinal))
+    if (!changePasswordDto.newPassword.Equals(changePasswordDto.repeatPassword, StringComparison.Ordinal))
       return BadRequest(ResponseMsg.PasswordsMismatch);
 
     var userEmail = _userClaimsService.GetNormalisedEmail();
@@ -120,7 +120,7 @@ public class AccountController : BaseApiController
     var appUser = await _userManager.Users.SingleOrDefaultAsync(rec => rec.NormalizedEmail.Equals(userEmail));
     if (appUser == null) return BadRequest(ResponseMsg.UserNotExist);
 
-    var result = await _userManager.ChangePasswordAsync(appUser, passwordDto.currentPassword, passwordDto.newPassword);
+    var result = await _userManager.ChangePasswordAsync(appUser, changePasswordDto.currentPassword, changePasswordDto.newPassword);
 
     return result.Succeeded
       ? ResponseMsg.PasswordUpdated
