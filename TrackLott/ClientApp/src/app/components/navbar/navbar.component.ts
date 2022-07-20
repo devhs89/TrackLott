@@ -8,7 +8,7 @@ import {Router} from "@angular/router";
 import {AuthGuardService} from "../../services/auth-guard.service";
 import {appRoute} from "../../constants/app-route";
 import {ProgressIndicatorService} from "../../services/progress-indicator.service";
-import {UserClaimModel} from "../../models/user-claim.model";
+import {WebTokenModel} from "../../models/web-token.model";
 
 @Component({
   selector: 'app-navbar',
@@ -26,7 +26,7 @@ export class NavbarComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit(): void {
-    this.appUserSubscription = this.accountService.userClaim$.subscribe((ut: UserClaimModel | null) => {
+    this.appUserSubscription = this.accountService.userClaim$.subscribe((ut: WebTokenModel | null) => {
       if (ut !== null) {
         this.userLoggedIn = true;
       }

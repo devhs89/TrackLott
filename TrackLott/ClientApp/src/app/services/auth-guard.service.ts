@@ -19,7 +19,7 @@ export class AuthGuardService implements CanActivate {
   canActivate(route: ActivatedRouteSnapshot, state: RouterStateSnapshot)
     : Observable<boolean | UrlTree> | Promise<boolean | UrlTree> | boolean | UrlTree {
     this.accountService.userClaim$.pipe(take(1)).subscribe(value => {
-      if (value?.token) {
+      if (value?.jwtToken) {
         this.isAuthenticated = true;
       }
     });

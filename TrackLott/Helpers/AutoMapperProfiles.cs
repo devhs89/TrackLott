@@ -12,9 +12,7 @@ public class AutoMapperProfiles : Profile
       .ForMember(model => model.UserName,
         expression => expression.MapFrom(dto => dto.Email));
 
-    CreateMap<TrackLottUserModel, ProfileDto>()
-      .ForMember(dto => dto.Dob,
-        expression => expression.MapFrom(model => model.Dob.ToString()));
+    CreateMap<TrackLottUserModel, ProfileDto>();
 
     CreateMap<ProfileUpdateDto, TrackLottUserModel>()
       .ForMember(model => model.GivenName, expression =>

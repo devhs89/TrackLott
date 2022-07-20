@@ -19,5 +19,5 @@ public class RegisterDto
   public DateTime Dob { get; set; }
 
   [Required, DataType(DataType.Text)] public string Country { get; set; }
-  [Required, RegularExpression("true")] public string TermsCheck { get; set; }
+  [Required] public bool TermsCheck { get; set; }
 }

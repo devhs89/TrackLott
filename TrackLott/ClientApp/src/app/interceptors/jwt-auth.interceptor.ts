@@ -3,7 +3,7 @@ import {HttpEvent, HttpHandler, HttpInterceptor, HttpRequest} from '@angular/com
 import {Observable} from 'rxjs';
 import {AccountService} from "../services/account.service";
 import {take} from "rxjs/operators";
-import {UserClaimModel} from "../models/user-claim.model";
+import {WebTokenModel} from "../models/web-token.model";
 
 @Injectable({
   providedIn: "root"
@@ -14,7 +14,7 @@ export class JwtAuthInterceptor implements HttpInterceptor {
   }
 
   intercept(request: HttpRequest<unknown>, next: HttpHandler): Observable<HttpEvent<unknown>> {
-    let currentAppUser: UserClaimModel | null = {token: ''};
+    let currentAppUser: WebTokenModel | null = {jwtToken: ''};
     let tokenizedRequest: HttpRequest<unknown> | null = null;
 
     this.accountService.userClaim$.pipe(take(1)).subscribe({
@@ -26,7 +26,7 @@ export class JwtAuthInterceptor implements HttpInterceptor {
     if (currentAppUser !== null) {
       tokenizedRequest = request.clone({
         setHeaders: {
-          "Authorization": `Bearer ${currentAppUser?.token}`
+          "Authorization": `Bearer ${currentAppUser?.jwtToken}`
         }
       });
     }

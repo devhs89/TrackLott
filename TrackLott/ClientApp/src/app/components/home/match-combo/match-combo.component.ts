@@ -16,7 +16,7 @@ import {genericConst} from "../../../constants/generic-const";
 import {PickedNumbers} from "../../../models/combination.model";
 import {LottoResult} from "../../../models/latest-lotto-result.model";
 import {MatchComboResponse, MatchedCombo, TableComboModel} from "../../../models/matched-combo.model";
-import {UserClaimModel} from "../../../models/user-claim.model";
+import {WebTokenModel} from "../../../models/web-token.model";
 
 @Component({
   selector: 'app-match-combo',
@@ -26,7 +26,7 @@ import {UserClaimModel} from "../../../models/user-claim.model";
 export class MatchComboComponent implements OnInit, OnDestroy {
   isHandset$: Observable<boolean>;
   lottoName = lottoName;
-  appUser$: Observable<UserClaimModel | null>;
+  appUser$: Observable<WebTokenModel | null>;
   subscriptions: Subscription[] = [];
   pathRoute = appRoute;
   lottoResult: LottoResult;
@@ -50,7 +50,7 @@ export class MatchComboComponent implements OnInit, OnDestroy {
     this.appUser$ = this.accountService.userClaim$;
     this.appUser$.pipe(take(1)).subscribe({
       next: userClaim => {
-        if (userClaim?.token) {
+        if (userClaim?.jwtToken) {
           this.lottoResultService.latestLottoResult$.pipe(take(1)).subscribe({
             next: lottoResult => {
               if (lottoResult?.productId) {
