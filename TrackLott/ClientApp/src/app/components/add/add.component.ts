@@ -4,12 +4,12 @@ import {FormControl, FormGroup, Validators} from "@angular/forms";
 import {Observable} from "rxjs";
 import {Breakpoints} from "@angular/cdk/layout";
 import {CombinationsService} from "../../services/combinations.service";
-import {GameSpecs} from "../../models/lotto-game";
 import {MatSelectChange} from "@angular/material/select";
-import {Combination, CombinationPayload, PickedNumbers} from "../../models/combination";
 import {lottoName, lottoSelectOption} from "../../constants/lotto-select-option";
 import {SnackBarService} from "../../services/snack-bar.service";
 import {genericConst} from "../../constants/generic-const";
+import {Combination, CombinationPayload, PickedNumbers} from "../../models/combination.model";
+import {GameSpec} from "../../models/lotto-game.model";
 
 @Component({
   selector: 'app-add',
@@ -19,7 +19,7 @@ import {genericConst} from "../../constants/generic-const";
 export class AddComponent implements OnInit {
   isHandset$: Observable<boolean>;
   lotterySelectOption = lottoSelectOption;
-  selectedGameOption: GameSpecs = lottoSelectOption.generic;
+  selectedGameOption: GameSpec = lottoSelectOption.generic;
   defaultSelectOption = lottoName.genericId;
   addCombosForm: FormGroup;
   lotteryNameControl: FormControl;
@@ -28,7 +28,6 @@ export class AddComponent implements OnInit {
   allCombinations: Combination[] = [];
   minDate: Date;
   maxDate: Date;
-  gc = genericConst;
 
   constructor(private deviceBreakpoint: DeviceBreakpointService, private combinationsService: CombinationsService, private snackBarService: SnackBarService) {
   }
@@ -122,11 +121,11 @@ export class AddComponent implements OnInit {
       }
       this.combinationsService.addCombinations(payload).subscribe({
         next: resp => {
-          this.snackBarService.showSnackBar(resp);
+          this.snackBarService.handleResponse(resp);
           this.clearCurrentPickedNumbers();
           this.clearAllPickedNumbers();
         },
-        error: err => this.snackBarService.showSnackBar(err.error)
+        error: err => this.snackBarService.handleResponse(err.error)
       });
     }
   }

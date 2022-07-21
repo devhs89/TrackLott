@@ -2,12 +2,11 @@ import {Component, OnInit} from '@angular/core';
 import {AccountService} from "../../../services/account.service";
 import {Countries} from "../../../constants/countries";
 import {FormBuilder, FormControl, FormGroup, Validators} from "@angular/forms";
-import {UserProfile} from "../../../models/user-profile";
-import {UserPassword} from "../../../models/user-password";
 import {SnackBarService} from "../../../services/snack-bar.service";
-import {notificationMessage} from "../../../constants/notification-message";
-import {UpdateField} from "../../../models/update-field";
-import {genericConst} from "../../../constants/generic-const";
+import {responseMsg} from "../../../constants/response-msg";
+import {UpdateFieldModel} from "../../../models/update-field.model";
+import {UserPasswordModel} from "../../../models/user-password.model";
+import {UserProfileModel} from "../../../models/user-profile.model";
 
 @Component({
   selector: 'app-account',
@@ -27,9 +26,8 @@ export class ProfileComponent implements OnInit {
   private currentPassword: FormControl;
   private newPassword: FormControl;
   private repeatPassword: FormControl;
-  private userProfile: UserProfile;
-  private userPwd: UserPassword = {currentPassword: "", newPassword: "", repeatPassword: ""};
-  gc = genericConst;
+  private userProfile: UserProfileModel;
+  private userPwd: UserPasswordModel = {currentPassword: "", newPassword: "", repeatPassword: ""};
 
   constructor(private formBuilder: FormBuilder, private accountService: AccountService, private snackBarService: SnackBarService) {
   }
@@ -73,7 +71,7 @@ export class ProfileComponent implements OnInit {
   onUpdateSubmit() {
     if (this.profileForm.invalid) return;
 
-    const infoToUpdate: UpdateField = {
+    const infoToUpdate: UpdateFieldModel = {
       givenName: undefined,
       surname: undefined,
       country: undefined
@@ -95,16 +93,16 @@ export class ProfileComponent implements OnInit {
 
     if (infoToUpdate.givenName === undefined && infoToUpdate.surname === undefined && infoToUpdate.country === undefined) return;
 
-    this.accountService.onUpdateInfo(infoToUpdate).subscribe({
-      next: resp => this.snackBarService.showSnackBar(resp === null ? notificationMessage.profileUpdateSuccess : notificationMessage.generic),
-      error: err => this.snackBarService.showSnackBar(err.error),
+    this.accountService.updateInfo(infoToUpdate).subscribe({
+      next: resp => this.snackBarService.handleResponse(resp === null ? responseMsg.profileUpdateSuccess : responseMsg.generic),
+      error: err => this.snackBarService.handleResponse(err.error),
       complete: () => this.getUserProfile()
     });
   }
 
   private getUserProfile() {
     this.accountService.showUser().subscribe({
-      next: (resp: UserProfile) => {
+      next: (resp: UserProfileModel) => {
         const dobReversed = resp.dob.split('/').reverse().join('/');
         this.userProfile = resp;
 
@@ -116,7 +114,7 @@ export class ProfileComponent implements OnInit {
           country: resp.country.toUpperCase() || ''
         });
       },
-      error: err => this.snackBarService.showSnackBar(err.error)
+      error: err => this.snackBarService.handleResponse(err.error)
     });
   }
 
@@ -127,17 +125,17 @@ export class ProfileComponent implements OnInit {
       this.userPwd.repeatPassword = this.repeatPassword.value;
 
       if (this.userPwd.newPassword === this.userPwd.repeatPassword) {
-        this.accountService.onUpdatePassword(this.userPwd)
+        this.accountService.updatePassword(this.userPwd)
           .subscribe({
-            next: resp => this.snackBarService.showSnackBar(resp),
-            error: err => this.snackBarService.showSnackBar(err.error),
+            next: resp => this.snackBarService.handleResponse(resp),
+            error: err => this.snackBarService.handleResponse(err.error),
             complete: () => {
               this.resetPasswordForm();
               this.disablePasswordControls = true;
             }
           });
       } else {
-        this.snackBarService.showSnackBar(notificationMessage.passwordMismatch);
+        this.snackBarService.handleResponse(responseMsg.passwordMismatch);
       }
     }
   }

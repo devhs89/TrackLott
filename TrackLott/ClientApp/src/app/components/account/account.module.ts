@@ -8,16 +8,16 @@ import {MaterialUiModule} from "../../modules/material-ui.module";
 import {FormsModule, ReactiveFormsModule} from "@angular/forms";
 import {AuthGuardService} from "../../services/auth-guard.service";
 import {ProfileComponent} from "./profile/profile.component";
-import {appRouteConst} from "../../constants/app-route-const";
+import {appRoute} from "../../constants/app-route";
 
 @NgModule({
   imports: [
     RouterModule.forChild([
-      {path: appRouteConst.login, component: LoginComponent},
-      {path: appRouteConst.register, component: RegisterComponent},
-      {path: appRouteConst.profile, component: ProfileComponent, canActivate: [AuthGuardService]},
-      {path: appRouteConst.forgot, component: ForgotComponent},
-      {path: '', redirectTo: appRouteConst.login, pathMatch: 'full'}
+      {path: appRoute.login, component: LoginComponent},
+      {path: appRoute.register, component: RegisterComponent},
+      {path: appRoute.profile, component: ProfileComponent, canActivate: [AuthGuardService]},
+      {path: appRoute.forgot, component: ForgotComponent},
+      {path: '', redirectTo: appRoute.login, pathMatch: 'full'}
     ]),
     CommonModule,
     FormsModule,

@@ -1,14 +1,14 @@
 import {Component, OnDestroy, OnInit} from '@angular/core';
 import {AccountService} from "../../services/account.service";
 import {Observable, Subscription} from "rxjs";
-import {UserClaim} from "../../models/user-claim";
 import {removeLocalUserToken, removeSessionUserToken} from "../../helpers/local-storage";
 import {DeviceBreakpointService} from "../../services/device-breakpoint.service";
 import {Breakpoints} from "@angular/cdk/layout";
 import {Router} from "@angular/router";
 import {AuthGuardService} from "../../services/auth-guard.service";
-import {appRouteConst} from "../../constants/app-route-const";
+import {appRoute} from "../../constants/app-route";
 import {ProgressIndicatorService} from "../../services/progress-indicator.service";
+import {WebTokenModel} from "../../models/web-token.model";
 
 @Component({
   selector: 'app-navbar',
@@ -19,14 +19,14 @@ export class NavbarComponent implements OnInit, OnDestroy {
   isHandset$: Observable<boolean>;
   isLoading$ = this.loadingService.isLoading$;
   appUserSubscription = new Subscription();
-  appRoute = appRouteConst;
+  appRoute = appRoute;
   userLoggedIn = false;
 
   constructor(private loadingService: ProgressIndicatorService, private deviceBreakpoint: DeviceBreakpointService, private accountService: AccountService, private router: Router, private authGuardService: AuthGuardService) {
   }
 
   ngOnInit(): void {
-    this.appUserSubscription = this.accountService.appUser$.subscribe((ut: UserClaim | null) => {
+    this.appUserSubscription = this.accountService.userClaim$.subscribe((ut: WebTokenModel | null) => {
       if (ut !== null) {
         this.userLoggedIn = true;
       }

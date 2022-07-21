@@ -1,37 +1,37 @@
 import {Injectable} from "@angular/core";
 import {HttpClient} from "@angular/common/http";
-import {UserRegister} from "../models/user-register";
 import {ReplaySubject} from "rxjs";
-import {UserLogin} from "../models/user-login";
-import {UserClaim} from "../models/user-claim";
-import {UserProfile} from "../models/user-profile";
-import {UserPassword} from "../models/user-password";
-import {UpdateField} from "../models/update-field";
 import {map} from "rxjs/operators";
 import {endRoute} from "../constants/end-route";
 import {setLocalUserToken, setSessionUserToken} from "../helpers/local-storage";
+import {UpdateFieldModel} from "../models/update-field.model";
+import {WebTokenModel} from "../models/web-token.model";
+import {UserLoginModel} from "../models/user-login.model";
+import {UserPasswordModel} from "../models/user-password.model";
+import {UserProfileModel} from "../models/user-profile.model";
+import {UserRegisterModel} from "../models/user-register.model";
 
 @Injectable({
   providedIn: "root"
 })
 export class AccountService {
-  private appUserBehaviorSubject = new ReplaySubject<UserClaim | null>(1);
-  appUser$ = this.appUserBehaviorSubject.asObservable();
+  private userClaimBehaviorSubject = new ReplaySubject<WebTokenModel | null>(1);
+  userClaim$ = this.userClaimBehaviorSubject.asObservable();
 
   constructor(private httpClient: HttpClient) {
   }
 
-  emitAppUser(userClaim: UserClaim) {
-    this.appUserBehaviorSubject.next(userClaim);
+  emitAppUser(userClaim: WebTokenModel) {
+    this.userClaimBehaviorSubject.next(userClaim);
   }
 
   removeAppUser() {
-    this.appUserBehaviorSubject.next(null);
+    this.userClaimBehaviorSubject.next(null);
   }
 
-  onRegister(userRegister: UserRegister) {
-    return this.httpClient.post<UserClaim>(endRoute.accountRegister, userRegister).pipe(map(value => {
-      if (value.email && value.token) {
+  register(userRegister: UserRegisterModel) {
+    return this.httpClient.post<WebTokenModel>(endRoute.accountRegister, userRegister).pipe(map(value => {
+      if (value.jwtToken) {
         this.emitAppUser(value);
         setSessionUserToken(value);
       }
@@ -39,25 +39,26 @@ export class AccountService {
     }));
   }
 
-  onLogin(userCredentials: UserLogin) {
-    return this.httpClient.post<UserClaim>(endRoute.accountLogin, userCredentials).pipe(map(value => {
-      if (value.email && value.token) {
-        this.emitAppUser(value);
-        userCredentials.rememberMe ? setLocalUserToken(value) : setSessionUserToken(value);
-      }
-      return value;
-    }));
+  login(userCredentials: UserLoginModel) {
+    return this.httpClient.post<WebTokenModel>(endRoute.accountLogin, userCredentials)
+      .pipe(map(value => {
+        if (value.jwtToken) {
+          this.emitAppUser(value);
+          userCredentials.rememberMe ? setLocalUserToken(value) : setSessionUserToken(value);
+        }
+        return value;
+      }));
   }
 
   showUser() {
-    return this.httpClient.post<UserProfile>(endRoute.accountShow, {});
+    return this.httpClient.post<UserProfileModel>(endRoute.accountShow, {});
   }
 
-  onUpdateInfo(newInfo: UpdateField) {
+  updateInfo(newInfo: UpdateFieldModel) {
     return this.httpClient.put<string>(endRoute.accountUpdate, newInfo);
   }
 
-  onUpdatePassword(passwords: UserPassword) {
+  updatePassword(passwords: UserPasswordModel) {
     return this.httpClient.post(endRoute.updatePassword, passwords, {responseType: "text"});
   }
 }

@@ -4,19 +4,19 @@ import {Observable, Subscription} from "rxjs";
 import {LottoResultService} from "../../../services/lotto-result.service";
 import {AccountService} from "../../../services/account.service";
 import {take} from "rxjs/operators";
-import {MatchComboResponse, MatchedCombo, TableComboModel} from "../../../models/matched-combo";
-import {PickedNumbers} from "../../../models/combination";
 import {DeviceBreakpointService} from "../../../services/device-breakpoint.service";
 import {Breakpoints} from "@angular/cdk/layout";
 import {MatPaginator} from "@angular/material/paginator";
 import {MatTableDataSource} from "@angular/material/table";
-import {LottoResult} from "../../../models/lotto-result";
-import {UserClaim} from "../../../models/user-claim";
 import {ProgressIndicatorService} from "../../../services/progress-indicator.service";
 import {lottoName} from "../../../constants/lotto-select-option";
 import {SnackBarService} from "../../../services/snack-bar.service";
-import {appRouteConst} from "../../../constants/app-route-const";
+import {appRoute} from "../../../constants/app-route";
 import {genericConst} from "../../../constants/generic-const";
+import {PickedNumbers} from "../../../models/combination.model";
+import {LottoResult} from "../../../models/latest-lotto-result.model";
+import {MatchComboResponse, MatchedCombo, TableComboModel} from "../../../models/matched-combo.model";
+import {WebTokenModel} from "../../../models/web-token.model";
 
 @Component({
   selector: 'app-match-combo',
@@ -26,16 +26,16 @@ import {genericConst} from "../../../constants/generic-const";
 export class MatchComboComponent implements OnInit, OnDestroy {
   isHandset$: Observable<boolean>;
   lottoName = lottoName;
-  gc = genericConst;
-  appUser$: Observable<UserClaim | null>;
+  appUser$: Observable<WebTokenModel | null>;
   subscriptions: Subscription[] = [];
-  pathRoute = appRouteConst;
+  pathRoute = appRoute;
   lottoResult: LottoResult;
   matchedCombosList: TableComboModel[] = [];
   tableColumns = [genericConst.tablePrimaryNumsCol, genericConst.tableDrawDateCol];
   tableDataSource: MatTableDataSource<TableComboModel>;
   MatchedCombosTotal: number = 0;
   @ViewChild(MatPaginator) paginator: MatPaginator;
+  gc = genericConst;
 
   constructor(private deviceBreakpointService: DeviceBreakpointService,
               private loadingService: ProgressIndicatorService,
@@ -47,10 +47,10 @@ export class MatchComboComponent implements OnInit, OnDestroy {
 
   ngOnInit(): void {
     this.isHandset$ = this.deviceBreakpointService.handsetBreakpoint(Breakpoints.XSmall);
-    this.appUser$ = this.accountService.appUser$;
+    this.appUser$ = this.accountService.userClaim$;
     this.appUser$.pipe(take(1)).subscribe({
       next: userClaim => {
-        if (userClaim?.token) {
+        if (userClaim?.jwtToken) {
           this.lottoResultService.latestLottoResult$.pipe(take(1)).subscribe({
             next: lottoResult => {
               if (lottoResult?.productId) {
@@ -76,7 +76,7 @@ export class MatchComboComponent implements OnInit, OnDestroy {
   private getMatchingCombinations(lottoResult: LottoResult) {
     this.combinationsService.matchCombinations(lottoResult.productId,
       this.paginator ? this.paginator.pageIndex : 0,
-      this.paginator ? this.paginator.pageSize : 5)
+      this.paginator ? this.paginator.pageSize : 10)
       .subscribe({
         next: (value: MatchComboResponse) => {
           // @ts-ignore
@@ -91,7 +91,7 @@ export class MatchComboComponent implements OnInit, OnDestroy {
             })
           );
         },
-        error: err => this.snackBarService.showSnackBar(err.error)
+        error: err => this.snackBarService.handleResponse(err.error)
       });
   }
 

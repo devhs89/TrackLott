@@ -4,7 +4,7 @@ using TrackLott.Models.DataModels;
 
 namespace TrackLott.Data;
 
-public class TrackLottDbContext : IdentityDbContext<UserModel, AppRoleModel, Guid>
+public class TrackLottDbContext : IdentityDbContext<TrackLottUserModel, TrackLottAppRoleModel, Guid>
 {
   public TrackLottDbContext(DbContextOptions<TrackLottDbContext> options) : base(options)
   {
@@ -20,7 +20,7 @@ public class TrackLottDbContext : IdentityDbContext<UserModel, AppRoleModel, Gui
     builder.Entity<LottoResultModel>().HasKey(model => new { model.ProductId, model.DrawNumber });
 
     builder.Entity<LottoResultModel>().HasMany(lr => lr.Combinations)
-      .WithOne(c => c.LotteryResult)
+      .WithOne(c => c.LottoResult)
       .HasForeignKey(c => new { LottoResultProductId = c.LottoProductId, LottoResultDrawNumber = c.LottoDrawNumber });
   }
 }

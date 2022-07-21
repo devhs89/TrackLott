@@ -5,20 +5,20 @@ import {AddComponent} from "./components/add/add.component";
 import {PlayComponent} from "./components/play/play.component";
 import {AuthGuardService} from "./services/auth-guard.service";
 import {TermsComponent} from "./components/terms/terms.component";
-import {appRouteConst} from "./constants/app-route-const";
+import {appRoute} from "./constants/app-route";
 import {LicenseComponent} from "./components/license/license.component";
 
 const routes = [
-  {path: appRouteConst.home, component: HomeComponent},
-  {path: appRouteConst.add, component: AddComponent, canActivate: [AuthGuardService]},
-  {path: appRouteConst.play, component: PlayComponent},
-  {path: appRouteConst.license, component: LicenseComponent},
-  {path: appRouteConst.terms, component: TermsComponent},
+  {path: appRoute.home, component: HomeComponent},
+  {path: appRoute.add, component: AddComponent, canActivate: [AuthGuardService]},
+  {path: appRoute.play, component: PlayComponent},
+  {path: appRoute.license, component: LicenseComponent},
+  {path: appRoute.terms, component: TermsComponent},
   {
-    path: appRouteConst.account,
+    path: appRoute.account,
     loadChildren: () => import('./components/account/account.module').then(mod => mod.AccountModule)
   },
-  {path: appRouteConst.root, redirectTo: appRouteConst.home, pathMatch: 'full'}
+  {path: appRoute.root, redirectTo: appRoute.home, pathMatch: 'full'}
 ];
 
 @NgModule({

@@ -4,5 +4,5 @@ namespace TrackLott.Interfaces;
 
 public interface ITokenService
 {
-  public Task<string> CreateToken(UserModel userModel);
+  public Task<string> CreateToken(TrackLottUserModel userModel);
 }

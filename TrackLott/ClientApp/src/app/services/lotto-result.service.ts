@@ -1,11 +1,11 @@
 import {Injectable} from '@angular/core';
 import {HttpClient} from '@angular/common/http';
-import {LottoResult, LottoResultResponse} from '../models/lotto-result';
 import {map} from 'rxjs/operators';
 import {of, ReplaySubject} from 'rxjs';
 import {getSavedLotResult, setLocalLotResult} from "../helpers/local-storage";
 import {splitDateTime} from "../helpers/split-date-time";
 import {endRoute} from "../constants/end-route";
+import {LottoResult, LottoResultResponse} from "../models/latest-lotto-result.model";
 
 @Injectable({
   providedIn: 'root',
@@ -49,7 +49,7 @@ export class LottoResultService {
   }
 
   private fetchLotResults() {
-    return this.httpClient.get<LottoResultResponse>(endRoute.latestLotto).pipe(
+    return this.httpClient.get<LottoResultResponse>(endRoute.lottoResultLatest).pipe(
       map((value) => {
         const lotResult = LottoResultService.mapRespToLottoResult(value);
         setLocalLotResult(lotResult);

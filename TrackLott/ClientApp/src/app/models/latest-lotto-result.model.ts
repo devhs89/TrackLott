@@ -1,4 +1,4 @@
-import {SplitDateTime} from "./basic-models";
+import {DateTimeModel} from "./date-time.model";
 
 export interface LottoResultResponse {
   productId: string;
@@ -19,6 +19,6 @@ export interface LottoResult {
 }
 
 export interface SavedLottoResult {
-  dateSaved: SplitDateTime;
+  dateSaved: DateTimeModel;
   result: LottoResult;
 }

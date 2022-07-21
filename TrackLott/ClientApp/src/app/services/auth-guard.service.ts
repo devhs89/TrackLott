@@ -3,9 +3,9 @@ import {take} from "rxjs/operators";
 import {Injectable} from "@angular/core";
 import {ActivatedRouteSnapshot, CanActivate, Router, RouterStateSnapshot, UrlTree} from "@angular/router";
 import {Observable} from "rxjs";
-import {appRouteConst} from "../constants/app-route-const";
+import {appRoute} from "../constants/app-route";
 import {SnackBarService} from "./snack-bar.service";
-import {notificationMessage} from "../constants/notification-message";
+import {responseMsg} from "../constants/response-msg";
 
 @Injectable({
   providedIn: "root"
@@ -18,15 +18,15 @@ export class AuthGuardService implements CanActivate {
 
   canActivate(route: ActivatedRouteSnapshot, state: RouterStateSnapshot)
     : Observable<boolean | UrlTree> | Promise<boolean | UrlTree> | boolean | UrlTree {
-    this.accountService.appUser$.pipe(take(1)).subscribe(value => {
-      if (value?.token) {
+    this.accountService.userClaim$.pipe(take(1)).subscribe(value => {
+      if (value?.jwtToken) {
         this.isAuthenticated = true;
       }
     });
 
     if (!this.isAuthenticated) {
-      this.snackBarService.showSnackBar(notificationMessage.loginFirst);
-      const ignore = this.router.navigate([appRouteConst.loginRel],
+      this.snackBarService.handleResponse(responseMsg.loginFirst);
+      const ignore = this.router.navigate([appRoute.loginAbs],
         {queryParams: {returnUrl: state.url}});
     }
     return this.isAuthenticated;

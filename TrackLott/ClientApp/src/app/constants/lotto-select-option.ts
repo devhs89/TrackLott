@@ -1,4 +1,4 @@
-import {LottoGame} from "../models/lotto-game";
+import {LottoGame} from "../models/lotto-game.model";
 
 export const lottoName = {
   genericId: "generic",
@@ -18,18 +18,18 @@ export const lottoName = {
 };
 
 export const lottoSelectOption: LottoGame = {
-  generic: {name: lottoName.genericDisplay, biggest: 45, standard: 6, allowed: 20, primaryNumbers: []},
-  monWedLotto: {name: lottoName.monWedLottoDisplay, biggest: 45, standard: 6, allowed: 20, primaryNumbers: []},
-  ozLotto: {name: lottoName.ozLottoDisplay, biggest: 47, standard: 7, allowed: 20, primaryNumbers: []},
+  generic: {name: lottoName.genericDisplay, biggest: 45, standard: 6, allowed: 10, primaryNumbers: []},
+  monWedLotto: {name: lottoName.monWedLottoDisplay, biggest: 45, standard: 6, allowed: 10, primaryNumbers: []},
+  ozLotto: {name: lottoName.ozLottoDisplay, biggest: 47, standard: 7, allowed: 10, primaryNumbers: []},
   powerball: {
     name: lottoName.powerballDisplay,
     biggest: 35,
     standard: 7,
-    allowed: 20,
+    allowed: 10,
     primaryNumbers: [],
     secondaryNumbers: []
   },
-  tattsLotto: {name: lottoName.tattsLottoDisplay, biggest: 45, standard: 6, allowed: 20, primaryNumbers: []},
+  tattsLotto: {name: lottoName.tattsLottoDisplay, biggest: 45, standard: 6, allowed: 10, primaryNumbers: []},
   setForLife744: {
     name: lottoName.setForLife744Display,
     biggest: 44,

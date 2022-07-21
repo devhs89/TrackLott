@@ -1,8 +1,7 @@
 import {Component, OnInit} from '@angular/core';
 import {LottoResultService} from "../../../services/lotto-result.service";
-import {LottoResult} from "../../../models/lotto-result";
 import {SnackBarService} from "../../../services/snack-bar.service";
-import {genericConst} from "../../../constants/generic-const";
+import {LottoResult} from "../../../models/latest-lotto-result.model";
 
 @Component({
   selector: 'app-latest-lotto-result',
@@ -11,7 +10,6 @@ import {genericConst} from "../../../constants/generic-const";
 })
 export class LatestLottoResultComponent implements OnInit {
   latestLottoResult: LottoResult;
-  gc = genericConst;
 
   constructor(private lottoResultService: LottoResultService, private snackBarService: SnackBarService) {
   }
@@ -21,7 +19,7 @@ export class LatestLottoResultComponent implements OnInit {
       next: (resp) => {
         this.latestLottoResult = {...resp};
       },
-      error: err => this.snackBarService.showSnackBar(err.error)
+      error: err => this.snackBarService.handleResponse(err.error)
     });
   }
 }

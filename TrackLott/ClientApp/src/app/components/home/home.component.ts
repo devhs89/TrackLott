@@ -1,4 +1,5 @@
 import {Component} from '@angular/core';
+import {genericConst} from "../../constants/generic-const";
 
 @Component({
   selector: 'app-home',

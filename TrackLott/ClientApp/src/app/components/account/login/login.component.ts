@@ -1,10 +1,10 @@
 import {Component, OnInit} from '@angular/core';
 import {FormControl, FormGroup, Validators} from "@angular/forms";
 import {AccountService} from "../../../services/account.service";
-import {UserLogin} from "../../../models/user-login";
 import {ActivatedRoute, Router} from "@angular/router";
 import {SnackBarService} from "../../../services/snack-bar.service";
-import {appRouteConst} from "../../../constants/app-route-const";
+import {appRoute} from "../../../constants/app-route";
+import {UserLoginModel} from "../../../models/user-login.model";
 
 @Component({
   selector: 'app-login',
@@ -13,6 +13,7 @@ import {appRouteConst} from "../../../constants/app-route-const";
 })
 export class LoginComponent implements OnInit {
   loginForm: FormGroup;
+  appRoute = appRoute
 
   constructor(private accountService: AccountService, private activatedRoute: ActivatedRoute, private router: Router, private snackBarService: SnackBarService) {
   }
@@ -27,15 +28,15 @@ export class LoginComponent implements OnInit {
 
   onLoginSubmit() {
     if (this.loginForm.valid) {
-      let userCredentials: UserLogin = {...this.loginForm.value};
-      this.accountService.onLogin(userCredentials).subscribe({
+      let userCredentials: UserLoginModel = {...this.loginForm.value};
+      this.accountService.login(userCredentials).subscribe({
         next: () => {
           const returnUrl = this.activatedRoute.snapshot.queryParamMap.get("returnUrl");
           returnUrl
             ? this.router.navigate([returnUrl])
-            : this.router.navigate([appRouteConst.homeAbs]);
+            : this.router.navigate([appRoute.homeAbs]);
         },
-        error: err => this.snackBarService.showSnackBar(err.error)
+        error: err => this.snackBarService.handleResponse(err.error)
       });
     }
   }

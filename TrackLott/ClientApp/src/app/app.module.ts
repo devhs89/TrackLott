@@ -7,7 +7,6 @@ import {HTTP_INTERCEPTORS, HttpClientModule} from "@angular/common/http";
 import {FormsModule, ReactiveFormsModule} from "@angular/forms";
 import {BrowserAnimationsModule} from "@angular/platform-browser/animations";
 import {MaterialUiModule} from "./modules/material-ui.module";
-import {JwtInterceptor} from "./interceptors/jwt.interceptor";
 import {LoadingInterceptor} from "./interceptors/loading.interceptor";
 import {AddComponent} from "./components/add/add.component";
 import {PlayComponent} from "./components/play/play.component";
@@ -15,9 +14,9 @@ import {HomeComponent} from "./components/home/home.component";
 import {NavbarComponent} from "./components/navbar/navbar.component";
 import {LatestLottoResultComponent} from "./components/home/latest-lotto-result/latest-lotto-result.component";
 import {MatchComboComponent} from "./components/home/match-combo/match-combo.component";
-import {NumberSvgComponent} from "./components/common/number-svg/number-svg.component";
 import {TermsComponent} from "./components/terms/terms.component";
 import {LicenseComponent} from "./components/license/license.component";
+import {JwtAuthInterceptor} from "./interceptors/jwt-auth.interceptor";
 
 @NgModule({
   declarations: [
@@ -29,7 +28,6 @@ import {LicenseComponent} from "./components/license/license.component";
     PlayComponent,
     TermsComponent,
     MatchComboComponent,
-    NumberSvgComponent,
     LicenseComponent
   ],
   imports: [
@@ -42,7 +40,7 @@ import {LicenseComponent} from "./components/license/license.component";
     MaterialUiModule
   ],
   providers: [
-    {provide: HTTP_INTERCEPTORS, useClass: JwtInterceptor, multi: true},
+    {provide: HTTP_INTERCEPTORS, useClass: JwtAuthInterceptor, multi: true},
     {provide: HTTP_INTERCEPTORS, useClass: LoadingInterceptor, multi: true}
   ],
   bootstrap: [AppComponent]

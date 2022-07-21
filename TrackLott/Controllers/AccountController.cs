@@ -12,13 +12,13 @@ namespace TrackLott.Controllers;
 
 public class AccountController : BaseApiController
 {
-  private readonly UserManager<UserModel> _userManager;
-  private readonly SignInManager<UserModel> _signInManager;
+  private readonly UserManager<TrackLottUserModel> _userManager;
+  private readonly SignInManager<TrackLottUserModel> _signInManager;
   private readonly ITokenService _tokenService;
   private readonly IMapper _mapper;
   private readonly IUserClaimsService _userClaimsService;
 
-  public AccountController(UserManager<UserModel> userManager, SignInManager<UserModel> signInManager,
+  public AccountController(UserManager<TrackLottUserModel> userManager, SignInManager<TrackLottUserModel> signInManager,
     ITokenService tokenService, IMapper mapper, IUserClaimsService userClaimsService)
   {
     _userManager = userManager;
@@ -30,7 +30,7 @@ public class AccountController : BaseApiController
 
   [HttpPost(EndRoute.Register)]
   [AllowAnonymous]
-  public async Task<ActionResult<UserTokenDto>> Register(RegisterDto registerDto)
+  public async Task<ActionResult<WebTokenDto>> Register(RegisterDto registerDto)
   {
     if (!registerDto.Password.Equals(registerDto.RepeatPassword, StringComparison.Ordinal))
       return BadRequest(ResponseMsg.PasswordsMismatch);
@@ -41,23 +41,26 @@ public class AccountController : BaseApiController
     if (userExists != null)
       return BadRequest(ResponseMsg.AccountAlreadyExists);
 
-    var appUser = _mapper.Map<UserModel>(registerDto);
+    var appUser = _mapper.Map<TrackLottUserModel>(registerDto);
     var createResult = await _userManager.CreateAsync(appUser, registerDto.Password);
     if (!createResult.Succeeded) return BadRequest(createResult.Errors.FirstOrDefault());
 
     var roleResult = await _userManager.AddToRoleAsync(appUser, AppRole.User);
-    if (!roleResult.Succeeded) return BadRequest(roleResult.Errors.FirstOrDefault());
-
-    return new UserTokenDto
+    if (roleResult.Succeeded)
     {
-      Email = appUser.Email,
-      Token = await _tokenService.CreateToken(appUser)
-    };
+      return new WebTokenDto
+      {
+        JwtToken = await _tokenService.CreateToken(appUser)
+      };
+    }
+
+    await _userManager.DeleteAsync(appUser);
+    return BadRequest(roleResult.Errors.FirstOrDefault());
   }
 
   [HttpPost(EndRoute.Login)]
   [AllowAnonymous]
-  public async Task<ActionResult<UserTokenDto>> Login(LoginDto loginDto)
+  public async Task<ActionResult<WebTokenDto>> Login(LoginDto loginDto)
   {
     var user = await _userManager.Users
       .SingleOrDefaultAsync(rec => rec.NormalizedEmail.Equals(loginDto.Email.Normalize()));
@@ -68,10 +71,9 @@ public class AccountController : BaseApiController
     var result = await _signInManager.CheckPasswordSignInAsync(user, loginDto.Password, true);
     if (!result.Succeeded) return Unauthorized(ResponseMsg.InvalidLoginDetails);
 
-    return new UserTokenDto()
+    return new WebTokenDto()
     {
-      Email = user.NormalizedEmail,
-      Token = await _tokenService.CreateToken(user)
+      JwtToken = await _tokenService.CreateToken(user)
     };
   }
 
@@ -90,7 +92,7 @@ public class AccountController : BaseApiController
   }
 
   [HttpPut(EndRoute.UpdateInfo)]
-  public async Task<ActionResult<UserModel>> UpdateInfo(ProfileUpdateDto profileUpdateDto)
+  public async Task<ActionResult<TrackLottUserModel>> UpdateInfo(ProfileUpdateDto profileUpdateDto)
   {
     var userEmail = _userClaimsService.GetNormalisedEmail();
     if (userEmail == null) return BadRequest(ResponseMsg.InvalidToken);
@@ -107,9 +109,9 @@ public class AccountController : BaseApiController
   }
 
   [HttpPost(EndRoute.UpdatePassword)]
-  public async Task<ActionResult<string>> UpdatePassword(PasswordDto passwordDto)
+  public async Task<ActionResult<string>> UpdatePassword(ChangePasswordDto changePasswordDto)
   {
-    if (!passwordDto.newPassword.Equals(passwordDto.repeatPassword, StringComparison.Ordinal))
+    if (!changePasswordDto.newPassword.Equals(changePasswordDto.repeatPassword, StringComparison.Ordinal))
       return BadRequest(ResponseMsg.PasswordsMismatch);
 
     var userEmail = _userClaimsService.GetNormalisedEmail();
@@ -118,7 +120,7 @@ public class AccountController : BaseApiController
     var appUser = await _userManager.Users.SingleOrDefaultAsync(rec => rec.NormalizedEmail.Equals(userEmail));
     if (appUser == null) return BadRequest(ResponseMsg.UserNotExist);
 
-    var result = await _userManager.ChangePasswordAsync(appUser, passwordDto.currentPassword, passwordDto.newPassword);
+    var result = await _userManager.ChangePasswordAsync(appUser, changePasswordDto.currentPassword, changePasswordDto.newPassword);
 
     return result.Succeeded
       ? ResponseMsg.PasswordUpdated

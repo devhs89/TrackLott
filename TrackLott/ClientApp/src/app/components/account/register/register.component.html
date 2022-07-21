@@ -1,4 +1,4 @@
-<mat-card class="mat-elevation-z6">
+<mat-card>
   <mat-card-title>Register</mat-card-title>
   <mat-divider class="my-3" inset></mat-divider>
   <mat-card-content>
@@ -32,7 +32,7 @@
             <mat-label>Password</mat-label>
             <input matInput name="password" ngModel
                    placeholder="Use 8 or more characters with a mix of letters, numbers & symbols"
-                   pattern="^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#$%^&*_=+-]).{8,}$" required type="password">
+                   pattern="^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#$%^&*_=+-]).{8,100}$" required type="password">
             <mat-error>Invalid password</mat-error>
           </mat-form-field>
         </div>
@@ -42,7 +42,7 @@
             <mat-label>Repeat Password</mat-label>
             <input matInput name="repeatPassword" ngModel
                    placeholder="Use 8 or more characters with a mix of letters, numbers & symbols"
-                   pattern="^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#$%^&*_=+-]).{8,}$" required type="password">
+                   pattern="^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#$%^&*_=+-]).{8,100}$" required type="password">
             <mat-error>Must match password</mat-error>
           </mat-form-field>
         </div>
@@ -68,8 +68,9 @@
         <div class="col-md-4">
           <mat-form-field appearance="outline" class="w-100">
             <mat-label>Date of Birth</mat-label>
+            <!--suppress TypeScriptValidateTypes -->
             <input [matDatepicker]="dobPicker" matInput name="dob" readonly="true" aria-readonly="true" ngModel
-                   placeholder="dd/mm/yyyy" required>
+                   placeholder="mm/dd/yyyy" [min]="minDate" [max]="maxDate" required>
             <mat-datepicker-toggle [for]="dobPicker" matSuffix></mat-datepicker-toggle>
             <mat-datepicker #dobPicker></mat-datepicker>
             <mat-error>Invalid date</mat-error>
@@ -80,7 +81,7 @@
       <div class="row mb-4">
         <div class="col-12">
           <mat-checkbox #termsCheck color="primary" name="termsCheck" ngModel required="true" pattern="true|false">
-            Agree to <a [routerLink]="appRoute.termsAbs" class="text-decoration-none">
+            Agree to <a [routerLink]="appRoute.termsAbs" class="link-secondary">
             terms and conditions</a>
           </mat-checkbox>
           <mat-error *ngIf="(ngFormObj.submitted && !termsCheck.checked)" [style]="{fontSize: 'x-small'}">

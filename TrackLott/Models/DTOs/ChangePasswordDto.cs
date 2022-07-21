@@ -1,6 +1,6 @@
 namespace TrackLott.Models.DTOs;
 
-public class PasswordDto
+public class ChangePasswordDto
 {
   public string currentPassword { get; set; }
   public string newPassword { get; set; }

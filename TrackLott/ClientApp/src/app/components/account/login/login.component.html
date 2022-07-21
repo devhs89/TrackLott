@@ -1,4 +1,4 @@
-<mat-card class="row col-md-7 mx-auto mat-elevation-z6">
+<mat-card class="w-lg-60 mx-auto mat-elevation-z6">
   <mat-card-title>Login</mat-card-title>
   <mat-divider class="my-3" inset></mat-divider>
   <mat-card-content>
@@ -18,10 +18,13 @@
         <mat-error>Invalid password</mat-error>
       </mat-form-field>
 
-      <mat-checkbox name="rememberMe">Remember Me</mat-checkbox>
-
+      <mat-checkbox name="rememberMe" class="mb-3">Remember Me</mat-checkbox>
       <button class="w-50 mb-3 mx-auto text-uppercase" color="primary" mat-flat-button type="submit">Login</button>
     </form>
+    <div class="row g-2 mb-3 text-center">
+      <a class="col-12 link-primary text-decoration-none" [routerLink]="appRoute.registerAbs">Register</a>
+      <a class="col-12 link-primary text-decoration-none" [routerLink]="appRoute.forgotAbs">Forgot password</a>
+    </div>
 
   </mat-card-content>
 </mat-card>

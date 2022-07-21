@@ -1,4 +1,4 @@
-export const appRouteConst = {
+export const appRoute = {
   root: "",
   home: "home",
   add: "add",
@@ -10,10 +10,10 @@ export const appRouteConst = {
   login: "login",
   forgot: "forgot",
   profile: "profile",
-  registerRel: "account/register",
-  loginRel: "account/login",
-  forgotRel: "account/forgot",
-  profileRel: "account/profile",
+  registerAbs: "/account/register",
+  loginAbs: "/account/login",
+  forgotAbs: "/account/forgot",
+  profileAbs: "/account/profile",
   homeAbs: "/home",
   addAbs: "/add",
   playAbs: "/play",

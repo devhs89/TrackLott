@@ -15,11 +15,11 @@
         <a [routerLink]="appRoute.licenseAbs" mat-list-item>License</a>
         <mat-divider></mat-divider>
         <ng-container *ngIf="!userLoggedIn; else sideLinkNotShow">
-          <a [routerLink]="appRoute.registerRel" mat-list-item>Register</a>
-          <a [routerLink]="appRoute.loginRel" mat-list-item>Login</a>
+          <a [routerLink]="appRoute.registerAbs" mat-list-item>Register</a>
+          <a [routerLink]="appRoute.loginAbs" mat-list-item>Login</a>
         </ng-container>
         <ng-template #sideLinkNotShow>
-          <a [routerLink]="appRoute.profileRel" mat-list-item>Profile</a>
+          <a [routerLink]="appRoute.profileAbs" mat-list-item>Profile</a>
           <a (click)="logout()" mat-list-item>Logout</a>
         </ng-template>
       </mat-nav-list>
@@ -42,14 +42,14 @@
         <span class="matSpacer"></span>
 
         <ng-container *ngIf="!userLoggedIn; else linkNotShow">
-          <a [routerLink]="appRoute.loginRel" mat-flat-button color="primary" routerLinkActive="selectedLink"
+          <a [routerLink]="appRoute.loginAbs" mat-flat-button color="primary" routerLinkActive="selectedLink"
              disableRipple>Login</a>
-          <a [routerLink]="appRoute.registerRel" mat-flat-button color="primary" routerLinkActive="selectedLink"
+          <a [routerLink]="appRoute.registerAbs" mat-flat-button color="primary" routerLinkActive="selectedLink"
              disableRipple>Register</a>
         </ng-container>
 
         <ng-template #linkNotShow>
-          <a [routerLink]="appRoute.profileRel" mat-flat-button color="primary" routerLinkActive="selectedLink"
+          <a [routerLink]="appRoute.profileAbs" mat-flat-button color="primary" routerLinkActive="selectedLink"
              disableRipple>Account</a>
           <a (click)="logout()" mat-flat-button routerLinkActive="selectedLink" color="primary" disableRipple>Logout</a>
         </ng-template>
@@ -58,8 +58,8 @@
           <mat-icon>expand_circle_down</mat-icon>
         </button>
         <mat-menu #terms="matMenu">
-          <a [routerLink]="appRoute.termsAbs" mat-menu-item>Terms</a>
-          <a [routerLink]="appRoute.licenseAbs" mat-menu-item>License</a>
+          <a class="link-light" [routerLink]="appRoute.termsAbs" mat-menu-item>Terms</a>
+          <a class="link-light" [routerLink]="appRoute.licenseAbs" mat-menu-item>License</a>
         </mat-menu>
       </ng-container>
     </mat-toolbar>

@@ -24,11 +24,11 @@ namespace TrackLott
       // Database related services
       services.AddDataStoreServices(_env);
 
+      // Identity related services
+      services.AddIdentityServices();
+
       // Authentication and Authorization related services
       services.AddAuthServices(_env);
-
-      // Jwt Token and User Claims related services
-      services.AddJwtTokenServices();
     }
 
     // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

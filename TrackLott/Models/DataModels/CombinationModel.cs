@@ -7,9 +7,9 @@ public class CombinationModel
   public Guid Id { get; set; }
   public string DateAdded { get; set; }
   public string PickedNumbers { get; set; }
-  public UserModel UserModel { get; set; }
-  [Column("UserId")] public Guid UserModelId { get; set; }
-  public LottoResultModel? LotteryResult { get; set; }
+  public TrackLottUserModel TrackLottUser { get; set; }
+  [Column("UserId")] public Guid TrackLottUserId { get; set; }
+  public LottoResultModel? LottoResult { get; set; }
   public string? LottoProductId { get; set; }
   public int? LottoDrawNumber { get; set; }
 }

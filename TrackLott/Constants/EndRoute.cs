@@ -7,8 +7,8 @@ public static class EndRoute
   public const string Login = "login";
   public const string Latest = "latest";
   public const string Show = "show";
-  public const string UpdatePassword = "updatePassword";
-  public const string UpdateInfo = "updateInfo";
+  public const string UpdatePassword = "update-password";
+  public const string UpdateInfo = "update-info";
   public const string Add = "add";
-  public const string MatchCombos = "matchCombos";
+  public const string MatchCombos = "match-combos";
 }

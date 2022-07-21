@@ -1,6 +1,6 @@
-import {SplitDateTime} from "../models/basic-models";
+import {DateTimeModel} from "../models/date-time.model";
 
-export const splitDateTime = (dateArg: Date): SplitDateTime => {
+export const splitDateTime = (dateArg: Date): DateTimeModel => {
   const dateStr = dateArg.getDate();
   const monthStr = dateArg.getMonth();
   const yearStr = dateArg.getFullYear();
