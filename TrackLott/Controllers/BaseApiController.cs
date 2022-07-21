@@ -1,12 +1,9 @@
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using TrackLott.Constants;
 
 namespace TrackLott.Controllers;
 
 [ApiController]
-[Route("[controller]")]
-[Authorize(AuthPolicyName.RequireAuthenticatedUser)]
+[Route("api/[controller]")]
 public class BaseApiController : ControllerBase
 {
 }

@@ -14,8 +14,8 @@ public static class AuthServicesExtension
   {
     serviceCollection.AddScoped<ITokenService, TokenService>();
 
-    serviceCollection.AddAuthentication(JwtBearerDefaults.AuthenticationScheme).AddJwtBearer(options =>
-      options.TokenValidationParameters = new TokenValidationParameters()
+    serviceCollection.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+      .AddJwtBearer(options => options.TokenValidationParameters = new TokenValidationParameters()
       {
         ValidIssuers = env.IsProduction()
           ? new[] { DomainName.TrackLottUsualAppsCom, DomainName.WwwTrackLottUsualAppsCom }
@@ -39,7 +39,6 @@ public static class AuthServicesExtension
     });
 
     serviceCollection.AddScoped<IUserClaimsService, UserClaimsService>();
-
     return serviceCollection;
   }
 }
