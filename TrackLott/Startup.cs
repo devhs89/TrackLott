@@ -1,3 +1,4 @@
+using Microsoft.AspNetCore.Hosting.Server.Features;
 using Microsoft.AspNetCore.HttpOverrides;
 using TrackLott.Constants;
 using TrackLott.Extensions;
@@ -32,12 +33,12 @@ namespace TrackLott
     }
 
     // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-    public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
+    public void Configure(IApplicationBuilder app)
     {
-      if (env.IsDevelopment()) app.UseDeveloperExceptionPage();
+      if (_env.IsDevelopment()) app.UseDeveloperExceptionPage();
 
       // Forward headers in production for reverse proxy
-      if (env.IsProduction())
+      if (_env.IsProduction())
       {
         app.UseForwardedHeaders(new ForwardedHeadersOptions()
         {
@@ -45,27 +46,33 @@ namespace TrackLott
         });
       }
 
-      app.UseHttpsRedirection();
-
-      app.UseRouting();
-
-      // Allow Cors from Client App when developing
-      if (!env.IsProduction())
-        app.UseCors(builder => builder.AllowAnyHeader().AllowAnyMethod().WithOrigins(DomainName.Localhost44497));
-
-      app.UseAuthentication();
-
-      app.UseAuthorization();
+      // Use Https Connection if listening on addresses other than localhost
+      var firstServerAddress = app.ServerFeatures.Get<IServerAddressesFeature>()?.Addresses.ToList().FirstOrDefault();
+      if (firstServerAddress != null && !firstServerAddress.Contains("localhost") &&
+          !firstServerAddress.Contains("127.0.0.1"))
+      {
+        app.UseHttpsRedirection();
+      }
 
       app.UseDefaultFiles();
       app.UseStaticFiles();
 
-      app.UseEndpoints(endpoints =>
-      {
-        endpoints.MapControllers();
+      app.UseRouting();
 
+      // Allow Cors from Client App when developing
+      if (!_env.IsProduction())
+      {
+        app.UseCors(builder => builder.AllowAnyHeader().AllowAnyMethod().WithOrigins(DomainName.Localhost44497));
+      }
+
+      app.UseAuthentication();
+      app.UseAuthorization();
+
+      app.UseEndpoints(builder =>
+      {
+        builder.MapControllers();
         // Let Client App handle routes not recognised by backend
-        endpoints.MapFallbackToController("Index", "Fallback");
+        builder.MapFallbackToController("Index", "Fallback");
       });
     }
   }
