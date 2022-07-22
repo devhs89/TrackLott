@@ -30,7 +30,8 @@ public static class IdentityServicesExtension
       })
       .AddRoles<TrackLottAppRoleModel>()
       .AddSignInManager<SignInManager<TrackLottUserModel>>()
-      .AddEntityFrameworkStores<TrackLottDbContext>();
+      .AddEntityFrameworkStores<TrackLottDbContext>()
+      .AddDefaultTokenProviders();
     return serviceCollection;
   }
 }

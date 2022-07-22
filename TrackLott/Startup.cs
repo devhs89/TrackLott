@@ -31,6 +31,9 @@ namespace TrackLott
       // AUTHENTICATION AND AUTHORIZATION RELATED SERVICES
       services.AddAuthServices(_env);
 
+      // ADD COMMUNICATION SERVICES
+      services.AddCommunicationServices();
+
       // SCHEDULED JOBS & SERVICES
       services.AddScheduledServices();
     }

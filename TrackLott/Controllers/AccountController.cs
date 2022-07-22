@@ -19,20 +19,22 @@ public class AccountController : BaseApiController
   private readonly ITokenService _tokenService;
   private readonly IMapper _mapper;
   private readonly IJwtClaimsService _jwtClaimsService;
+  private readonly IEmailService _emailService;
 
   public AccountController(UserManager<TrackLottUserModel> userManager, SignInManager<TrackLottUserModel> signInManager,
-    ITokenService tokenService, IMapper mapper, IJwtClaimsService jwtClaimsService)
+    ITokenService tokenService, IMapper mapper, IJwtClaimsService jwtClaimsService, IEmailService emailService)
   {
     _userManager = userManager;
     _signInManager = signInManager;
     _tokenService = tokenService;
     _mapper = mapper;
     _jwtClaimsService = jwtClaimsService;
+    _emailService = emailService;
   }
 
   // REGISTER ACCOUNT CONTROLLER ACTION
   [HttpPost(EndRoute.Register), AllowAnonymous]
-  public async Task<ActionResult<WebTokenDto>> Register(RegisterDto registerDto)
+  public async Task<ActionResult<string>> Register(RegisterDto registerDto)
   {
     if (!registerDto.Password.Equals(registerDto.RepeatPassword, StringComparison.Ordinal))
       return BadRequest(MessageResp.PasswordsMismatch);
@@ -54,7 +56,34 @@ public class AccountController : BaseApiController
     if (token == null)
       return StatusCode(StatusCodes.Status500InternalServerError, MessageResp.UnableToWriteToken);
 
-    return new WebTokenDto(token);
+    var confirmationCode = await _userManager.GenerateEmailConfirmationTokenAsync(appUser);
+    var confirmationUrl = $"{DomainName.TrackLottUsualAppsCom}{EndRoute.AccountConfirmAbs}?code={confirmationCode}";
+
+    var resp = await _emailService.SendConfirmationEmailAsync(
+      new EmailPropsDto()
+      {
+        TemplateId = EmailTemplateId.EmailConfirmation,
+        Address = appUser.Email,
+        TemplateDataDto = new ConfirmationEmailTemplateDataDto()
+        {
+          EmailSubject = "Test Confirmation Email Token",
+          TrackLottReceiverGivenName = appUser.GivenName,
+          TrackLottReceiverSurname = appUser.Surname,
+          TrackLottReceiverAddress = appUser.Email,
+          TrackLottEmailConfirmationTokenUrl = confirmationUrl
+        }
+      }
+    );
+    if (resp == null) Console.WriteLine(resp);
+
+    return Ok(resp);
+  }
+
+  // ACCOUNT EMAIL CONFIRMATION CONTROLLER ACTION
+  [HttpPost(EndRoute.Confirm), AllowAnonymous]
+  public ActionResult<string> ConfirmEmail([FromQuery(Name = "code")] string confirmationCode)
+  {
+    return Ok(confirmationCode);
   }
 
   // ACCOUNT LOGIN CONTROLLER ACTION

@@ -30,7 +30,7 @@ public class ProjectLoginScheduledService : IHostedService, IDisposable
     var httpRequestMessage = new HttpRequestMessage()
     {
       Method = HttpMethod.Post,
-      RequestUri = new Uri($"{DomainName.Localhost5001}{EndRoute.ProjectAccessTokenExt}"),
+      RequestUri = new Uri($"{DomainName.Localhost5001}{EndRoute.AdminProjectAccessTokenExt}"),
       Content = new StringContent(
         JsonSerializer.Serialize(new ProjectLoginDto()
         {
