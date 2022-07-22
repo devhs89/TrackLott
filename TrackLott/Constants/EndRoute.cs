@@ -11,4 +11,5 @@ public static class EndRoute
   public const string UpdateInfo = "update-info";
   public const string Add = "add";
   public const string MatchCombos = "match-combos";
+  public const string ProjectAccessTokenExt = "/api/project/access-token";
 }

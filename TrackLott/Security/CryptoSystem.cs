@@ -1,40 +1,41 @@
 using System.Security.Cryptography;
 using System.Text;
+using Microsoft.IdentityModel.Tokens;
 using TrackLott.Constants;
 
 namespace TrackLott.Security;
 
 public static class CryptoSystem
 {
-  public static async Task<RSA> GetRsaKey()
+  public static RsaSecurityKey GetRsaSecurityKey()
   {
-    await CreateRsaKeys();
+    CreateRsaKeys();
 
     var keyPaths = KeyPaths();
-    var privateKeyBytes = await File.ReadAllBytesAsync(keyPaths["privateKeyPath"]);
+    var privateKeyBytes = File.ReadAllBytes(keyPaths[0]);
     if (privateKeyBytes == null) throw new Exception(MessageResp.UnableToReadFileContent);
-    var privateXmlString = Encoding.UTF8.GetString(privateKeyBytes);
+    var privateXmlString = Encoding.Default.GetString(privateKeyBytes);
 
     var rsa = RSA.Create();
     rsa.FromXmlString(privateXmlString);
-    return rsa;
+    return new RsaSecurityKey(rsa);
   }
 
-  private static async Task CreateRsaKeys()
+  private static void CreateRsaKeys()
   {
     var keyPaths = KeyPaths();
-    if (File.Exists(keyPaths["privateKeyPath"])) return;
+    if (File.Exists(keyPaths[0])) return;
 
     var rsa = RSA.Create();
     var privateXmlKey = rsa.ToXmlString(true);
     var publicXmlKey = rsa.ToXmlString(false);
-    await using var idRsa = File.Create(keyPaths["privateKeyPath"]);
-    await using var idRsaPub = File.Create(keyPaths["publicKeyPath"]);
-    await idRsa.WriteAsync(Encoding.UTF8.GetBytes(privateXmlKey));
-    await idRsaPub.WriteAsync(Encoding.UTF8.GetBytes(publicXmlKey));
+    using var idRsa = File.Create(keyPaths[0]);
+    using var idRsaPub = File.Create(keyPaths[1]);
+    idRsa.Write(Encoding.Default.GetBytes(privateXmlKey));
+    idRsaPub.Write(Encoding.Default.GetBytes(publicXmlKey));
   }
 
-  private static Dictionary<string, string> KeyPaths()
+  private static string[] KeyPaths()
   {
     var jwtKeysDir = Environment.GetEnvironmentVariable(EnvVarName.TracklottAuthKeysDir);
     if (jwtKeysDir == null) throw new Exception(MessageResp.MissingSecurityKeysDir);
@@ -46,10 +47,6 @@ public static class CryptoSystem
     var privateKeyPath = Path.Combine(jwtKeysDir, privateRsa);
     var publicKeyPath = Path.Combine(jwtKeysDir, publicRsa);
 
-    return new Dictionary<string, string>
-    {
-      { "privateKeyPath", privateKeyPath },
-      { "publicKeyPath", publicKeyPath }
-    };
+    return new[] { privateKeyPath, publicKeyPath };
   }
 }

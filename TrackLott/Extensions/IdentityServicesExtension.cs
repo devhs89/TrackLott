@@ -10,11 +10,18 @@ public static class IdentityServicesExtension
   {
     serviceCollection.AddIdentityCore<TrackLottUserModel>(options =>
       {
-        options.Password.RequiredLength = 8;
-        options.Password.RequireLowercase = true;
-        options.Password.RequireUppercase = true;
-        options.Password.RequireDigit = true;
-        options.Password.RequireNonAlphanumeric = true;
+        options.SignIn = new SignInOptions()
+        {
+          RequireConfirmedEmail = true
+        };
+        options.Password = new PasswordOptions()
+        {
+          RequiredLength = 8,
+          RequireLowercase = true,
+          RequireUppercase = true,
+          RequireDigit = true,
+          RequireNonAlphanumeric = true
+        };
         options.Lockout = new LockoutOptions()
         {
           MaxFailedAccessAttempts = 3,

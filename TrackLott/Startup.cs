@@ -1,6 +1,7 @@
 using Microsoft.AspNetCore.Hosting.Server.Features;
 using Microsoft.AspNetCore.HttpOverrides;
 using TrackLott.Constants;
+using TrackLott.Controllers;
 using TrackLott.Extensions;
 
 namespace TrackLott
@@ -14,30 +15,31 @@ namespace TrackLott
       _env = env;
     }
 
-    // This method gets called by the runtime. Use this method to add services to the container.
     public void ConfigureServices(IServiceCollection services)
     {
       services.AddControllers();
 
-      // Common services like helper services
+      // COMMON SERVICES LIKE HELPER SERVICES
       services.AddHelperServices();
 
-      // Database related services
+      // DATABASE RELATED SERVICES
       services.AddDataStoreServices(_env);
 
-      // Identity related services
+      // IDENTITY RELATED SERVICES
       services.AddIdentityServices();
 
-      // Authentication and Authorization related services
+      // AUTHENTICATION AND AUTHORIZATION RELATED SERVICES
       services.AddAuthServices(_env);
+
+      // SCHEDULED JOBS & SERVICES
+      services.AddScheduledServices();
     }
 
-    // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
     public void Configure(IApplicationBuilder app)
     {
       if (_env.IsDevelopment()) app.UseDeveloperExceptionPage();
 
-      // Forward headers in production for reverse proxy
+      // FORWARD HEADERS IN PRODUCTION FOR REVERSE PROXY
       if (_env.IsProduction())
       {
         app.UseForwardedHeaders(new ForwardedHeadersOptions()
@@ -46,7 +48,7 @@ namespace TrackLott
         });
       }
 
-      // Use Https Connection if listening on addresses other than localhost
+      // USE HTTPS CONNECTION IF LISTENING ON ADDRESSES OTHER THAN LOCALHOST
       var firstServerAddress = app.ServerFeatures.Get<IServerAddressesFeature>()?.Addresses.ToList().FirstOrDefault();
       if (firstServerAddress != null && !firstServerAddress.Contains("localhost") &&
           !firstServerAddress.Contains("127.0.0.1"))
@@ -59,7 +61,7 @@ namespace TrackLott
 
       app.UseRouting();
 
-      // Allow Cors from Client App when developing
+      // ALLOW CORS FROM CLIENT APP WHEN DEVELOPING
       if (!_env.IsProduction())
       {
         app.UseCors(builder => builder.AllowAnyHeader().AllowAnyMethod().WithOrigins(DomainName.Localhost44497));
@@ -71,7 +73,8 @@ namespace TrackLott
       app.UseEndpoints(builder =>
       {
         builder.MapControllers();
-        // Let Client App handle routes not recognised by backend
+
+        // LET CLIENT APP HANDLE ROUTES NOT RECOGNISED BY BACKEND
         builder.MapFallbackToController("Index", "Fallback");
       });
     }

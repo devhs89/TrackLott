@@ -1,8 +1,8 @@
-using TrackLott.Models.DataModels;
+using System.Security.Claims;
 
 namespace TrackLott.Interfaces;
 
 public interface ITokenService
 {
-  public Task<string> CreateToken(TrackLottUserModel userModel);
+  public string? CreateToken(IEnumerable<Claim> claimsList);
 }

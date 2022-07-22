@@ -11,14 +11,14 @@ namespace TrackLott.Controllers;
 public class CombinationController : BaseApiController
 {
   private readonly TrackLottDbContext _dbContext;
-  private readonly IUserClaimsService _userClaimsService;
+  private readonly IJwtClaimsService _jwtClaimsService;
   private readonly ILogger<CombinationController> _logger;
 
-  public CombinationController(TrackLottDbContext dbContext, IUserClaimsService userClaimsService,
+  public CombinationController(TrackLottDbContext dbContext, IJwtClaimsService jwtClaimsService,
     ILogger<CombinationController> logger)
   {
     _dbContext = dbContext;
-    _userClaimsService = userClaimsService;
+    _jwtClaimsService = jwtClaimsService;
     _logger = logger;
   }
 
@@ -91,7 +91,7 @@ public class CombinationController : BaseApiController
 
   private async Task<ActionResult<TrackLottUserModel?>> GetUser()
   {
-    var userEmail = _userClaimsService.GetNormalisedEmail();
+    var userEmail = _jwtClaimsService.GetNormalisedEmailClaim();
     if (userEmail == null) return Unauthorized(MessageResp.InvalidToken);
     return await _dbContext.Users.SingleOrDefaultAsync(model => model.NormalizedEmail.Equals(userEmail));
   }

@@ -2,5 +2,10 @@ namespace TrackLott.Models.DTOs;
 
 public class WebTokenDto
 {
-  public string JwtToken { get; set; }
+  public WebTokenDto(string? jwtToken)
+  {
+    JwtToken = jwtToken;
+  }
+
+  public string? JwtToken { get; set; }
 }
