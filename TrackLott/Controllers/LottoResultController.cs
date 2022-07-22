@@ -25,7 +25,7 @@ public class LottoResultController : BaseApiController
   {
     var result = await _dbContext.LottoResults.OrderByDescending(lottery => lottery.DrawDate)
       .FirstOrDefaultAsync();
-    if (result == null) return NotFound(ResponseMsg.NoLatestLottoResult);
+    if (result == null) return NotFound(MessageResp.NoLatestLottoResult);
 
     return _mapper.Map<LottoResultDto>(result);
   }

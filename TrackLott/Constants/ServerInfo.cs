@@ -1,6 +1,6 @@
 namespace TrackLott.Constants;
 
-public static class EmailAsset
+public static class ServerInfo
 {
   public const string NoReplyServerEmail = "no-reply@usualapps.com";
   public const string NoReplyProjectName = "TrackLott (No Reply)";

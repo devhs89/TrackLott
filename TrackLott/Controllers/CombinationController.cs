@@ -26,7 +26,7 @@ public class CombinationController : BaseApiController
   public async Task<ActionResult<string>> AddCombo(CombinationDto[] combinations)
   {
     var user = await GetUser();
-    if (user.Value == null) return Unauthorized(ResponseMsg.UserNotExist);
+    if (user.Value == null) return Unauthorized(MessageResp.UserNotExist);
 
     var allCombinations = new List<CombinationModel>();
     foreach (var combo in combinations)
@@ -56,7 +56,7 @@ public class CombinationController : BaseApiController
     await _dbContext.Combinations.AddRangeAsync(allCombinations);
     allCombinations.Clear();
     await _dbContext.SaveChangesAsync();
-    return ResponseMsg.ComboSaved;
+    return MessageResp.ComboSaved;
   }
 
   [HttpPost(EndRoute.MatchCombos)]
@@ -64,10 +64,10 @@ public class CombinationController : BaseApiController
     int pageSize)
   {
     var user = await GetUser();
-    if (user.Value == null) return Unauthorized(ResponseMsg.UserNotExist);
+    if (user.Value == null) return Unauthorized(MessageResp.UserNotExist);
 
     var lottoResult = await GetFirstMatchingLotto(productId);
-    if (lottoResult == null) return NotFound(ResponseMsg.NoLatestLottoResult);
+    if (lottoResult == null) return NotFound(MessageResp.NoLatestLottoResult);
 
     var totalResults = await _dbContext.Combinations.Where(model =>
       model.LottoProductId != null &&
@@ -81,7 +81,7 @@ public class CombinationController : BaseApiController
       .Skip(pageIndex * pageSize)
       .Take(pageSize)
       .ToListAsync();
-    if (!combinationsResult.Any()) return NotFound(ResponseMsg.NoMatchingCombinations);
+    if (!combinationsResult.Any()) return NotFound(MessageResp.NoMatchingCombinations);
 
     var matchingCombos = combinationsResult.Select(combination =>
         new MatchingCombinationDto { DateAdded = combination.DateAdded, PickedNumbers = combination.PickedNumbers })
@@ -92,7 +92,7 @@ public class CombinationController : BaseApiController
   private async Task<ActionResult<TrackLottUserModel?>> GetUser()
   {
     var userEmail = _userClaimsService.GetNormalisedEmail();
-    if (userEmail == null) return Unauthorized(ResponseMsg.InvalidToken);
+    if (userEmail == null) return Unauthorized(MessageResp.InvalidToken);
     return await _dbContext.Users.SingleOrDefaultAsync(model => model.NormalizedEmail.Equals(userEmail));
   }
 

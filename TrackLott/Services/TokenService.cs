@@ -42,7 +42,7 @@ public class TokenService : ITokenService
         DateTime.Now.AddDays(7)));
 
     var writtenToken = new JwtSecurityTokenHandler().WriteToken(jwtSecurityToken);
-    if (writtenToken == null) throw new SecurityTokenException(ResponseMsg.UnableToWriteToken);
+    if (writtenToken == null) throw new SecurityTokenException(MessageResp.UnableToWriteToken);
     return writtenToken;
   }
 }

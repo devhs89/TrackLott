@@ -33,13 +33,13 @@ public class AccountController : BaseApiController
   public async Task<ActionResult<WebTokenDto>> Register(RegisterDto registerDto)
   {
     if (!registerDto.Password.Equals(registerDto.RepeatPassword, StringComparison.Ordinal))
-      return BadRequest(ResponseMsg.PasswordsMismatch);
+      return BadRequest(MessageResp.PasswordsMismatch);
 
     var userExists =
       await _userManager.Users.SingleOrDefaultAsync(usr =>
         usr.NormalizedEmail.Equals(registerDto.Email.Normalize().ToUpper()));
     if (userExists != null)
-      return BadRequest(ResponseMsg.AccountAlreadyExists);
+      return BadRequest(MessageResp.AccountAlreadyExists);
 
     var appUser = _mapper.Map<TrackLottUserModel>(registerDto);
     var createResult = await _userManager.CreateAsync(appUser, registerDto.Password);
@@ -66,10 +66,10 @@ public class AccountController : BaseApiController
       .SingleOrDefaultAsync(rec => rec.NormalizedEmail.Equals(loginDto.Email.Normalize()));
 
     if (user == null)
-      return Unauthorized(ResponseMsg.InvalidLoginDetails);
+      return Unauthorized(MessageResp.InvalidLoginDetails);
 
     var result = await _signInManager.CheckPasswordSignInAsync(user, loginDto.Password, true);
-    if (!result.Succeeded) return Unauthorized(ResponseMsg.InvalidLoginDetails);
+    if (!result.Succeeded) return Unauthorized(MessageResp.InvalidLoginDetails);
 
     return new WebTokenDto()
     {
@@ -81,11 +81,11 @@ public class AccountController : BaseApiController
   public async Task<ActionResult<ProfileDto>> ShowUser()
   {
     var userEmail = _userClaimsService.GetNormalisedEmail();
-    if (userEmail == null) return BadRequest(userEmail + ResponseMsg.InvalidToken);
+    if (userEmail == null) return BadRequest(userEmail + MessageResp.InvalidToken);
 
     var appUser = await _userManager.Users.SingleOrDefaultAsync(rec => rec.NormalizedEmail.Equals(userEmail));
     if (appUser == null)
-      return BadRequest(ResponseMsg.UserNotExist);
+      return BadRequest(MessageResp.UserNotExist);
 
     var profile = _mapper.Map<ProfileDto>(appUser);
     return profile;
@@ -95,16 +95,16 @@ public class AccountController : BaseApiController
   public async Task<ActionResult<TrackLottUserModel>> UpdateInfo(ProfileUpdateDto profileUpdateDto)
   {
     var userEmail = _userClaimsService.GetNormalisedEmail();
-    if (userEmail == null) return BadRequest(ResponseMsg.InvalidToken);
+    if (userEmail == null) return BadRequest(MessageResp.InvalidToken);
 
     var appUser = await _userManager.Users.SingleOrDefaultAsync(rec => rec.NormalizedEmail.Equals(userEmail));
     if (appUser == null)
-      return BadRequest(ResponseMsg.UserNotExist);
+      return BadRequest(MessageResp.UserNotExist);
 
     _mapper.Map(profileUpdateDto, appUser);
 
     var res = await _userManager.UpdateAsync(appUser);
-    if (!res.Succeeded) return BadRequest(ResponseMsg.GenericError);
+    if (!res.Succeeded) return BadRequest(MessageResp.GenericError);
     return NoContent();
   }
 
@@ -112,18 +112,18 @@ public class AccountController : BaseApiController
   public async Task<ActionResult<string>> UpdatePassword(ChangePasswordDto changePasswordDto)
   {
     if (!changePasswordDto.newPassword.Equals(changePasswordDto.repeatPassword, StringComparison.Ordinal))
-      return BadRequest(ResponseMsg.PasswordsMismatch);
+      return BadRequest(MessageResp.PasswordsMismatch);
 
     var userEmail = _userClaimsService.GetNormalisedEmail();
-    if (userEmail == null) return BadRequest(ResponseMsg.InvalidToken);
+    if (userEmail == null) return BadRequest(MessageResp.InvalidToken);
 
     var appUser = await _userManager.Users.SingleOrDefaultAsync(rec => rec.NormalizedEmail.Equals(userEmail));
-    if (appUser == null) return BadRequest(ResponseMsg.UserNotExist);
+    if (appUser == null) return BadRequest(MessageResp.UserNotExist);
 
     var result = await _userManager.ChangePasswordAsync(appUser, changePasswordDto.currentPassword, changePasswordDto.newPassword);
 
     return result.Succeeded
-      ? ResponseMsg.PasswordUpdated
-      : BadRequest(ResponseMsg.PasswordChangeFailed);
+      ? MessageResp.PasswordUpdated
+      : BadRequest(MessageResp.PasswordChangeFailed);
   }
 }

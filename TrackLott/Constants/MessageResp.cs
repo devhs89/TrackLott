@@ -1,6 +1,6 @@
 namespace TrackLott.Constants;
 
-public static class ResponseMsg
+public static class MessageResp
 {
   public const string GenericError = "Something went wrong. Sorry for any inconvenience.";
   public const string TrackLottDbConnFail = "TrackLott Database connection failed.";

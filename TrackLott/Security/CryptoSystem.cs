@@ -12,7 +12,7 @@ public static class CryptoSystem
 
     var keyPaths = KeyPaths();
     var privateKeyBytes = await File.ReadAllBytesAsync(keyPaths["privateKeyPath"]);
-    if (privateKeyBytes == null) throw new Exception(ResponseMsg.UnableToReadFileContent);
+    if (privateKeyBytes == null) throw new Exception(MessageResp.UnableToReadFileContent);
     var privateXmlString = Encoding.UTF8.GetString(privateKeyBytes);
 
     var rsa = RSA.Create();
@@ -37,7 +37,7 @@ public static class CryptoSystem
   private static Dictionary<string, string> KeyPaths()
   {
     var jwtKeysDir = Environment.GetEnvironmentVariable(EnvVarName.TracklottAuthKeysDir);
-    if (jwtKeysDir == null) throw new Exception(ResponseMsg.MissingSecurityKeysDir);
+    if (jwtKeysDir == null) throw new Exception(MessageResp.MissingSecurityKeysDir);
 
     if (!Directory.Exists(jwtKeysDir)) Directory.CreateDirectory(jwtKeysDir);
 
