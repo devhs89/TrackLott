@@ -24,4 +24,5 @@ public static class MessageResp
   public const string PasswordUpdated = "Password updated successfully";
   public const string ComboSaved = "Combination Saved.";
   public const string ComboSavedWithNoName = "Combinations saved without lottery name.";
+  public const string EmailConfirmed = "Email Confirmed.";
 }

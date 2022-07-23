@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.JsonWebTokens;
+using Microsoft.IdentityModel.Tokens;
 using TrackLott.Constants;
 using TrackLott.Interfaces;
 using TrackLott.Models.DataModels;
@@ -56,11 +57,14 @@ public class AccountController : BaseApiController
     if (token == null)
       return StatusCode(StatusCodes.Status500InternalServerError, MessageResp.UnableToWriteToken);
 
+    var urlSafeUserId = Base64UrlEncoder.Encode(appUser.Id.ToString());
     var confirmationCode = await _userManager.GenerateEmailConfirmationTokenAsync(appUser);
-    var confirmationUrl = $"{DomainName.TrackLottUsualAppsCom}{EndRoute.AccountConfirmAbs}?code={confirmationCode}";
+    var urlSafeConfirmationCode = Base64UrlEncoder.Encode(confirmationCode);
+    var confirmationUrl =
+      $"{DomainName.TrackLottUsualAppsCom}{EndRoute.AccountConfirmAbs}?id={urlSafeUserId}&code={urlSafeConfirmationCode}";
 
-    var resp = await _emailService.SendConfirmationEmailAsync(
-      new EmailPropsDto()
+    var emailSuccess = await _emailService.SendConfirmationEmailAsync(
+      new EmailPropsDto
       {
         TemplateId = EmailTemplateId.EmailConfirmation,
         Address = appUser.Email,
@@ -74,16 +78,24 @@ public class AccountController : BaseApiController
         }
       }
     );
-    if (resp == null) Console.WriteLine(resp);
-
-    return Ok(resp);
+    return Ok(emailSuccess);
   }
 
   // ACCOUNT EMAIL CONFIRMATION CONTROLLER ACTION
   [HttpPost(EndRoute.Confirm), AllowAnonymous]
-  public ActionResult<string> ConfirmEmail([FromQuery(Name = "code")] string confirmationCode)
+  public async Task<ActionResult<string>> ConfirmEmail([FromQuery] string id,
+    [FromQuery(Name = "code")] string confirmationCode)
   {
-    return Ok(confirmationCode);
+    var userId = Guid.Parse(Base64UrlEncoder.Decode(id));
+    var user = await _userManager.Users.SingleOrDefaultAsync(model => model.Id.Equals(userId));
+    if (user == null) return Unauthorized(MessageResp.UserNotExist);
+
+    var code = Base64UrlEncoder.Decode(confirmationCode);
+    if (code == null) return Unauthorized(MessageResp.InvalidToken);
+
+    var result = _userManager.ConfirmEmailAsync(user, code);
+    if (!result.IsCompletedSuccessfully) return Unauthorized(MessageResp.InvalidToken);
+    return Ok(MessageResp.EmailConfirmed);
   }
 
   // ACCOUNT LOGIN CONTROLLER ACTION
