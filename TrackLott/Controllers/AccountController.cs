@@ -37,32 +37,41 @@ public class AccountController : BaseApiController
   [HttpPost(EndRoute.Register), AllowAnonymous]
   public async Task<ActionResult<string>> Register(RegisterDto registerDto)
   {
+    // Check if passwords match
     if (!registerDto.Password.Equals(registerDto.RepeatPassword, StringComparison.Ordinal))
       return BadRequest(MessageResp.PasswordsMismatch);
 
+    // Check if user already exists
     var userExists = await _userManager.Users.SingleOrDefaultAsync(usr =>
       usr.NormalizedEmail.Equals(registerDto.Email.Normalize().ToUpper()));
     if (userExists != null) return BadRequest(MessageResp.AccountAlreadyExists);
 
+    // Map dto to model
     var appUser = _mapper.Map<TrackLottUserModel>(registerDto);
+    
+    // Create user
     var createResult = await _userManager.CreateAsync(appUser, registerDto.Password);
     if (!createResult.Succeeded) return BadRequest(createResult.Errors.FirstOrDefault());
 
+    // Assign user basic permissions
     var roleResult = await _userManager.AddToRoleAsync(appUser, AppRole.User);
     if (!roleResult.Succeeded)
       return StatusCode(StatusCodes.Status500InternalServerError, MessageResp.AddToRoleFailed);
 
+    // Create Jwt token with user claims 
     var claims = await CreateClaimsList(appUser);
     var token = _tokenService.CreateToken(claims);
     if (token == null)
       return StatusCode(StatusCodes.Status500InternalServerError, MessageResp.UnableToWriteToken);
 
+    // Create email confirmation token
     var urlSafeUserId = Base64UrlEncoder.Encode(appUser.Id.ToString());
     var confirmationCode = await _userManager.GenerateEmailConfirmationTokenAsync(appUser);
     var urlSafeConfirmationCode = Base64UrlEncoder.Encode(confirmationCode);
     var confirmationUrl =
       $"{DomainName.TrackLottUsualAppsCom}{EndRoute.AccountConfirmAbs}?id={urlSafeUserId}&code={urlSafeConfirmationCode}";
 
+    // Send account confirmation email
     var emailSuccess = await _emailService.SendConfirmationEmailAsync(
       new EmailPropsDto
       {
