@@ -1,9 +1,11 @@
 # TrackLott
-##### Side project - to show my skills in Asp.Net, Entity Framework, C#, Angular & TypeScript
+###### Side project - to show my skills in Asp.Net, Entity Framework, C#, Angular & TypeScript
 
 An Angular-Asp.Net web application that lets you track your previously played lottery number combinations and play a lottery game to predict lucky lotto combinations.
 
-##### Development
+---
+
+### Development
 1. Set following environment variables -
    1. "ASPNETCORE_ENVIRONMENT" = "Development"
    2. "SQL_DEV_URL" = [Insert Connection String - Install appropriate Entity Framework package if using database other than MySQL]
@@ -14,3 +16,34 @@ An Angular-Asp.Net web application that lets you track your previously played lo
    1. Install appropriate Nuget package if using any using database other than MySQL
 5. Run "dotnet ef database update" to apply any pending changes
 6. Build and run application with "dotnet run --build"
+
+---
+
+### Conventional Commits Format
+```
+<TYPE>:[featureName]: <description>
+```
+The commit must be prefixed with commit "type" followed by a colon, then feature name followed by a colon ***(in camel case & only if a feature commit)*** & finally the commit description.  
+
+###### Types
+
+Only certain types are permitted, with the most common being:
+
+- `FIX:` a commit that fixes a bug.
+- `FEATURE:` a commit that adds a feature.
+- `DOCS:` a commit that adds or updates comments.
+- `TEST:` a commit that adds any test(s).
+- `REFACTOR:` a commit that improves performance or readability without any functional changes.
+- `MISC:` a commit that does not fall under any of the above types.  
+
+###### Examples
+
+A commit fixing a bug
+```
+FIX: move "user logged in" check out of RxJS subscription
+```
+
+A commit adding a new feature
+```
+FEATURE:emailService: implement email service
+```
