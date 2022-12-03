@@ -26,7 +26,7 @@ namespace TrackLott
       services.AddDataStoreServices();
 
       // IDENTITY RELATED SERVICES
-      services.AddIdentityServices();
+      services.AddIdentityServices(_env);
 
       // AUTHENTICATION AND AUTHORIZATION RELATED SERVICES
       services.AddAuthServices(_env);

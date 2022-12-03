@@ -6,7 +6,7 @@ namespace TrackLott.Extensions;
 
 public static class IdentityServicesExtension
 {
-  public static IServiceCollection AddIdentityServices(this IServiceCollection serviceCollection)
+  public static void AddIdentityServices(this IServiceCollection serviceCollection, IWebHostEnvironment env)
   {
     serviceCollection.AddIdentityCore<TrackLottUserModel>(options =>
       {
@@ -25,13 +25,11 @@ public static class IdentityServicesExtension
         options.Lockout = new LockoutOptions()
         {
           MaxFailedAccessAttempts = 3,
-          DefaultLockoutTimeSpan = new TimeSpan(8, 0, 0)
+          DefaultLockoutTimeSpan = env.IsProduction() ? TimeSpan.FromHours(8) : TimeSpan.FromMinutes(1)
         };
       })
       .AddRoles<TrackLottAppRoleModel>()
-      .AddSignInManager<SignInManager<TrackLottUserModel>>()
       .AddEntityFrameworkStores<TrackLottDbContext>()
       .AddDefaultTokenProviders();
-    return serviceCollection;
   }
 }
