@@ -1,7 +1,6 @@
 using System.Security.Claims;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.IdentityModel.JsonWebTokens;
 using Microsoft.IdentityModel.Tokens;
 using TrackLott.Constants;
 using TrackLott.Interfaces;
@@ -12,11 +11,8 @@ namespace TrackLott.Extensions;
 
 public static class AuthServicesExtension
 {
-  public static IServiceCollection AddAuthServices(this IServiceCollection serviceCollection, IWebHostEnvironment env)
+  public static void AddAuthServices(this IServiceCollection serviceCollection, IWebHostEnvironment env)
   {
-    // TOKEN SERVICE FOR PROVIDING JWT TOKENS
-    serviceCollection.AddScoped<ITokenService, TokenService>();
-
     // DEFAULT AUTHENTICATION SCHEME AND TOKEN VALIDATION PARAMETERS
     serviceCollection.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
       .AddJwtBearer(options => options.TokenValidationParameters = new TokenValidationParameters()
@@ -56,9 +52,10 @@ public static class AuthServicesExtension
       options.FallbackPolicy = requireConfirmedAccountPolicy;
     });
 
+    // TOKEN SERVICE FOR PROVIDING JWT TOKENS
+    serviceCollection.AddScoped<ITokenService, TokenService>();
+
     // REGISTER JWT CLAIMS SERVICE
     serviceCollection.AddScoped<IJwtClaimsService, JwtClaimsService>();
-
-    return serviceCollection;
   }
 }
