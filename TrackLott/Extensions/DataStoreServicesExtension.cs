@@ -6,7 +6,7 @@ namespace TrackLott.Extensions;
 
 public static class DataStoreServicesExtension
 {
-  public static IServiceCollection AddDataStoreServices(this IServiceCollection services, IWebHostEnvironment env)
+  public static void AddDataStoreServices(this IServiceCollection services)
   {
     services.AddDbContext<TrackLottDbContext>(options =>
     {
@@ -16,7 +16,5 @@ public static class DataStoreServicesExtension
       var serverVersion = new MySqlServerVersion(new Version(8, 0, 29));
       options.UseMySql(connectionString, serverVersion);
     });
-
-    return services;
   }
 }

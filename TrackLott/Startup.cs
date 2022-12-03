@@ -23,7 +23,7 @@ namespace TrackLott
       services.AddHelperServices();
 
       // DATABASE RELATED SERVICES
-      services.AddDataStoreServices(_env);
+      services.AddDataStoreServices();
 
       // IDENTITY RELATED SERVICES
       services.AddIdentityServices();
