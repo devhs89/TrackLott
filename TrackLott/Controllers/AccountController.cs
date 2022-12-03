@@ -8,7 +8,7 @@ using Microsoft.IdentityModel.JsonWebTokens;
 using Microsoft.IdentityModel.Tokens;
 using TrackLott.Constants;
 using TrackLott.Interfaces;
-using TrackLott.Models.DataModels;
+using TrackLott.Models;
 using TrackLott.Models.DTOs;
 
 namespace TrackLott.Controllers;

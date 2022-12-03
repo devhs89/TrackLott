@@ -1,5 +1,5 @@
 using AutoMapper;
-using TrackLott.Models.DataModels;
+using TrackLott.Models;
 using TrackLott.Models.DTOs;
 
 namespace TrackLott.Helpers;

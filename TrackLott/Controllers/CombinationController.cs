@@ -3,7 +3,7 @@ using Microsoft.EntityFrameworkCore;
 using TrackLott.Constants;
 using TrackLott.Data;
 using TrackLott.Interfaces;
-using TrackLott.Models.DataModels;
+using TrackLott.Models;
 using TrackLott.Models.DTOs;
 
 namespace TrackLott.Controllers;

@@ -1,6 +1,6 @@
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
-using TrackLott.Models.DataModels;
+using TrackLott.Models;
 
 namespace TrackLott.Data;
 

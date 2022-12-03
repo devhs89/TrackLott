@@ -1,6 +1,6 @@
 using System.ComponentModel.DataAnnotations;
 
-namespace TrackLott.Models.DataModels;
+namespace TrackLott.Models;
 
 public class LottoResultModel
 {
