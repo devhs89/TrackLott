@@ -1,0 +1,37 @@
+﻿version: "0.1"
+name: "tracklott.usualapps.com"
+services:
+  mysql:
+    image: "mysql:latest"
+    container_name: "tracklott_mysql_dev"
+    ports:
+      - "33061:3306"
+    env_file:
+      - "${TRACK_LOTT_DOCKER_CONFIG_DIR}/envs/mysql_docker.env"
+    volumes:
+      - "${TRACK_LOTT_SQL_CONFIG_DIR}/mysql:/var/lib/mysql"
+    networks:
+      - default_dev_net
+  tracklott:
+    container_name: "tracklott_aspnet_dev"
+    image: "mcr.microsoft.com/dotnet/sdk:6.0"
+    working_dir: "/tracklott"
+    ports:
+      - "50015:50015"
+      - "60015:60015"
+    env_file:
+      - "${TRACK_LOTT_DOCKER_CONFIG_DIR}/envs/aspnet_docker.env"
+    volumes:
+      - "${TRACK_LOTT_ASPNET_DEV_CERTS_DIR}:/.aspnet/https/"
+      - "./Release/publish/tracklott"
+      - "./DevFolder:/tracklott/DevFolder"
+    entrypoint: "dotnet TrackLott.dll"
+    restart: "on-failure"
+    networks:
+      - default_dev_net
+    depends_on:
+      - mysql
+networks:
+  default_dev_net:
+    name: default_dev_net
+    external: true
