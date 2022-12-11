@@ -2,8 +2,6 @@
 **/.idea
 **/.vscode
 
-**/launchSettings.json
-**/appsettings.Development.json
 **/appsettings.Production.json
 **/bin
 **/obj
