@@ -1,13 +1,15 @@
 # My Ignores
 **/.idea
 **/.vscode
+**/*.editorconfig
 
 **/appsettings.Production.json
 **/bin
 **/obj
 **/Release
-**/*.editorconfig
 
 **/node_modules
 **/.angular
 **/bootstrap
+
+**/.env
