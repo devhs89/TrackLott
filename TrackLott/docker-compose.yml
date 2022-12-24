@@ -23,7 +23,7 @@ services:
       - "${TRACK_LOTT_DOCKER_CONFIG_DIR}/envs/aspnet_docker.env"
     volumes:
       - "${TRACK_LOTT_ASPNET_DEV_CERTS_DIR}:/.aspnet/https/"
-      - "./Release/publish/tracklott:/tracklott"
+      - "./Release/publish:/tracklott"
       - "./DevFolder:/tracklott/DevFolder"
     entrypoint: "dotnet TrackLott.dll"
     restart: "on-failure"
