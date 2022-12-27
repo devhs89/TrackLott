@@ -1,4 +1,3 @@
-using Microsoft.AspNetCore.Hosting.Server.Features;
 using Microsoft.AspNetCore.HttpOverrides;
 using TrackLott.Constants;
 using TrackLott.Controllers;
@@ -51,13 +50,7 @@ namespace TrackLott
         });
       }
 
-      // USE HTTPS CONNECTION IF LISTENING ON ADDRESSES OTHER THAN LOCALHOST
-      var firstServerAddress = app.ServerFeatures.Get<IServerAddressesFeature>()?.Addresses.ToList().FirstOrDefault();
-      if (firstServerAddress != null && !firstServerAddress.Contains("localhost") &&
-          !firstServerAddress.Contains("127.0.0.1"))
-      {
-        app.UseHttpsRedirection();
-      }
+      app.UseHttpsRedirection();
 
       app.UseDefaultFiles();
       app.UseStaticFiles();

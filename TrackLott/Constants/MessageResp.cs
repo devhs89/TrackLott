@@ -4,7 +4,7 @@ public static class MessageResp
 {
   public const string GenericError = "Something went wrong. Please contact site administrator.";
   public const string TrackLottDbConnFail = "TrackLott Database connection failed.";
-  public const string MissingSecurityKeysDir = "Security keys directory path missing.";
+  public const string MissingJwtEncryptionKeysDir = "JWT Encryption keys directory path missing.";
   public const string UnableToReadFileContent = "Unable to read file's contents.";
   public const string UnableToWriteToken = "Token Handler Unable to Write Token";
   public const string AccountCreationFailed = "Something went wrong. Failed to create user account.";

@@ -10,10 +10,10 @@ public static class DataStoreServicesExtension
   {
     services.AddDbContext<TrackLottDbContext>(options =>
     {
-      var connectionString = Environment.GetEnvironmentVariable(EnvVarName.TrackLottConnStr);
+      var connectionString = Environment.GetEnvironmentVariable(EnvVarName.DbConnStr);
       if (connectionString == null) throw new Exception(MessageResp.TrackLottDbConnFail);
 
-      var serverVersion = new MySqlServerVersion(new Version(8, 0, 29));
+      var serverVersion = new MySqlServerVersion(new Version(8, 0));
       options.UseMySql(connectionString, serverVersion);
     });
   }

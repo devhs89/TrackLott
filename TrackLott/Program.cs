@@ -1,4 +1,5 @@
-using System.Net;
+using System.Security.Cryptography.X509Certificates;
+using TrackLott.Constants;
 
 namespace TrackLott
 {
@@ -14,16 +15,23 @@ namespace TrackLott
     {
       return Host.CreateDefaultBuilder(args).ConfigureWebHostDefaults(webBuilder =>
       {
-        var env = Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT");
-        if (env is "Production")
+        webBuilder.UseKestrel(options =>
         {
-          webBuilder.UseKestrel(options =>
-          {
-            options.Listen(IPAddress.Loopback, 8000);
-            options.Listen(IPAddress.Loopback, 8001);
-          });
-        }
+          options.ListenLocalhost(50015);
 
+          var certsDir = Environment.GetEnvironmentVariable(EnvVarName.HttpsCertsDir);
+          if (certsDir == null) return;
+
+          var pemFilePath = Path.Combine(certsDir, "tracklott.pem");
+          var keyFilePath = Path.Combine(certsDir, "tracklott.key");
+
+          if (File.Exists(pemFilePath) && File.Exists(keyFilePath))
+          {
+            options.ListenLocalhost(60015,
+              listenOptions => listenOptions.UseHttps(adapterOptions =>
+                adapterOptions.ServerCertificate = X509Certificate2.CreateFromPemFile(pemFilePath, keyFilePath)));
+          }
+        });
         webBuilder.UseStartup<Startup>();
       });
     }

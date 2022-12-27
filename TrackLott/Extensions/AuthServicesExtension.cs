@@ -55,6 +55,9 @@ public static class AuthServicesExtension
     // TOKEN SERVICE FOR PROVIDING JWT TOKENS
     serviceCollection.AddScoped<ITokenService, TokenService>();
 
+    // Add HttpContextAccessor Service
+    serviceCollection.AddHttpContextAccessor();
+
     // REGISTER JWT CLAIMS SERVICE
     serviceCollection.AddScoped<IJwtClaimsService, JwtClaimsService>();
   }
