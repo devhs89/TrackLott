@@ -4,6 +4,7 @@
 **/*.editorconfig
 
 **/appsettings.Production.json
+**/launchSettings.json
 **/bin
 **/obj
 **/Release
