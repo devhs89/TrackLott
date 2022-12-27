@@ -1,0 +1,18 @@
+version: "0.1"
+name: "tracklott.usualapps.com"
+services:
+  mysql:
+    image: "mysql:latest"
+    container_name: "tracklott_mysql_dev"
+    ports:
+      - "33061:3306"
+    env_file:
+      - "${TRACK_LOTT_DOCKER_CONFIG_DIR}/envs/mysql_docker.env"
+    volumes:
+      - "${TRACK_LOTT_SQL_CONFIG_DIR}/mysql:/var/lib/mysql"
+    networks:
+      - tracklott_net_dev
+networks:
+  tracklott_net_dev:
+    name: tracklott_net_dev
+    
