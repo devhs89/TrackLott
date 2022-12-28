@@ -1,9 +1,10 @@
 using System.ComponentModel.DataAnnotations;
 
-namespace TrackLott.Models.DTOs;
+namespace TrackLott.DTOs;
 
 public class ConfirmationEmailTemplateDataDto
 {
+  [Required, DataType(DataType.Text)] public string? TemplateId { get; set; }
   [Required, DataType(DataType.Text)] public string EmailSubject { get; set; }
   [Required, DataType(DataType.Text)] public string? TrackLottReceiverGivenName { get; set; }
   [Required, DataType(DataType.Text)] public string? TrackLottReceiverSurname { get; set; }

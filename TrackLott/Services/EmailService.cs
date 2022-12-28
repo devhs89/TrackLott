@@ -1,11 +1,11 @@
-using System.Net.Http.Headers;
-using System.Net.Mime;
+using System.Net;
 using System.Text;
 using System.Text.Json;
-using Microsoft.AspNetCore.Authentication.JwtBearer;
+using SendGrid;
+using SendGrid.Helpers.Mail;
 using TrackLott.Constants;
+using TrackLott.DTOs;
 using TrackLott.Interfaces;
-using TrackLott.Models.DTOs;
 
 namespace TrackLott.Services;
 
@@ -20,38 +20,56 @@ public class EmailService : IEmailService
     _httpClient = httpClient;
   }
 
-  public async Task<string?> SendConfirmationEmailAsync(EmailPropsDto dataDto)
+  public async Task<HttpStatusCode> SendConfirmationEmailAsync(ConfirmationEmailTemplateDataDto dataDto)
   {
-    var res = await SendHttpRequest(EndRoute.AdminEmailSendExt, HttpMethod.Post, dataDto);
-    Console.WriteLine("________________");
-    Console.WriteLine(res);
-    Console.WriteLine("________________");
-    return res;
+    // If not in production, send emails to file
+    if (!_env.IsProduction())
+    {
+      return EmailToFile(new { dataDto.TemplateId, receiverEmailAddress = dataDto.TrackLottReceiverAddress });
+    }
+
+    var client = new SendGridClient(GetEmailServerApi());
+    var msg = new SendGridMessage
+    {
+      From = new EmailAddress(ServerInfo.NoReplyServerEmail, ServerInfo.NoReplyProjectName),
+      TemplateId = dataDto.TemplateId
+    };
+    var subject = _env.IsProduction() ? dataDto.EmailSubject : $"Development: {dataDto.EmailSubject}";
+
+    msg.SetTemplateData(dataDto);
+    msg.AddTo(dataDto.TrackLottReceiverAddress);
+
+    // Disable all tracking
+    msg.SetOpenTracking(false);
+    msg.SetClickTracking(false, false);
+    msg.SetGoogleAnalytics(false);
+
+    var resp = await client.SendEmailAsync(msg);
+    return resp?.StatusCode ?? HttpStatusCode.InternalServerError;
   }
 
-  private async Task<string?> SendHttpRequest(string endPoint, HttpMethod method, object dataDto)
+  // METHOD: GET EMAIL SERVER API
+  private static string GetEmailServerApi()
   {
-    var projectToken = Environment.GetEnvironmentVariable(EnvVarName.TrackLottProjectJwtToken);
-    if (projectToken == null) return null;
+    return Environment.GetEnvironmentVariable(EnvVarName.SendgridApi) ??
+           throw new Exception(MessageResp.SendGridServiceApiNotSet);
+  }
 
-    var adminProject = _env.IsProduction() ? DomainName.AdminUsualAppsCom : DomainName.Localhost5001;
-    var adminEmailSendUri = new Uri($"{adminProject}{endPoint}");
-
-    var httpRequestMessage = new HttpRequestMessage()
+  // METHOD: EMAIL TO FILE
+  private static HttpStatusCode EmailToFile(object args)
+  {
+    // Create DevFolder if not already exists
+    var devFolderPath = Path.Combine(Directory.GetCurrentDirectory(), "DevFolder");
+    if (!Directory.Exists(devFolderPath))
     {
-      Method = method,
-      RequestUri = adminEmailSendUri,
-      Headers =
-      {
-        Authorization = new AuthenticationHeaderValue(JwtBearerDefaults.AuthenticationScheme,
-          projectToken)
-      },
-      Content = new StringContent(JsonSerializer.Serialize(dataDto),
-        Encoding.UTF8, MediaTypeNames.Application.Json)
-    };
+      var devFolder = Path.Combine(Directory.GetCurrentDirectory(), "DevFolder");
+      var _ = Directory.CreateDirectory(devFolder);
+    }
 
-    var resp = await _httpClient.SendAsync(httpRequestMessage,
-      HttpCompletionOption.ResponseContentRead);
-    return await resp.Content.ReadAsStringAsync();
+    // Write email content to file
+    using var fileStream = File.Create(Path.Combine(devFolderPath,
+      $"EmailService_{DateTime.Now:dddd_yyyy-MM-dd_HH-mm-ss-fff}.json"));
+    var fileWritten = fileStream.WriteAsync(Encoding.UTF8.GetBytes(JsonSerializer.Serialize(args)));
+    return fileWritten.IsCompletedSuccessfully ? HttpStatusCode.Accepted : HttpStatusCode.BadRequest;
   }
 }

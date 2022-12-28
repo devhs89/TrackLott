@@ -25,4 +25,5 @@ public static class MessageResp
   public const string ComboSaved = "Combination Saved.";
   public const string ComboSavedWithNoName = "Combinations saved without lottery name.";
   public const string EmailConfirmed = "Email Confirmed.";
+  public const string SendGridServiceApiNotSet = "SendGrid Email Service API Key not set";
 }

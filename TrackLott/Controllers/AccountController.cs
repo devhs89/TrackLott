@@ -7,6 +7,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.JsonWebTokens;
 using Microsoft.IdentityModel.Tokens;
 using TrackLott.Constants;
+using TrackLott.DTOs;
 using TrackLott.Interfaces;
 using TrackLott.Models;
 using TrackLott.Models.DTOs;
@@ -48,7 +49,7 @@ public class AccountController : BaseApiController
 
     // Map dto to model
     var appUser = _mapper.Map<TrackLottUserModel>(registerDto);
-    
+
     // Create user
     var createResult = await _userManager.CreateAsync(appUser, registerDto.Password);
     if (!createResult.Succeeded) return BadRequest(createResult.Errors.FirstOrDefault());
@@ -73,18 +74,14 @@ public class AccountController : BaseApiController
 
     // Send account confirmation email
     var emailSuccess = await _emailService.SendConfirmationEmailAsync(
-      new EmailPropsDto
+      new ConfirmationEmailTemplateDataDto()
       {
         TemplateId = EmailTemplateId.EmailConfirmation,
-        Address = appUser.Email,
-        TemplateDataDto = new ConfirmationEmailTemplateDataDto()
-        {
-          EmailSubject = "Test Confirmation Email Token",
-          TrackLottReceiverGivenName = appUser.GivenName,
-          TrackLottReceiverSurname = appUser.Surname,
-          TrackLottReceiverAddress = appUser.Email,
-          TrackLottEmailConfirmationTokenUrl = confirmationUrl
-        }
+        EmailSubject = "Test Confirmation Email Token",
+        TrackLottReceiverGivenName = appUser.GivenName,
+        TrackLottReceiverSurname = appUser.Surname,
+        TrackLottReceiverAddress = appUser.Email,
+        TrackLottEmailConfirmationTokenUrl = confirmationUrl
       }
     );
     return Ok(emailSuccess);
