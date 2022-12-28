@@ -1,6 +1,5 @@
 using Microsoft.AspNetCore.HttpOverrides;
 using TrackLott.Constants;
-using TrackLott.Controllers;
 using TrackLott.Extensions;
 
 namespace TrackLott
@@ -31,10 +30,7 @@ namespace TrackLott
       services.AddAuthServices(_env);
 
       // ADD COMMUNICATION SERVICES
-      services.AddCommunicationServices();
-
-      // SCHEDULED JOBS & SERVICES
-      services.AddScheduledServices();
+      // services.AddCommunicationServices();
     }
 
     public void Configure(IApplicationBuilder app)

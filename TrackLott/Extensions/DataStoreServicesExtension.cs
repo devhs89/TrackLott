@@ -12,9 +12,8 @@ public static class DataStoreServicesExtension
     {
       var connectionString = Environment.GetEnvironmentVariable(EnvVarName.DbConnStr);
       if (connectionString == null) throw new Exception(MessageResp.TrackLottDbConnFail);
-
-      var serverVersion = new MySqlServerVersion(new Version(8, 0));
-      options.UseMySql(connectionString, serverVersion);
+      options.UseMySql(connectionString, ServerVersion.AutoDetect(connectionString),
+        builder => builder.EnableRetryOnFailure(3, TimeSpan.FromSeconds(5), null));
     });
   }
 }
