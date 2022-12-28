@@ -14,7 +14,6 @@ namespace TrackLott
     private static IHostBuilder CreateHostBuilder(string[] args)
     {
       return Host.CreateDefaultBuilder(args).ConfigureWebHostDefaults(webBuilder =>
-      {
         webBuilder.UseKestrel(options =>
         {
           options.ListenLocalhost(50015);
@@ -31,9 +30,7 @@ namespace TrackLott
               listenOptions => listenOptions.UseHttps(adapterOptions =>
                 adapterOptions.ServerCertificate = X509Certificate2.CreateFromPemFile(pemFilePath, keyFilePath)));
           }
-        });
-        webBuilder.UseStartup<Startup>();
-      });
+        }).UseStartup<Startup>());
     }
   }
 }
