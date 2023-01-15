@@ -30,6 +30,10 @@ namespace TrackLott
               listenOptions => listenOptions.UseHttps(adapterOptions =>
                 adapterOptions.ServerCertificate = X509Certificate2.CreateFromPemFile(pemFilePath, keyFilePath)));
           }
+          else
+          {
+            options.ListenLocalhost(60015);
+          }
         }).UseStartup<Startup>());
     }
   }
