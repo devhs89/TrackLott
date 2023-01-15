@@ -30,7 +30,7 @@ namespace TrackLott
       services.AddAuthServices(_env);
 
       // ADD COMMUNICATION SERVICES
-      // services.AddCommunicationServices();
+      services.AddCommunicationServices();
     }
 
     public void Configure(IApplicationBuilder app)

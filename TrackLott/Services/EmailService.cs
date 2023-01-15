@@ -12,12 +12,10 @@ namespace TrackLott.Services;
 public class EmailService : IEmailService
 {
   private readonly IWebHostEnvironment _env;
-  private readonly HttpClient _httpClient;
 
-  public EmailService(IWebHostEnvironment env, HttpClient httpClient)
+  public EmailService(IWebHostEnvironment env)
   {
     _env = env;
-    _httpClient = httpClient;
   }
 
   public async Task<HttpStatusCode> SendConfirmationEmailAsync(ConfirmationEmailTemplateDataDto dataDto)
