@@ -1,5 +1,6 @@
 using System.Security.Cryptography.X509Certificates;
 using TrackLott.Constants;
+using TrackLott.Data;
 
 namespace TrackLott
 {
@@ -8,6 +9,13 @@ namespace TrackLott
     public static async Task Main(string[] args)
     {
       var host = CreateHostBuilder(args).Build();
+
+      using (var scope = host.Services.CreateScope())
+      {
+        var context = scope.ServiceProvider.GetRequiredService<TrackLottDbContext>();
+        await InitialSeed.AddRoles(context);
+      }
+
       await host.RunAsync();
     }
 
