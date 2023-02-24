@@ -14,9 +14,15 @@ public class JwtClaimsService : IJwtClaimsService
 
   public Guid? GetGuidIdClaim()
   {
-    // JwtRegisteredClaimNames.sub maps to ClaimTypes.NameIdentifier by default
-    // Change mapping to use JwtRegisteredClaimNames.sub
     var id = _claimsPrinciple?.FindFirstValue(ClaimTypes.NameIdentifier);
+    Console.WriteLine(id);
+    Console.WriteLine(id);
+    Console.WriteLine(id);
+    Console.WriteLine(id);
+    Console.WriteLine(id);
+    Console.WriteLine(id);
+    Console.WriteLine(id);
+    Console.WriteLine(id);
     return id == null ? null : Guid.Parse(id);
   }
 

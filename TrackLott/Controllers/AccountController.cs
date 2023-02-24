@@ -4,7 +4,6 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.IdentityModel.JsonWebTokens;
 using Microsoft.IdentityModel.Tokens;
 using TrackLott.Constants;
 using TrackLott.Interfaces;
@@ -83,7 +82,7 @@ public class AccountController : BaseApiController
     //     TrackLottEmailConfirmationTokenUrl = confirmationUrl
     //   }
     // );
-    return Ok(token);
+    return Ok(new { jwtToken = token });
   }
 
   // ACCOUNT EMAIL CONFIRMATION CONTROLLER ACTION
@@ -178,7 +177,7 @@ public class AccountController : BaseApiController
     // PRIVATE: CREATE CLAIMS LIST
     var claims = new List<Claim>
     {
-      new(JwtRegisteredClaimNames.Sub, userModel.Id.ToString()),
+      new(ClaimTypes.NameIdentifier, userModel.Id.ToString()),
       new(CustomClaimType.ConfirmedAccount, userModel.EmailConfirmed.ToString())
     };
     var roles = await _userManager.GetRolesAsync(userModel);
