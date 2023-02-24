@@ -7,7 +7,6 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.JsonWebTokens;
 using Microsoft.IdentityModel.Tokens;
 using TrackLott.Constants;
-using TrackLott.DTOs;
 using TrackLott.Interfaces;
 using TrackLott.Models;
 using TrackLott.Models.DTOs;
@@ -66,25 +65,25 @@ public class AccountController : BaseApiController
       return StatusCode(StatusCodes.Status500InternalServerError, MessageResp.UnableToWriteToken);
 
     // Create email confirmation token
-    var urlSafeUserId = Base64UrlEncoder.Encode(appUser.Id.ToString());
-    var confirmationCode = await _userManager.GenerateEmailConfirmationTokenAsync(appUser);
-    var urlSafeConfirmationCode = Base64UrlEncoder.Encode(confirmationCode);
-    var confirmationUrl =
-      $"{DomainName.TrackLottUsualAppsCom}{EndRoute.AccountConfirmAbs}?id={urlSafeUserId}&code={urlSafeConfirmationCode}";
+    // var urlSafeUserId = Base64UrlEncoder.Encode(appUser.Id.ToString());
+    // var confirmationCode = await _userManager.GenerateEmailConfirmationTokenAsync(appUser);
+    // var urlSafeConfirmationCode = Base64UrlEncoder.Encode(confirmationCode);
+    // var confirmationUrl =
+    //   $"{DomainName.TrackLottUsualAppsCom}{EndRoute.AccountConfirmAbs}?id={urlSafeUserId}&code={urlSafeConfirmationCode}";
 
     // Send account confirmation email
-    var emailSuccess = await _emailService.SendConfirmationEmailAsync(
-      new ConfirmationEmailTemplateDataDto()
-      {
-        TemplateId = EmailTemplateId.EmailConfirmation,
-        EmailSubject = "Test Confirmation Email Token",
-        TrackLottReceiverGivenName = appUser.GivenName,
-        TrackLottReceiverSurname = appUser.Surname,
-        TrackLottReceiverAddress = appUser.Email,
-        TrackLottEmailConfirmationTokenUrl = confirmationUrl
-      }
-    );
-    return Ok(emailSuccess);
+    // var emailSuccess = await _emailService.SendConfirmationEmailAsync(
+    //   new ConfirmationEmailTemplateDataDto()
+    //   {
+    //     TemplateId = EmailTemplateId.EmailConfirmation,
+    //     EmailSubject = "Test Confirmation Email Token",
+    //     TrackLottReceiverGivenName = appUser.GivenName,
+    //     TrackLottReceiverSurname = appUser.Surname,
+    //     TrackLottReceiverAddress = appUser.Email,
+    //     TrackLottEmailConfirmationTokenUrl = confirmationUrl
+    //   }
+    // );
+    return Ok(token);
   }
 
   // ACCOUNT EMAIL CONFIRMATION CONTROLLER ACTION
